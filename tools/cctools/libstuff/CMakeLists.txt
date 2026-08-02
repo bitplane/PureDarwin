@@ -51,8 +51,8 @@ target_compile_definitions(host_libstuff PRIVATE
 )
 if(NOT APPLE)
     target_compile_definitions(host_libstuff PRIVATE
-        EMULATED_HOST_CPU_TYPE=CPU_TYPE_X86_64
-        EMULATED_HOST_CPU_SUBTYPE=CPU_SUBTYPE_X86_64_ALL)
+        EMULATED_HOST_CPU_TYPE=${PUREDARWIN_TARGET_CPU_TYPE}
+        EMULATED_HOST_CPU_SUBTYPE=${PUREDARWIN_TARGET_CPU_SUBTYPE})
 endif()
 target_include_directories(host_libstuff PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../include

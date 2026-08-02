@@ -1,3 +1,16 @@
+# Mach-O CPU identity of the Darwin target, derived from the target triple.
+# Host tools that inspect or emit Mach-O (libstuff, the CTF tools) use these to
+# select the target slice, regardless of the machine they are running on.
+if(NOT PUREDARWIN_TARGET_TRIPLE OR PUREDARWIN_TARGET_TRIPLE MATCHES "^(x86_64|amd64)-")
+    set(PUREDARWIN_TARGET_CPU_TYPE CPU_TYPE_X86_64)
+    set(PUREDARWIN_TARGET_CPU_SUBTYPE CPU_SUBTYPE_X86_64_ALL)
+elseif(PUREDARWIN_TARGET_TRIPLE MATCHES "^(arm64|aarch64)-")
+    set(PUREDARWIN_TARGET_CPU_TYPE CPU_TYPE_ARM64)
+    set(PUREDARWIN_TARGET_CPU_SUBTYPE CPU_SUBTYPE_ARM64_ALL)
+else()
+    message(FATAL_ERROR "Cannot derive a Mach-O CPU type from PUREDARWIN_TARGET_TRIPLE \"${PUREDARWIN_TARGET_TRIPLE}\"")
+endif()
+
 function(target_darwin_platform name)
     if(PUREDARWIN_TARGET_TRIPLE)
         target_compile_options(${name} PRIVATE --target=${PUREDARWIN_TARGET_TRIPLE})

@@ -42,7 +42,7 @@ static const char	armag[] = ARMAG;
 
 #include <mach-o/loader.h>
 #include <mach-o/fat.h>
-#ifndef PUREDARWIN_HOST_CPU_TYPE
+#ifndef PUREDARWIN_TARGET_CPU_TYPE
 #include <crt_externs.h>
 #include <mach/mach.h>
 #include <mach-o/dyld.h>
@@ -51,8 +51,8 @@ static const char	armag[] = ARMAG;
 
 static cpu_type_t current_program_arch(void)
 {
-#ifdef PUREDARWIN_HOST_CPU_TYPE
-        return PUREDARWIN_HOST_CPU_TYPE;
+#ifdef PUREDARWIN_TARGET_CPU_TYPE
+        return PUREDARWIN_TARGET_CPU_TYPE;
 #else
         cpu_type_t current_arch = (_NSGetMachExecuteHeader())->cputype;
         return current_arch;
@@ -61,8 +61,8 @@ static cpu_type_t current_program_arch(void)
 
 static cpu_type_t current_kernel_arch(void)
 {
-#ifdef PUREDARWIN_HOST_CPU_TYPE
-        return PUREDARWIN_HOST_CPU_TYPE;
+#ifdef PUREDARWIN_TARGET_CPU_TYPE
+        return PUREDARWIN_TARGET_CPU_TYPE;
 #else
         struct host_basic_info  hi;
         unsigned int            size;

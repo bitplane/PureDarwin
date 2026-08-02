@@ -16,6 +16,14 @@ set(CMAKE_MACOSX_MIN_VERSION 11.0)
 set(PUREDARWIN_COMPILER_RT_SOURCE_DIR "" CACHE PATH "compiler-rt source tree for the XNU profile runtime")
 set(PUREDARWIN_TARGET_TRIPLE "" CACHE STRING "Clang target triple for Darwin binaries")
 
+if(NOT APPLE AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64)")
+    # Linux on ARM defaults to unsigned char; the vendored Apple and Sun tools
+    # assume the signed char of the x86 and Darwin ABIs. Darwin targets keep
+    # signed char on every architecture, so this is a no-op for cross-compiled
+    # output and only affects natively built host tools.
+    add_compile_options(-fsigned-char)
+endif()
+
 include(ExternalProject)
 include(cmake/asm.cmake)
 include(cmake/bundle_resources.cmake)

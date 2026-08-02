@@ -38,6 +38,6 @@ target_include_directories(libelf.host PRIVATE
 )
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_compile_definitions(libelf.host PRIVATE
-        PUREDARWIN_HOST_CPU_TYPE=CPU_TYPE_X86_64
+        PUREDARWIN_TARGET_CPU_TYPE=${PUREDARWIN_TARGET_CPU_TYPE}
     )
 endif()
