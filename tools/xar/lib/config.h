@@ -34,3 +34,13 @@
 #define DEV_STRING PRId32
 #define DEV_HEXSTRING PRIx32
 #define DEV_CAST (uint32_t)
+
+#ifdef __linux__
+#undef HAVE_GETATTRLIST
+#undef HAVE_SETATTRLIST
+#undef HAVE_CHFLAGS
+#undef HAVE_STRUCT_STAT_ST_FLAGS
+#undef HAVE_STRUCT_STATFS_F_FSTYPENAME
+#undef HAVE_LCHMOD
+#undef HAVE_STRMODE
+#endif
