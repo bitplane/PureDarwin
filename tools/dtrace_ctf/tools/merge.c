@@ -127,7 +127,7 @@
 #if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 #include <unistd.h>
 #include <signal.h>
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 typedef struct equiv_data equiv_data_t;
 
@@ -1323,7 +1323,7 @@ tdesc_ops_t tdesc_ops[] = {
 #if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 #pragma init(bigheap)
 static size_t maxpgsize = 0x400000;
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 #define	MERGE_PHASE1_BATCH_SIZE		8
 #define	MERGE_PHASE1_MAX_SLOTS		5
@@ -1384,7 +1384,7 @@ bigheap(void)
 {
 	/* NOOP */
 }
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 static void
 finalize_phase_one(workqueue_t *wq)
@@ -1737,7 +1737,7 @@ wq_init(workqueue_t *wq, int nfiles)
 		pthread_mutex_init(&wq->wq_wip[i].wip_lock, NULL);
 #if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 		pthread_cond_init(&wq->wq_wip[i].wip_cv, NULL); /* Omitted on Solaris!?! */
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 		wq->wq_wip[i].wip_batchid = wq->wq_next_batchid++;
 	}
 

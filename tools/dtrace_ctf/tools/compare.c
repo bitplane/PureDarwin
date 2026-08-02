@@ -41,7 +41,7 @@
 
 #if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 extern const
-#endif /* __APPLE__ */ 
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 char *progname;
 int debug_level = DEBUG_LEVEL;
 

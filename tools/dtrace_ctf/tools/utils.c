@@ -58,7 +58,7 @@ getpname(void)
 
 	return (pname);
 }
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 void
 vwarn(const char *format, va_list alist)

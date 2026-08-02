@@ -91,6 +91,8 @@ $(OBJPATH)/allsymbols: $(OBJPATH)/$(KERNEL_FILE_NAME)
 
 .PHONY: check_all_exports
 
+# kextsymboltool verifies the offsets returned by lseek() on its output file,
+# which /dev/null cannot satisfy everywhere, so give it a real file to discard.
 check_all_exports: $(OBJPATH)/allsymbols $(KEXT_CREATE_SYMBOL_SET)
 	$(_v)$(KEXT_CREATE_SYMBOL_SET)					\
 		$(KEXT_ARCH_FLAGS_$(CURRENT_ARCH_CONFIG))		\

@@ -42,7 +42,7 @@
 
 int debug_level;
 const char *progname = "ctfdump";
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 #include <string.h>
 #include <strings.h>
@@ -74,7 +74,7 @@ struct ctf_buf {
 
 void write_file(Elf *src, const char *srcname, Elf *dst, const char *dstname, caddr_t ctfdata, size_t ctfsize, int flags);
 
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 #define	WARN(x)	{ warn(x); return (E_ERROR); }
 
@@ -140,7 +140,7 @@ typedef struct ctf_data {
 	int cd_nsyms;		/* Number of symbol table entries */
 #if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 	Elf32_Word sh_link;
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 } ctf_data_t;
 
 static const char *
@@ -359,7 +359,7 @@ gelf_getsym_macho_64(Elf_Data * data, int ndx, GElf_Sym * sym, const char *base)
 			
 	return sym;
 }
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 /*
  * Given the current symbol index (-1 to start at the beginning of the symbol
@@ -388,7 +388,7 @@ next_sym(const ctf_data_t *cd, const int symidx, const uchar_t matchtype,
 				return (-1);
 		}
 		else
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 		if (gelf_getsym(cd->cd_symdata, i, &sym) == 0)
 			return (-1);
 
@@ -1026,7 +1026,7 @@ print_usage(FILE *fp, int verbose)
 	(void) fprintf(fp, "Usage: %s [-dfhlsSt] [-u file] file\n", getpname());
 #else
 	(void) fprintf(fp, "Usage: %s [-dfhlrsSt] [-u file] file\n", progname);
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 	if (verbose) {
 		(void) fprintf(fp,
@@ -1036,7 +1036,7 @@ print_usage(FILE *fp, int verbose)
 		    "\t-l  dump label table\n"
 #if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 		    "\t-r  remove listed symbols from CTF data\n" 
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 		    "\t-s  dump string table\n"
 		    "\t-S  dump statistics\n"
 		    "\t-t  dump type section\n"
@@ -1171,7 +1171,7 @@ skiploop:
 		} else {
 			symscn = findelfscn(elf, &ehdr, ".symtab");
 		}
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 		/* If we found a symbol table, find the corresponding strings */
 		if (symscn != NULL) {
@@ -1216,7 +1216,7 @@ skiploop:
 					cd.cd_strdata = elf_getdata(symstrscn, NULL);
 					cd.sh_link = shdr.sh_link;
 				}
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 			}
 		}
 	} else {
@@ -1316,7 +1316,7 @@ skiploop:
 		free(tmpname);
 		flags = 0;
 	}
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 	if (flags & F_HDR)
 		error |= print_header(hp, &cd);

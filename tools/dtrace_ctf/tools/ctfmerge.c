@@ -55,7 +55,7 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 #include "ctf_headers.h"
 #include "ctftools.h"
@@ -442,7 +442,7 @@ main(int argc, char **argv)
 			terminate("Couldn't rename output temp file %s", tmpname);
 		free(tmpname);
 	}
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 		
 	return (0);
 }

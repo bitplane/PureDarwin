@@ -177,7 +177,7 @@ aborterr(char *format, ...)
 	 * signal handlers in ctfconvert and friends, we may as well just exit().
 	 */
 	exit(1);
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 }
 
 /*PRINTFLIKE1*/

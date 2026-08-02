@@ -1,7 +1,12 @@
 find_program(dsymutil_path NAMES dsymutil llvm-dsymutil REQUIRED)
 find_program(bash_path NAMES bash REQUIRED)
 
-set(PUREDARWIN_BUILD_JOBS 1 CACHE STRING "Parallel XNU build jobs")
+include(ProcessorCount)
+ProcessorCount(host_cpu_count)
+if(host_cpu_count EQUAL 0)
+    set(host_cpu_count 1)
+endif()
+set(PUREDARWIN_BUILD_JOBS ${host_cpu_count} CACHE STRING "Parallel XNU build jobs")
 set(xnu_make_environment
     SYSCTL_HW_PHYSICALCPU=${PUREDARWIN_BUILD_JOBS}
     SYSCTL_HW_LOGICALCPU=${PUREDARWIN_BUILD_JOBS}

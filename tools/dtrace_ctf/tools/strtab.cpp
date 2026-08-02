@@ -45,7 +45,7 @@
 
 #define	MIN(a, b) 		((a) > (b) ? (b) : (a))
 
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 #include "llvm-ADT/DenseMap.h"
 

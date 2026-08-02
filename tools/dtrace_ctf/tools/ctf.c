@@ -47,7 +47,7 @@
 #define SWAP32(v)		v = OSSwapInt32(v)
 #define SWAP64(v)		v = OSSwapInt64(v)
 
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 /*
  * Name of the file currently being read, used to print error messages.  We

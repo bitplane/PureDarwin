@@ -147,7 +147,7 @@ read_ctf_common(char *file, char *label, read_cb_f *func, void *arg,
 	case ELF_K_ELF:
 #if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 	case ELF_K_MACHO: /* Underlying file is Mach-o */
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 		found = read_file(elf, file, label,
 		    func, arg, require_ctf);
 		break;
@@ -220,7 +220,7 @@ count_files(char **files, int n)
 		case ELF_K_ELF:
 #if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 		case ELF_K_MACHO: /* Underlying file is Mach-o */
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 			nfiles++;
 			break;
 		default:
@@ -286,7 +286,7 @@ symit_new(Elf *elf, const char *file)
 		    (si->si_strd = elf_getdata(scn, NULL)) == NULL)
 			elfterminate(file, "Cannot read strings for .dir_str_table");
 	}
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 	si->si_nument = si->si_shdr.sh_size / si->si_shdr.sh_entsize;
 
 	return (si);
@@ -408,7 +408,7 @@ gelf_getsym_macho_64(Elf_Data * data, int ndx, GElf_Sym * sym, const char *base)
 	return sym;
 }
 
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 GElf_Sym *
 symit_next(symit_data_t *si, int type)
@@ -431,7 +431,7 @@ symit_next(symit_data_t *si, int type)
 			gelf_getsym(si->si_symd, si->si_next, &si->si_cursym);
 			gelf_getsym(si->si_symd, si->si_next, &sym);
 		}
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 		si->si_curname = (caddr_t)si->si_strd->d_buf + sym.st_name;
 
 		if (GELF_ST_TYPE(sym.st_info) == STT_FILE)

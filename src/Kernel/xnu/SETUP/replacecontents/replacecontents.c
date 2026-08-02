@@ -53,7 +53,8 @@ main(int argc, char * argv[])
 	int i;
 	char *cursor;
 
-	program_name = argv[0];
+	program_name = strrchr(argv[0], '/');
+	program_name = program_name == NULL ? argv[0] : program_name + 1;
 
 	if (argc < 2) {
 		usage();

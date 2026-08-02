@@ -109,7 +109,7 @@ file_read(const char *filename, const char *cumatch, int verbose, int ignore_non
 	source_types = built_source_types(elf, filename);
 #else
 	source_types = SOURCE_C | SOURCE_S;
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 	if ((source_types == SOURCE_NONE || (source_types & SOURCE_UNKNOWN)) &&
 	    ignore_non_c) {

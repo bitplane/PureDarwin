@@ -143,7 +143,8 @@ main(int argc, char * argv[])
 	segname_t             * names = NULL;
 	int                     ch;
 
-	program_name = argv[0];
+	program_name = strrchr(argv[0], '/');
+	program_name = program_name == NULL ? argv[0] : program_name + 1;
 
 	while ((ch = getopt(argc, argv, "s:i:n:o:")) != -1) {
 		switch (ch) {

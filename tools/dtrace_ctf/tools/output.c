@@ -137,7 +137,7 @@ gelf_getsym_macho_64(Elf_Data * data, int ndx, int nent, GElf_Sym * dst, const c
 		
 	return dst;
 }
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 typedef struct iidesc_match {
 	int iim_fuzzy;
@@ -467,7 +467,7 @@ sort_iidescs(Elf *elf, const char *file, tdata_t *td, int fuzzymatch,
 		    (strdata = elf_getdata(scn, NULL)) == NULL)
 			terminate("%s: Can't open direct string table\n", file);
 	}
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 	iiburst = iiburst_new(td, nent);
 
@@ -590,7 +590,7 @@ sort_iidescs(Elf *elf, const char *file, tdata_t *td, int fuzzymatch,
 
 		(*curr)++;
 	}	
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 	/*
 	 * Stabs are generated for every function declared in a given C source
@@ -1115,7 +1115,7 @@ write_ctf(tdata_t *td, const char *curname, const char *newname, int flags)
 #else
 	data = make_ctf_data(td, elf, curname, &len, flags);
 	write_file(elf, curname, telf, newname, data, len, flags);
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 	free(data);
 
 	elf_end(telf);

@@ -51,7 +51,7 @@
 #include "memory.h"
 #include "list.h"
 
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 struct hash {
 	int h_nbuckets;

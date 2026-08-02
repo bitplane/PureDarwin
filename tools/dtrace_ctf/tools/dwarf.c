@@ -105,7 +105,7 @@
 
 /* it is EXTREMELY slow, and doesn't affect memory that much */
 #define dwarf_dealloc(...)
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 /* The version of DWARF which we support. */
 #define	DWARF_VERSION	2
@@ -572,7 +572,7 @@ die_isvirtual(dwarf_t *dw, Dwarf_Die die)
 
 	return (die_signed(dw, die, DW_AT_virtuality, &val, 0) && val);
 }
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 static int
 die_isglobal(dwarf_t *dw, Dwarf_Die die)
@@ -1799,7 +1799,7 @@ die_function_create(dwarf_t *dw, Dwarf_Die die, Dwarf_Off off, tdesc_t *tdp)
 #if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 		if (die_attr(dw, die, DW_AT_type, 0) == NULL)
 			continue; /* C++ "this" and "meta" can land here. */
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 #if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 		if ((tmp = die_name(dw, arg)) == ATOM_NULL) {
@@ -1814,7 +1814,7 @@ die_function_create(dwarf_t *dw, Dwarf_Die die, Dwarf_Off off, tdesc_t *tdp)
 			ii->ii_nargs++;
 			continue;
 		}
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 		if (strcmp(tmp->value, "...") == 0) {
 			ii->ii_vargs = 1;
@@ -1840,7 +1840,7 @@ die_function_create(dwarf_t *dw, Dwarf_Die die, Dwarf_Off off, tdesc_t *tdp)
 #if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 			if (die_attr(dw, die, DW_AT_type, 0) == NULL)
 				continue; /* C++ "this" and "meta" can land here. */
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 			ii->ii_args[i++] = die_lookup_pass1(dw, arg,
 			    DW_AT_type);
 		}
@@ -1851,7 +1851,7 @@ die_function_create(dwarf_t *dw, Dwarf_Die die, Dwarf_Off off, tdesc_t *tdp)
 #if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 	if (spec_die)
 		dwarf_dealloc(dw->dw_dw, spec_die, DW_DLA_DIE);
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 }
 
 /*ARGSUSED3*/
@@ -1987,7 +1987,7 @@ die_create_one(dwarf_t *dw, Dwarf_Die die)
 	/* gcc 5402 emits nameless die that are base types. Workaround imminent failure. */
 	if (tdp != NULL && ATOM_NULL == tdp->t_name && dc->dc_create == die_base_create)
 		tdp->t_name = atom_get("unsigned int");
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 	dc->dc_create(dw, die, off, tdp);
 

@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <stdbool.h>
 #include <errno.h>
@@ -87,7 +88,8 @@ main(int argc, char * argv[])
 	const char *dst = NULL;
 	char dsttmpname[MAXPATHLEN];
 
-	program_name = argv[0];
+	program_name = strrchr(argv[0], '/');
+	program_name = program_name == NULL ? argv[0] : program_name + 1;
 
 	while ((ch = getopt(argc, argv, "cSm:")) != -1) {
 		switch (ch) {

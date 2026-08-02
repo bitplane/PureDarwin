@@ -72,6 +72,6 @@
 #include "ctf.h"
 #include "ctf_api.h"
 #include "libctf.h"
-#endif /* __APPLE__ */
+#endif /* __APPLE__ || PUREDARWIN_TARGET */
 
 #endif /* _CTF_HEADERS_H */
