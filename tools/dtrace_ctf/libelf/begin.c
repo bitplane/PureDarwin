@@ -40,21 +40,30 @@
 
 static const char	armag[] = ARMAG;
 
+#include <mach-o/loader.h>
+#include <mach-o/fat.h>
+#ifndef PUREDARWIN_HOST_CPU_TYPE
 #include <crt_externs.h>
 #include <mach/mach.h>
-#include <mach-o/loader.h>
 #include <mach-o/dyld.h>
-#include <mach-o/fat.h>
 #include <sys/sysctl.h>
+#endif
 
 static cpu_type_t current_program_arch(void)
 {
+#ifdef PUREDARWIN_HOST_CPU_TYPE
+        return PUREDARWIN_HOST_CPU_TYPE;
+#else
         cpu_type_t current_arch = (_NSGetMachExecuteHeader())->cputype;
         return current_arch;
+#endif
 }
 
 static cpu_type_t current_kernel_arch(void)
 {
+#ifdef PUREDARWIN_HOST_CPU_TYPE
+        return PUREDARWIN_HOST_CPU_TYPE;
+#else
         struct host_basic_info  hi;
         unsigned int            size;
         kern_return_t           kret;
@@ -83,6 +92,7 @@ static cpu_type_t current_kernel_arch(void)
                 current_arch |= CPU_ARCH_ABI64;
         }
         return current_arch;
+#endif
 }
 
 static Elf *

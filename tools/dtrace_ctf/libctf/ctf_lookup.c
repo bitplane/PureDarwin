@@ -285,12 +285,12 @@ ctf_func_info(ctf_file_t *fp, unsigned long symidx, ctf_funcinfo_t *fip)
 		/*
 		 * On Darwin, we do not have symbol type information
 		 */
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 		if (ELF32_ST_TYPE(symp->st_info) != STT_FUNC)
 			return (ctf_set_errno(fp, ECTF_NOTFUNC));
 #endif
 	} else {
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 		if (ELF64_ST_TYPE(symp->st_info) != STT_FUNC)
 			return (ctf_set_errno(fp, ECTF_NOTFUNC));
 #endif

@@ -30,4 +30,14 @@ target_sources(libelf.host PRIVATE
     ../include/gelf.h
 )
 set_property(TARGET libelf.host PROPERTY OUTPUT_NAME elf)
-target_include_directories(libelf.host PRIVATE ../include ../include/sys)
+target_include_directories(libelf.host PRIVATE
+    ../include
+    ../include/sys
+    ../../cctools/include
+    ../../cctools/include/foreign
+)
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    target_compile_definitions(libelf.host PRIVATE
+        PUREDARWIN_HOST_CPU_TYPE=CPU_TYPE_X86_64
+    )
+endif()
