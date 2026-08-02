@@ -109,6 +109,7 @@ externalproject_add(xnu
             -D DSYMUTIL_PATH=${dsymutil_path}
             -D FIREHOSE_KERNEL_LIBRARY_PATH=$<TARGET_FILE:libfirehose_kernel>
             -D FIREHOSE_KERNEL_HEADER_PATH=$<TARGET_PROPERTY:libfirehose_kernel,INTERFACE_INCLUDE_DIRECTORIES>
+            -D PROFILE_RUNTIME_LIBRARY_PATH=${profile_runtime_library_path}
             -D PTHREAD_HEADER_PATH=$<TARGET_PROPERTY:pthread_common_headers,INTERFACE_INCLUDE_DIRECTORIES>
             -P ${CMAKE_CURRENT_SOURCE_DIR}/preprocess_files.cmake
     COMMAND
@@ -126,6 +127,9 @@ add_dependencies(xnu
     migcom host_strip host_lipo host_nm unifdef host_nmedit availability.pl host_ld
     dyld_availability_headers
 )
+if(TARGET compiler_rt_profile)
+    add_dependencies(xnu compiler_rt_profile)
+endif()
 
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xnu/System/Library/Frameworks/Kernel.framework/Versions/A/Resources DESTINATION System/Library/Frameworks/Kernel.framework/Versions/A COMPONENT BaseSystem)
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xnu/System/Library/Frameworks/Kernel.framework/Versions/A/Headers DESTINATION System/Library/Frameworks/Kernel.framework/Versions/A COMPONENT DeveloperTools)
