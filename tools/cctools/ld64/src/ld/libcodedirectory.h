@@ -5,6 +5,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#ifndef __unused
+#define __unused __attribute__((unused))
+#endif
+
 #if 0 // __has_include(<Kernel/kern/cs_blobs.h>)
 #include <Kernel/kern/cs_blobs.h>
 #else

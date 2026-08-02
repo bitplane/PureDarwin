@@ -49,6 +49,11 @@ target_compile_definitions(host_libstuff PRIVATE
     __DARWIN_UNIX03
     PROGRAM_PREFIX=\"\"
 )
+if(NOT APPLE)
+    target_compile_definitions(host_libstuff PRIVATE
+        EMULATED_HOST_CPU_TYPE=CPU_TYPE_X86_64
+        EMULATED_HOST_CPU_SUBTYPE=CPU_SUBTYPE_X86_64_ALL)
+endif()
 target_include_directories(host_libstuff PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../include
     ${CMAKE_CURRENT_SOURCE_DIR}/../include/foreign

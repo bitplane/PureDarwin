@@ -32,6 +32,8 @@ extern void warning(const char* format, ...) __attribute__((format(printf, 1, 2)
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <stuff/port.h>
+
 enum expand_result {
   EXPAND_ERROR = -1,
   EXPAND_COMPLETE = 0,

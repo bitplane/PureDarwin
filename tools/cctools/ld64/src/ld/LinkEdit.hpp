@@ -31,7 +31,9 @@
 #include <limits.h>
 #include <unistd.h>
 #include <CommonCrypto/CommonDigest.h>
+#ifdef __APPLE__
 #include <CommonCrypto/CommonDigestSPI.h>
+#endif
 
 #include <vector>
 #include <unordered_map>

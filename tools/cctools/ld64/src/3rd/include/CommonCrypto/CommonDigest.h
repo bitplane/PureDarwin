@@ -1,3 +1,6 @@
+#ifndef LD64_COMMON_CRYPTO_COMMON_DIGEST_H
+#define LD64_COMMON_CRYPTO_COMMON_DIGEST_H
+
 #ifdef __APPLE__
 
 #include_next <CommonCrypto/CommonDigest.h>
@@ -46,3 +49,5 @@ static unsigned char *CC_MD5(const void *data, unsigned long nbytes,
 }
 
 #endif /* __APPLE__ */
+
+#endif /* LD64_COMMON_CRYPTO_COMMON_DIGEST_H */

@@ -8,7 +8,13 @@ void strmode(/* mode_t */ int mode, char *p);
 #endif /* !__APPLE__ */
 
 #ifndef HAVE_REALLOCF
+#ifdef __cplusplus
+extern "C" {
+#endif
 void *reallocf(void *ptr, size_t size);
+#ifdef __cplusplus
+}
+#endif
 #elif defined(HAVE_BSD_STDLIB_H)
 #include <bsd/stdlib.h>
 #endif /* !HAVE_REALLOCF */

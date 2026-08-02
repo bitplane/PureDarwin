@@ -19,6 +19,7 @@ target_sources(host_ld_libpasses PRIVATE
 )
 
 target_compile_definitions(host_ld_libpasses PRIVATE __DARWIN_UNIX03)
+target_compile_options(host_ld_libpasses PRIVATE -fblocks)
 target_include_directories(host_ld_libpasses PRIVATE
     ../../../../include
     ../../../../include/foreign
@@ -29,5 +30,5 @@ target_include_directories(host_ld_libpasses PRIVATE
     ../../3rd
     ../../..
 )
-set_property(TARGET host_ld_libpasses PROPERTY CXX_STANDARD 11)
+set_property(TARGET host_ld_libpasses PROPERTY CXX_STANDARD 17)
 suppress_all_warnings(host_ld_libpasses)

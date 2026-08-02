@@ -20,17 +20,21 @@ target_sources(host_ld PRIVATE
 )
 
 target_compile_definitions(host_ld PRIVATE __DARWIN_UNIX03)
-target_compile_options(host_ld PRIVATE "-Wno-#warnings" -Wno-deprecated)
+target_compile_options(host_ld PRIVATE "-Wno-#warnings" -Wno-deprecated -fblocks)
 target_link_libraries(host_ld PRIVATE
     host_libxar host_ld_helper host_ld_BlocksRuntime host_ld_libparsers host_ld_libpasses host_libstuff
     OpenSSL::SSL OpenSSL::Crypto
-    host_commoncrypto_static
-    host_commoncrypto_private_headers
-    host_commoncrypto_headers
     host_corecrypto_headers
 )
+if(APPLE)
+    target_link_libraries(host_ld PRIVATE
+        host_commoncrypto_static
+        host_commoncrypto_private_headers
+        host_commoncrypto_headers
+    )
+endif()
 set_property(TARGET host_ld PROPERTY OUTPUT_NAME ld)
-set_property(TARGET host_ld PROPERTY CXX_STANDARD 11)
+set_property(TARGET host_ld PROPERTY CXX_STANDARD 17)
 target_include_directories(host_ld PRIVATE
     ../../../include
     ../../../include/foreign
