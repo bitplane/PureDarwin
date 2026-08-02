@@ -230,8 +230,16 @@ endef
 #
 # Default ARCH_FLAGS, for use with compiler/linker/assembler/mig drivers
 
+ifneq ($(PUREDARWIN_TARGET_TRIPLE),)
+ARCH_FLAGS_X86_64	  = -target $(PUREDARWIN_TARGET_TRIPLE)
+ARCH_FLAGS_X86_64H	  = -target $(PUREDARWIN_TARGET_TRIPLE)
+else
 ARCH_FLAGS_X86_64	  = -arch x86_64
 ARCH_FLAGS_X86_64H	  = -arch x86_64h
+endif
+
+KEXT_ARCH_FLAGS_X86_64	  = -arch x86_64
+KEXT_ARCH_FLAGS_X86_64H	  = -arch x86_64h
 
 ifneq ($(filter ARM ARM64,$(CURRENT_ARCH_CONFIG)),)
 

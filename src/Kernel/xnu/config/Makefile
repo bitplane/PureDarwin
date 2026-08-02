@@ -64,7 +64,7 @@ $(OBJPATH)/$(1).symbolset: MY_EXPORTS_ARGS := $$(foreach file,$$($(1)_EXPORTS),-
 $(OBJPATH)/$(1).symbolset: $$($(1)_EXPORTS) $(OBJPATH)/allsymbols $(KEXT_CREATE_SYMBOL_SET)
 	@$$(LOG_SYMBOLSET) "$(ColorF)$(1)$(Color0) ($(ColorLF)$(CURRENT_ARCH_CONFIG_LC)$(Color0))"
 	$(_v)$(KEXT_CREATE_SYMBOL_SET)			\
-		$(ARCH_FLAGS_$(CURRENT_ARCH_CONFIG))	\
+		$(KEXT_ARCH_FLAGS_$(CURRENT_ARCH_CONFIG))	\
 		-import $(OBJPATH)/allsymbols		\
 		$$(MY_EXPORTS_ARGS)			\
 		-output $$@ $(_vstdout)
@@ -93,19 +93,20 @@ $(OBJPATH)/allsymbols: $(OBJPATH)/$(KERNEL_FILE_NAME)
 
 check_all_exports: $(OBJPATH)/allsymbols $(KEXT_CREATE_SYMBOL_SET)
 	$(_v)$(KEXT_CREATE_SYMBOL_SET)					\
-		$(ARCH_FLAGS_$(CURRENT_ARCH_CONFIG))			\
+		$(KEXT_ARCH_FLAGS_$(CURRENT_ARCH_CONFIG))		\
 		-import $(OBJPATH)/allsymbols				\
 		$(foreach symbolset,$(filter-out Private,$(SYMBOL_COMPONENT_LIST)),	\
 			-export $(SOURCE)/$(symbolset).exports		\
 			-export $(SOURCE)/$(symbolset).$(EXPORT_SOURCE_ARCH_CONFIG_LC).exports)	\
-		-output /dev/null $(_vstdout)
+		-output $(OBJPATH)/check_all_exports.tmp $(_vstdout)
 	$(_v)$(KEXT_CREATE_SYMBOL_SET)					\
-		$(ARCH_FLAGS_$(CURRENT_ARCH_CONFIG))			\
+		$(KEXT_ARCH_FLAGS_$(CURRENT_ARCH_CONFIG))		\
 		-import $(OBJPATH)/allsymbols				\
 		$(foreach symbolset,$(filter-out Unsupported,$(SYMBOL_COMPONENT_LIST)),	\
 			-export $(SOURCE)/$(symbolset).exports		\
 			-export $(SOURCE)/$(symbolset).$(EXPORT_SOURCE_ARCH_CONFIG_LC).exports)	\
-		-output /dev/null $(_vstdout)
+		-output $(OBJPATH)/check_all_exports.tmp $(_vstdout)
+	$(_v)$(RM) $(OBJPATH)/check_all_exports.tmp
 
 $(OBJPATH)/$(MD_SUPPORTED_KPI_FILENAME): $(EXPORTS_FILES)
 	@$(LOG_SUPPORTED_KPI) "$(CURRENT_ARCH_CONFIG_LC)"

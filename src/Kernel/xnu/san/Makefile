@@ -63,7 +63,7 @@ ifneq ($(RC_ProjectName),xnu_libraries)
 $(OBJPATH)/%.symbolset: $(SOURCE)/%.exports
 	@$(LOG_SYMBOLSET) "$*$(Color0) ($(ColorLF)$(CURRENT_ARCH_CONFIG_LC)$(Color0))"
 	$(_v)$(KEXT_CREATE_SYMBOL_SET)			\
-		$(ARCH_FLAGS_$(CURRENT_ARCH_CONFIG))	\
+		$(KEXT_ARCH_FLAGS_$(CURRENT_ARCH_CONFIG))	\
 		-import $(OBJPATH)/allsymbols		\
 		-export $<		                \
 		-output $@ $(_vstdout)

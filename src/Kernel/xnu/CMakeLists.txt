@@ -1,4 +1,5 @@
 find_program(dsymutil_path NAMES dsymutil llvm-dsymutil REQUIRED)
+find_program(bash_path NAMES bash REQUIRED)
 
 set(PUREDARWIN_BUILD_JOBS 1 CACHE STRING "Parallel XNU build jobs")
 set(xnu_make_environment
@@ -14,6 +15,8 @@ set(xnu_make_environment
     PUREDARWIN_HOST_LIBMACHO=$<TARGET_FILE:host_libmacho>
     PUREDARWIN_HOST_LIBSTUFF=$<TARGET_FILE:host_libstuff>
     HOST_GM4=m4
+    SHELL=${bash_path}
+    PUREDARWIN_TARGET_TRIPLE=${PUREDARWIN_TARGET_TRIPLE}
 )
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xnu_header_install)

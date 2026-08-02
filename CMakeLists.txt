@@ -13,6 +13,7 @@ cmake_policy(SET CMP0114 NEW)
 
 set(CMAKE_INSTALL_PREFIX "")
 set(CMAKE_MACOSX_MIN_VERSION 11.0)
+set(PUREDARWIN_TARGET_TRIPLE "" CACHE STRING "Clang target triple for Darwin binaries")
 
 include(ExternalProject)
 include(cmake/asm.cmake)

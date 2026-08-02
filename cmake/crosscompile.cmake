@@ -1,7 +1,15 @@
+function(target_darwin_platform name)
+    if(PUREDARWIN_TARGET_TRIPLE)
+        target_compile_options(${name} PRIVATE --target=${PUREDARWIN_TARGET_TRIPLE})
+        target_link_options(${name} PRIVATE --target=${PUREDARWIN_TARGET_TRIPLE})
+    endif()
+endfunction()
+
 function(add_darwin_executable name)
     cmake_parse_arguments(SL "NO_STANDARD_LIBRARIES;USE_HOST_SDK" "MACOSX_VERSION_MIN" "" ${ARGN})
 
     add_executable(${name})
+    target_darwin_platform(${name})
     add_dependencies(${name} host_ld)
     target_compile_definitions(${name} PRIVATE __PUREDARWIN__)
     target_link_options(${name} PRIVATE -fuse-ld=$<TARGET_FILE:host_ld>)
@@ -27,6 +35,7 @@ function(add_darwin_static_library name)
     cmake_parse_arguments(SL "USE_HOST_SDK" "MACOSX_VERSION_MIN" "" ${ARGN})
 
     add_library(${name} STATIC)
+    target_darwin_platform(${name})
     add_dependencies(${name} host_libtool)
     target_compile_definitions(${name} PRIVATE __PUREDARWIN__)
 
@@ -52,6 +61,7 @@ function(add_darwin_shared_library name)
     else()
         add_library(${name} SHARED)
     endif()
+    target_darwin_platform(${name})
 
     add_dependencies(${name} host_ld)
     target_link_options(${name} PRIVATE -fuse-ld=$<TARGET_FILE:host_ld>)
@@ -101,6 +111,7 @@ function(add_darwin_object_library name)
     cmake_parse_arguments(SL "USE_HOST_SDK" "MACOSX_VERSION_MIN" "" ${ARGN})
 
     add_library(${name} OBJECT)
+    target_darwin_platform(${name})
     set_property(TARGET ${name} PROPERTY LINKER_LANGUAGE C)
     target_compile_definitions(${name} PRIVATE __PUREDARWIN__)
 
