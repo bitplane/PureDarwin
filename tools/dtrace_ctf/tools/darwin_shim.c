@@ -22,17 +22,29 @@
 
 #include "darwin_shim.h"
 
+#ifdef PUREDARWIN_LINUX_HOST
+#include <sys/utsname.h>
+#include <time.h>
+#else
 #include <mach/mach.h>
 #include <mach/mach_time.h>
 #include <sys/sysctl.h>
+#endif
 #include <sys/time.h>
 #include <sys/errno.h>
+#include <string.h>
 #include <unistd.h>
 #include <fnmatch.h>
 
 hrtime_t
 gethrtime(void)
 {
+#ifdef PUREDARWIN_LINUX_HOST
+	struct timespec now;
+
+	clock_gettime(CLOCK_MONOTONIC, &now);
+	return (hrtime_t)now.tv_sec * NANOSEC + now.tv_nsec;
+#else
 	uint64_t elapsed;
 	static uint64_t start;
 	static mach_timebase_info_data_t sTimebaseInfo = { 0, 0 };
@@ -77,6 +89,7 @@ gethrtime(void)
 
 		return (q32 << 32) + ((r32 << 32) + lambda64)/denom;
 	}
+#endif
 }
 
 int 
@@ -89,6 +102,33 @@ gmatch(const char *s, const char *p)
 long 
 sysinfo(int command, char *buf, long count)
 {
+#ifdef PUREDARWIN_LINUX_HOST
+	struct utsname name;
+	const char *value;
+	size_t length;
+
+	if (count <= 0 || uname(&name) < 0)
+		return -1;
+
+	switch (command) {
+	case SI_RELEASE:
+		value = name.release;
+		break;
+	case SI_SYSNAME:
+		value = name.sysname;
+		break;
+	default:
+		errno = EINVAL;
+		return -1;
+	}
+
+	length = strlen(value) + 1;
+	if ((long)length > count)
+		length = count;
+	memcpy(buf, value, length);
+	buf[length - 1] = '\0';
+	return strlen(value) + 1;
+#else
 	switch (command)
 	{
 	int mib[2];
@@ -112,6 +152,7 @@ sysinfo(int command, char *buf, long count)
 	
 	/* NOTREACHED */
 	return 0;
+#endif
 }
 
 // The following are used only for "assert()"
@@ -148,10 +189,14 @@ p_online(processorid_t processorid, int flag)
 	static int ncpu = -1;
 	
 	if (ncpu == -1) {
+#ifdef PUREDARWIN_LINUX_HOST
+		ncpu = sysconf(_SC_NPROCESSORS_ONLN);
+#else
 		size_t len = sizeof(ncpu);
 		int mib[2] = { CTL_HW, HW_NCPU };
 		
 		(void)sysctl(mib, 2, (void *)&ncpu, &len, NULL, 0);
+#endif
 	}
 
 	switch(flag) {

@@ -83,6 +83,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <strings.h>
 #include <errno.h>
 #include <libelf.h>
@@ -97,7 +98,7 @@
 #include "alist.h"
 #include "traverse.h"
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 /* Sun extensions not present in Darwin's dwarf.h */
 #define DW_ATE_SUN_interval_float       0x91
 #define DW_ATE_SUN_imaginary_float      0x92 /* Obsolete: See DW_ATE_imaginary_float */
@@ -1934,7 +1935,7 @@ static const die_creator_t die_creators[] = {
 	{ DW_TAG_volatile_type,		0,		die_volatile_create },
 	{ DW_TAG_restrict_type,		0,		die_restrict_create },
 	{ DW_TAG_APPLE_ptrauth_type,	0,		die_ptrauth_create },
-	{ 0, NULL }
+	{ 0, 0, NULL }
 };
 
 static const die_creator_t *
@@ -2240,7 +2241,7 @@ dw_read(Elf *elf, const char *filename, const char *unitmatch, int verbose, tdat
 		die_create(dw, child);
 		die_resolve(dw);
 
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 		cvt_fixups(td, dw->dw_ptrsz);
 #else
 		/* Ignore Solaris gore. See on-src-20080707/usr/src/tools/ctf/cvt/fixup_tdescs.c */

@@ -27,8 +27,14 @@
 #ifndef _BARRIER_H
 #define	_BARRIER_H
 
-#include <dispatch/dispatch.h>
 #include <pthread.h>
+
+#ifdef PUREDARWIN_LINUX_HOST
+typedef struct barrier {
+	pthread_barrier_t bar;
+} barrier_t;
+#else
+#include <dispatch/dispatch.h>
 
 typedef struct barrier {
 	pthread_mutex_t bar_lock;	/* protects bar_numin */
@@ -37,6 +43,7 @@ typedef struct barrier {
 	dispatch_semaphore_t *bar_sem;	/* where everyone waits */
 	int bar_nthr;			/* # of waiters to trigger release */
 } barrier_t;
+#endif
 
 extern void barrier_init(barrier_t *, int);
 extern int barrier_wait(barrier_t *);

@@ -27,7 +27,8 @@ target_sources(host_ctfconvert PRIVATE
 )
 
 set_property(TARGET host_ctfconvert PROPERTY OUTPUT_NAME "ctfconvert")
-target_include_directories(host_ctfconvert PRIVATE ../include ../include/sys ../libelf)
+target_include_directories(host_ctfconvert PRIVATE ../include ../include/sys ../libelf
+    ../../cctools/include ../../cctools/include/foreign)
 target_link_libraries(host_ctfconvert PRIVATE libelf.host libdwarf.host libctf.host ${ZLIB_LIBRARY_RELEASE})
 set_property(TARGET host_ctfconvert PROPERTY CXX_STANDARD 14)
 suppress_all_warnings(host_ctfconvert)
@@ -57,7 +58,8 @@ target_sources(host_ctfdump PRIVATE
 )
 
 set_property(TARGET host_ctfdump PROPERTY OUTPUT_NAME "ctfdump")
-target_include_directories(host_ctfdump PRIVATE ../include ../include/sys ../libelf)
+target_include_directories(host_ctfdump PRIVATE ../include ../include/sys ../libelf
+    ../../cctools/include ../../cctools/include/foreign)
 target_link_libraries(host_ctfdump PRIVATE libelf.host libctf.host ${ZLIB_LIBRARY_RELEASE})
 set_property(TARGET host_ctfdump PROPERTY CXX_STANDARD 14)
 suppress_all_warnings(host_ctfdump)
@@ -90,7 +92,20 @@ target_sources(host_ctfmerge PRIVATE
 )
 
 set_property(TARGET host_ctfmerge PROPERTY OUTPUT_NAME ctfmerge)
-target_include_directories(host_ctfmerge PRIVATE ../include ../include/sys ../libelf)
+target_include_directories(host_ctfmerge PRIVATE ../include ../include/sys ../libelf
+    ../../cctools/include ../../cctools/include/foreign)
 target_link_libraries(host_ctfmerge PRIVATE libelf.host libdwarf.host libctf.host ${ZLIB_LIBRARY_RELEASE})
 set_property(TARGET host_ctfmerge PROPERTY CXX_STANDARD 14)
 suppress_all_warnings(host_ctfmerge)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    find_package(Threads REQUIRED)
+    foreach(target host_ctfconvert host_ctfdump host_ctfmerge)
+        target_compile_definitions(${target} PRIVATE
+            PUREDARWIN_LINUX_HOST
+            PUREDARWIN_TARGET
+            _GNU_SOURCE
+        )
+        target_link_libraries(${target} PRIVATE Threads::Threads)
+    endforeach()
+endif()

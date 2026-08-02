@@ -13,6 +13,7 @@
 #ifndef LLVM_ADT_DENSEMAPINFO_H
 #define LLVM_ADT_DENSEMAPINFO_H
 
+#include <cstring>
 #include <memory>
 
 namespace llvm {
@@ -34,7 +35,16 @@ struct DenseMapInfo<const char *> {
     return reinterpret_cast<const char *>(-2);
   }
   static unsigned getHashValue(const char *s) {
-    return std::__murmur2_or_cityhash<size_t>()(s, strlen(s));
+#ifdef PUREDARWIN_LINUX_HOST
+    unsigned hash = 2166136261U;
+    while (*s != '\0') {
+      hash ^= static_cast<unsigned char>(*s++);
+      hash *= 16777619U;
+    }
+    return hash;
+#else
+    return std::__murmur2_or_cityhash<size_t>()(s, std::strlen(s));
+#endif
   }
   static bool isEqual(const char *LHS, const char *RHS) {
     if (LHS == RHS)
@@ -43,7 +53,7 @@ struct DenseMapInfo<const char *> {
       return false;
     if (LHS == getTombstoneKey() || RHS == getTombstoneKey())
       return false;
-    return strcmp(LHS, RHS) == 0;
+    return std::strcmp(LHS, RHS) == 0;
   }
 };
 

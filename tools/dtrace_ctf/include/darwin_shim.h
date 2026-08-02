@@ -43,7 +43,9 @@ hrtime_t gethrtime(void);
 
 typedef int processorid_t;
 
+#ifndef PUREDARWIN_LINUX_HOST
 #define pthread_cond_reltimedwait_np pthread_cond_timedwait_relative_np
+#endif
 
 /*
  * return x rounded up to an align boundary

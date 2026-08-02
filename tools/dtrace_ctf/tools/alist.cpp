@@ -64,8 +64,9 @@ struct alist : public llvm::DenseMap<void *, void *, alistDenseMapInfo> {
 	}
 
 	void
-	stats(int verbose __unused)
+	stats(int verbose)
 	{
+		(void)verbose;
 		printf("Alist statistics\n");
 		printf(" Items  : %d\n", size());
 	}
