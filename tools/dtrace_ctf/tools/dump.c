@@ -24,7 +24,7 @@
  * Use is subject to license terms.
  */
 
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 #include <sys/types.h>
 #include <sys/sysmacros.h>
 #include <sys/stat.h>
@@ -44,6 +44,7 @@ int debug_level;
 const char *progname = "ctfdump";
 #endif /* __APPLE__ */
 
+#include <string.h>
 #include <strings.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -58,7 +59,7 @@ const char *progname = "ctfdump";
 #include "utils.h"
 #include "symbol.h"
 
-#ifdef __APPLE__
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 extern caddr_t write_buffer(ctf_header_t *h, ctf_buf_t *buf, size_t *resszp);
 extern caddr_t write_compressed_buffer(ctf_header_t *h, ctf_buf_t *buf, size_t *resszp);
 struct ctf_buf {
@@ -137,7 +138,7 @@ typedef struct ctf_data {
 	Elf_Data *cd_symdata;	/* Symbol table */
 	Elf_Data *cd_strdata;	/* Symbol table strings */
 	int cd_nsyms;		/* Number of symbol table entries */
-#if defined (__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 	Elf32_Word sh_link;
 #endif /* __APPLE__ */
 } ctf_data_t;
@@ -262,7 +263,7 @@ print_labeltable(const ctf_header_t *hp, const ctf_data_t *cd)
 	return (E_SUCCESS);
 }
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 static GElf_Sym *
 gelf_getsym_macho(Elf_Data * data, int ndx, GElf_Sym * sym, const char *base)
 {
@@ -377,7 +378,7 @@ next_sym(const ctf_data_t *cd, const int symidx, const uchar_t matchtype,
 		char *name;
 		int type;
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 		if (cd->sh_link == SHN_MACHO) { /* Underlying file is Mach-o */
 			if (gelf_getsym_macho(cd->cd_symdata, i, &sym, (const char *)(cd->cd_strdata->d_buf)) == 0)
 				return (-1);
@@ -1021,7 +1022,7 @@ print_stats(void)
 static int
 print_usage(FILE *fp, int verbose)
 {
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 	(void) fprintf(fp, "Usage: %s [-dfhlsSt] [-u file] file\n", getpname());
 #else
 	(void) fprintf(fp, "Usage: %s [-dfhlrsSt] [-u file] file\n", progname);
@@ -1033,7 +1034,7 @@ print_usage(FILE *fp, int verbose)
 		    "\t-f  dump function section\n"
 		    "\t-h  dump file header\n"
 		    "\t-l  dump label table\n"
-#ifdef __APPLE__
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 		    "\t-r  remove listed symbols from CTF data\n" 
 #endif /* __APPLE__ */
 		    "\t-s  dump string table\n"
@@ -1156,7 +1157,7 @@ skiploop:
 		 * should be used. We default to the .symtab section if sh_link
 		 * is zero or if there's an error reading the section header.
 		 */
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 		if (gelf_getshdr(ctfscn, &ctfshdr) != NULL &&
 		    ctfshdr.sh_link != 0) {
 			symscn = elf_getscn(elf, ctfshdr.sh_link);
@@ -1178,7 +1179,7 @@ skiploop:
 			Elf_Scn *symstrscn;
 
 			if (gelf_getshdr(symscn, &shdr) != NULL) {
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 				symstrscn = elf_getscn(elf, shdr.sh_link);
 
 				cd.cd_nsyms = shdr.sh_size / shdr.sh_entsize;
@@ -1297,7 +1298,7 @@ skiploop:
 		cd.cd_ctflen = hp->cth_stroff + hp->cth_strlen;
 	}
 
-#ifdef __APPLE__
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 	if (doclean) {
 		int nsyms = argc - 1 - optind;
 		char **syms = &argv[optind];

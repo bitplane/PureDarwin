@@ -124,7 +124,7 @@
 #include "memory.h"
 #include "traverse.h"
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 #include <unistd.h>
 #include <signal.h>
 #endif /* __APPLE__ */
@@ -1320,7 +1320,7 @@ tdesc_ops_t tdesc_ops[] = {
  * this comment will not live to see the stock hit five.
  */
 
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 #pragma init(bigheap)
 static size_t maxpgsize = 0x400000;
 #endif /* __APPLE__ */
@@ -1329,7 +1329,7 @@ static size_t maxpgsize = 0x400000;
 #define	MERGE_PHASE1_MAX_SLOTS		5
 #define	MERGE_INPUT_THROTTLE_LEN	10
 
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 static void
 bigheap(void)
 {
@@ -1735,7 +1735,7 @@ wq_init(workqueue_t *wq, int nfiles)
 
 	for (i = 0; i < nslots; i++) {
 		pthread_mutex_init(&wq->wq_wip[i].wip_lock, NULL);
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 		pthread_cond_init(&wq->wq_wip[i].wip_cv, NULL); /* Omitted on Solaris!?! */
 #endif /* __APPLE__ */
 		wq->wq_wip[i].wip_batchid = wq->wq_next_batchid++;

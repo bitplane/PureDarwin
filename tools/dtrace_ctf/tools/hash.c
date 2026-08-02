@@ -28,7 +28,7 @@
  * Routines for manipulating hash tables
  */
 
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 #include <stdio.h>
 #include <stdlib.h>
 #include <strings.h>

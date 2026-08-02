@@ -138,7 +138,7 @@ terminate(const char *format, ...)
 	va_list ap;
 
 	va_start(ap, format);
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 	whine("ERROR", format, ap);
 #else
     /*
@@ -168,7 +168,7 @@ aborterr(char *format, ...)
 	whine("ERROR", format, ap);
 	va_end(ap);
 
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 	abort();
 #else
 	/*

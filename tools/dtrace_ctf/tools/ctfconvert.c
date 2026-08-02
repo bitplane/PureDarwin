@@ -105,7 +105,7 @@ file_read(const char *filename, const char *cumatch, int verbose, int ignore_non
 		    elf_errmsg(-1));
 	}
 
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 	source_types = built_source_types(elf, filename);
 #else
 	source_types = SOURCE_C | SOURCE_S;
@@ -137,7 +137,7 @@ file_read(const char *filename, const char *cumatch, int verbose, int ignore_non
 			    filename);
 			exit(0);
 		}
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 		/* produce an empty output */
 		*td = tdata_new();
 		rc = 1;

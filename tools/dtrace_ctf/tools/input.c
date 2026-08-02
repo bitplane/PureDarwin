@@ -32,6 +32,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <gelf.h>
+#include <string.h>
 #include <strings.h>
 #include <sys/types.h>
 
@@ -105,7 +106,7 @@ read_file(Elf *elf, char *file, char *label, read_cb_f *func, void *arg,
 
 	/* Reconstruction of type tree */
 	if ((si = symit_new(elf, file)) == NULL) {
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 		warning("%s has no symbol table - skipping", file);
 #endif
 		return (0);
@@ -144,7 +145,7 @@ read_ctf_common(char *file, char *label, read_cb_f *func, void *arg,
 
 	switch (elf_kind(elf)) {
 	case ELF_K_ELF:
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 	case ELF_K_MACHO: /* Underlying file is Mach-o */
 #endif /* __APPLE__ */
 		found = read_file(elf, file, label,
@@ -217,7 +218,7 @@ count_files(char **files, int n)
 
 		switch (elf_kind(elf)) {
 		case ELF_K_ELF:
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 		case ELF_K_MACHO: /* Underlying file is Mach-o */
 #endif /* __APPLE__ */
 			nfiles++;
@@ -267,7 +268,7 @@ symit_new(Elf *elf, const char *file)
 	    (si->si_symd = elf_getdata(scn, NULL)) == NULL)
 		elfterminate(file, "Cannot read .symtab");
 
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 	if ((scn = elf_getscn(elf, si->si_shdr.sh_link)) == NULL ||
 	    (si->si_strd = elf_getdata(scn, NULL)) == NULL)
 		elfterminate(file, "Cannot read strings for .symtab");
@@ -309,7 +310,7 @@ symit_curfile(symit_data_t *si)
 	return (si->si_curfile);
 }
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 #include <mach-o/loader.h>
 #include <mach-o/nlist.h>
 
@@ -416,7 +417,7 @@ symit_next(symit_data_t *si, int type)
 	int check_sym = (type == STT_OBJECT || type == STT_FUNC);
 
 	for (; si->si_next < si->si_nument; si->si_next++) {
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 		gelf_getsym(si->si_symd, si->si_next, &si->si_cursym);
 		gelf_getsym(si->si_symd, si->si_next, &sym);
 #else

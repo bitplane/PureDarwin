@@ -39,7 +39,7 @@
 
 #include "ctftools.h"
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 extern const
 #endif /* __APPLE__ */ 
 char *progname;

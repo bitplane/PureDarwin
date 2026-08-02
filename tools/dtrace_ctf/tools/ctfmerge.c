@@ -23,7 +23,7 @@
  * Use is subject to license terms.
  */
 
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -87,7 +87,7 @@ usage(void)
 	    "       %s [-fgstv] -l label | -L labelenv -o outfile -w withfile "
 	    "file ...\n"
 	    "       %s [-g] -c srcfile destfile\n"
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 	    "       %s [-fgstv] -l label | -L labelenv -o master_macho_file -Z raw_ctf_outfile file ...\n"
 #endif
 	    "\n"
@@ -153,7 +153,7 @@ main(int argc, char **argv)
 	tdata_t *mstrtd, *savetd;
 	char *uniqfile = NULL, *uniqlabel = NULL;
 	char *withfile = NULL;
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 	char *raw_ctf_file = NULL;
 #endif
 	char *label = NULL;
@@ -171,7 +171,7 @@ main(int argc, char **argv)
 		debug_level = atoi(getenv("CTFMERGE_DEBUG_LEVEL"));
 
 	err = 0;
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 	while ((c = getopt(argc, argv, ":cd:D:fgl:L:o:tvw:sZ:")) != EOF) {
 #else
 	while ((c = getopt(argc, argv, ":cd:D:fgl:L:o:tvw:s")) != EOF) {
@@ -223,7 +223,7 @@ main(int argc, char **argv)
 			/* use the dynsym rather than the symtab */
 			dynsym = CTF_USE_DYNSYM;
 			break;
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 		case 'Z':
 			/* Write raw CTF data by itself */
 			raw_ctf_file = optarg;
@@ -257,7 +257,7 @@ main(int argc, char **argv)
 			err++;
 	}
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 	if ((uniqfile != NULL || withfile != NULL) && raw_ctf_file != NULL)
 		err++;
 #endif
@@ -283,7 +283,7 @@ main(int argc, char **argv)
 	if (outfile && access(outfile, R_OK|W_OK) != 0)
 		terminate("Cannot open output file %s for r/w", outfile);
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 	if (raw_ctf_file && access(raw_ctf_file, F_OK) != -1)
 		terminate("Raw CTF output file %s already exists", raw_ctf_file);
 #endif
@@ -422,7 +422,7 @@ main(int argc, char **argv)
 		savetd = mstrtd;
 	}
 
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 	tmpname = mktmpname(outfile, ".ctf");
 	write_ctf(savetd, outfile, tmpname,
 		  CTF_COMPRESS | write_fuzzy_match | dynsym | keep_stabs);

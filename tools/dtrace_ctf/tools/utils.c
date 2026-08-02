@@ -36,7 +36,7 @@
 
 static const char *pname;
 
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 #pragma init(getpname)
 const char *
 getpname(void)

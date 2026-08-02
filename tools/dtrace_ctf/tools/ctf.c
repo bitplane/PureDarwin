@@ -41,7 +41,7 @@
 #include "strtab.h"
 #include "memory.h"
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 #include <libkern/OSByteOrder.h>
 #define SWAP16(v)		v = OSSwapInt16(v)
 #define SWAP32(v)		v = OSSwapInt32(v)

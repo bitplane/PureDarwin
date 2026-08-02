@@ -63,7 +63,7 @@
  *    an explicit path #include.
  */
 
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 #include <uts/common/sys/ctf.h>
 #include <uts/common/sys/ctf_api.h>
 #include <lib/libctf/common/libctf.h>

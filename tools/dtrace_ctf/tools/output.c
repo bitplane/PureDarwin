@@ -30,6 +30,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <strings.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -44,7 +45,7 @@
 #include "traverse.h"
 #include "symbol.h"
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 #include <mach-o/loader.h>
 #include <mach-o/nlist.h>
 #include <sys/mman.h>
@@ -439,7 +440,7 @@ sort_iidescs(Elf *elf, const char *file, tdata_t *td, int fuzzymatch,
 
 	if ((stidx = findelfsecidx(elf, file,
 	    dynsym ? ".dynsym" : ".symtab")) < 0)
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 		terminate("%s: Can't open symbol table\n", file);
 #else
 	return (iiburst_new(td, 0)); /* missing symbol table is most likely an empty binary,
@@ -450,7 +451,7 @@ sort_iidescs(Elf *elf, const char *file, tdata_t *td, int fuzzymatch,
 	gelf_getshdr(scn, &shdr);
 	nent = shdr.sh_size / shdr.sh_entsize;
 
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 	scn = elf_getscn(elf, shdr.sh_link);
 	strdata = elf_getdata(scn, NULL);
 #else
@@ -470,7 +471,7 @@ sort_iidescs(Elf *elf, const char *file, tdata_t *td, int fuzzymatch,
 
 	iiburst = iiburst_new(td, nent);
 
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 	for (i = 0; i < nent; i++) {
 		GElf_Sym sym;
 		iidesc_t **tolist;
@@ -1088,7 +1089,7 @@ write_ctf(tdata_t *td, const char *curname, const char *newname, int flags)
 	if ((telf = elf_begin(tfd, ELF_C_WRITE, NULL)) == NULL)
 		elfterminate(curname, "Cannot write");
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 	if (ELFCLASS32 == elf->ed_class) {
 		data = make_ctf_data(td, elf, curname, &len, flags);
 		if (flags & CTF_RAW_OUTPUT) {

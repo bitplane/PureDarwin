@@ -395,7 +395,7 @@ tdata_t *ctfmerge_done(void);
 #define	CTF_COMPRESS	0x04 /* compress CTF output */
 #define	CTF_KEEP_STABS	0x08 /* keep .stabs sections */
 #define	CTF_MINIMIZE	0x10 /* create minimal symbols & CTF output file */
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 #define CTF_RAW_OUTPUT	(1<<30) /* output raw CTF data only, no segment/section data, and do not copy original file */
 #endif /* __APPLE__ */
 

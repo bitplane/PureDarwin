@@ -534,7 +534,7 @@ die_isdecl(dwarf_t *dw, Dwarf_Die die)
 	return (die_bool(dw, die, DW_AT_declaration, &val, 0) && val);
 }
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 static atom_t *
 die_linkage_name(dwarf_t *dw, Dwarf_Die die)
 {
@@ -1235,7 +1235,7 @@ die_sou_resolve(tdesc_t *tdp, tdesc_t **tdpp, void *private)
 
 	for (ml = tdp->t_members; ml != NULL; ml = ml->ml_next) {
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 		// Check for NULL mt before the size check.
 		// Seeing lots of crashes due to mt being NULL in
 		// the code below.
@@ -1263,7 +1263,7 @@ die_sou_resolve(tdesc_t *tdp, tdesc_t **tdpp, void *private)
 			return (1);
 		}
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 #else
 		if ((mt = tdesc_basetype(ml->ml_type)) == NULL) {
 			dw->dw_nunres++;
@@ -1745,7 +1745,7 @@ die_function_create(dwarf_t *dw, Dwarf_Die die, Dwarf_Off off, tdesc_t *tdp)
 		}
 	}
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 	if (die_isdecl(dw, die)) {
 		return; /* Prototype. */
 	}
@@ -1796,12 +1796,12 @@ die_function_create(dwarf_t *dw, Dwarf_Die die, Dwarf_Off off, tdesc_t *tdp)
 
 		if (die_tag(dw, arg) != DW_TAG_formal_parameter)
 			continue;
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 		if (die_attr(dw, die, DW_AT_type, 0) == NULL)
 			continue; /* C++ "this" and "meta" can land here. */
 #endif /* __APPLE__ */
 
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(PUREDARWIN_TARGET)
 		if ((tmp = die_name(dw, arg)) == ATOM_NULL) {
 			terminate("die %llu: func arg %d has no name\n",
 			    off, ii->ii_nargs + 1);
@@ -1837,7 +1837,7 @@ die_function_create(dwarf_t *dw, Dwarf_Die die, Dwarf_Off off, tdesc_t *tdp)
 		    arg = die_sibling(dw, arg)) {
 			if (die_tag(dw, arg) != DW_TAG_formal_parameter)
 				continue;
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 			if (die_attr(dw, die, DW_AT_type, 0) == NULL)
 				continue; /* C++ "this" and "meta" can land here. */
 #endif /* __APPLE__ */
@@ -1848,7 +1848,7 @@ die_function_create(dwarf_t *dw, Dwarf_Die die, Dwarf_Off off, tdesc_t *tdp)
 
 	iidesc_add(dw->dw_td->td_iihash, ii);
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 	if (spec_die)
 		dwarf_dealloc(dw->dw_dw, spec_die, DW_DLA_DIE);
 #endif /* __APPLE__ */
@@ -1982,7 +1982,7 @@ die_create_one(dwarf_t *dw, Dwarf_Die die)
 	if (tdp != NULL)
 		tdp->t_name = die_name(dw, die);
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(PUREDARWIN_TARGET)
 #warning BOGUS workaround (nameless base die emitted by gcc)!
 	/* gcc 5402 emits nameless die that are base types. Workaround imminent failure. */
 	if (tdp != NULL && ATOM_NULL == tdp->t_name && dc->dc_create == die_base_create)
