@@ -9,6 +9,9 @@ include $(MakeInc_def)
 OBJS = setsegname.o
 
 CFLAGS = -isysroot $(HOST_SDKROOT) -mmacosx-version-min=$(HOST_OS_VERSION) -g -O0 -I$(SOURCE) -I.
+ifneq ($(PUREDARWIN_HOST_CCTOOLS_INCLUDE),)
+CFLAGS += -I$(PUREDARWIN_HOST_CCTOOLS_INCLUDE) -I$(PUREDARWIN_HOST_CCTOOLS_INCLUDE)/foreign
+endif
 
 WARNFLAGS = -Wall
 

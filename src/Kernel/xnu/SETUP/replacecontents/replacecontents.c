@@ -37,6 +37,8 @@
 
 void usage(void);
 
+static const char *program_name;
+
 int
 main(int argc, char * argv[])
 {
@@ -49,6 +51,9 @@ main(int argc, char * argv[])
 	const char *dst = NULL;
 	ssize_t readsize, writesize;
 	int i;
+	char *cursor;
+
+	program_name = argv[0];
 
 	if (argc < 2) {
 		usage();
@@ -66,16 +71,15 @@ main(int argc, char * argv[])
 		err(EX_UNAVAILABLE, "malloc() failed");
 	}
 
-	newcontent[0] = '\0';
-
+	cursor = newcontent;
 	for (i = 2; i < argc; i++) {
-		strlcat(newcontent, argv[i], newcontentlength);
-		if (i < argc - 1) {
-			strlcat(newcontent, " ", newcontentlength);
-		} else {
-			strlcat(newcontent, "\n", newcontentlength);
-		}
+		size_t length = strlen(argv[i]);
+
+		memcpy(cursor, argv[i], length);
+		cursor += length;
+		*cursor++ = i < argc - 1 ? ' ' : '\n';
 	}
+	*cursor = '\0';
 
 	dstfd = open(dst, O_RDWR | O_CREAT | O_APPEND, DEFFILEMODE);
 	if (dstfd < 0) {
@@ -144,6 +148,6 @@ void
 usage(void)
 {
 	fprintf(stderr, "Usage: %s <dst> <new> <contents> <...>\n",
-	    getprogname());
+	    program_name);
 	exit(EX_USAGE);
 }

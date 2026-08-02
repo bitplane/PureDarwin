@@ -42,6 +42,8 @@
 void usage(void);
 char *escape_string(const char *);
 
+static const char *program_name;
+
 /*
  * We support appending to two databases.
  *
@@ -70,6 +72,8 @@ main(int argc, char * argv[])
 	size_t read_bytes;
 	int i;
 	size_t input_file_len;
+
+	program_name = argv[0];
 
 	if (argc < 5) {
 		usage();
@@ -165,7 +169,7 @@ main(int argc, char * argv[])
 void
 usage(void)
 {
-	fprintf(stderr, "Usage: %s <json_output> <cwd> <input_file> <compiler> [<invocation> ...]\n", getprogname());
+	fprintf(stderr, "Usage: %s <json_output> <cwd> <input_file> <compiler> [<invocation> ...]\n", program_name);
 	exit(EX_USAGE);
 }
 

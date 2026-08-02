@@ -9,14 +9,20 @@ include $(MakeInc_def)
 OBJS = kextsymboltool.o
 
 CFLAGS = -isysroot $(HOST_SDKROOT) -mmacosx-version-min=$(HOST_OS_VERSION) -g -O0 -I$(SOURCE) -I.
+ifneq ($(PUREDARWIN_HOST_CCTOOLS_INCLUDE),)
+CFLAGS += -I$(PUREDARWIN_HOST_CCTOOLS_INCLUDE) -I$(PUREDARWIN_HOST_CCTOOLS_INCLUDE)/foreign
+endif
 
 WARNFLAGS = -Wall
 
 LDFLAGS = -isysroot $(HOST_SDKROOT) -mmacosx-version-min=$(HOST_OS_VERSION) -lstdc++
+ifneq ($(PUREDARWIN_HOST_LIBMACHO),)
+LDLIBS += $(PUREDARWIN_HOST_LIBMACHO) $(PUREDARWIN_HOST_LIBSTUFF) -luuid
+endif
 
 kextsymboltool: $(OBJS)
 	@$(LOG_HOST_LD) "$@"
-	$(_v)$(HOST_CC) $(LDFLAGS) -o $@ $^
+	$(_v)$(HOST_CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 %.o: %.c
 	@$(LOG_HOST_CC) "$@"
