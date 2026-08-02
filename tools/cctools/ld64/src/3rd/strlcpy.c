@@ -25,6 +25,7 @@
 
 #include <string.h>
 
+__attribute__((weak))
 size_t
 strlcpy(char * restrict dst, const char * restrict src, size_t maxlen) {
     const size_t srclen = strlen(src);
