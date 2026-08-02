@@ -40,11 +40,7 @@
 #include <mach/boolean.h>
 #include "strdefs.h"
 
-#ifdef linux
-#include <linux/types.h>
-#else /* linux */
 #include <sys/types.h>
-#endif /* linux */
 typedef u_int ipc_flags_t;
 
 /*

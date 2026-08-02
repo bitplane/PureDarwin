@@ -18,7 +18,11 @@ target_sources(migcom PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR}/lexxer.yy.c
 )
 target_compile_definitions(migcom PRIVATE MIG_VERSION=\"\")
-target_include_directories(migcom PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(migcom PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ../cctools/include
+    ../cctools/include/foreign
+)
 
 add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/y.tab.c
     COMMAND yacc -d -b "${CMAKE_CURRENT_BINARY_DIR}/y" ${CMAKE_CURRENT_SOURCE_DIR}/parser.y
