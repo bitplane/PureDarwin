@@ -1,6 +1,12 @@
 find_program(dsymutil_path NAMES dsymutil llvm-dsymutil REQUIRED)
 find_program(bash_path NAMES bash REQUIRED)
 
+set(xnu_host_cflags "")
+if(NOT APPLE AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64)")
+    # XNU's make-built host tools do not inherit the CMake host options.
+    set(xnu_host_cflags "-D__arm64__=1 -fsigned-char")
+endif()
+
 include(ProcessorCount)
 ProcessorCount(host_cpu_count)
 if(host_cpu_count EQUAL 0)
@@ -19,6 +25,7 @@ set(xnu_make_environment
     PUREDARWIN_HOST_CCTOOLS_INCLUDE=${PUREDARWIN_SOURCE_DIR}/tools/cctools/include
     PUREDARWIN_HOST_LIBMACHO=$<TARGET_FILE:host_libmacho>
     PUREDARWIN_HOST_LIBSTUFF=$<TARGET_FILE:host_libstuff>
+    PUREDARWIN_HOST_CFLAGS=${xnu_host_cflags}
     HOST_GM4=m4
     SHELL=${bash_path}
     PUREDARWIN_TARGET_TRIPLE=${PUREDARWIN_TARGET_TRIPLE}
