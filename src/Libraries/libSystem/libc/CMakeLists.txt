@@ -131,10 +131,10 @@ target_include_directories(libc_dyld PRIVATE
     ${libc_source_dir}/stdlib
     ${libc_source_dir}/string
     ${libc_source_dir}/uuid/uuidsrc)
+target_compile_definitions(libc_dyld PRIVATE VARIANT_STATIC=1)
 target_link_libraries(libc_dyld PRIVATE
     AvailabilityHeaders
     clang_bootstrap_headers
-    corecrypto_static
     libc_features
     libc_private_headers
     libplatform_headers
