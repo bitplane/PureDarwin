@@ -37,7 +37,8 @@ target_include_directories(pthread_dyld PRIVATE
     ${pthread_source_dir}
     ${pthread_source_dir}/private
     ${pthread_source_dir}/src
-    ${pthread_source_dir}/src/resolver)
+    ${pthread_source_dir}/src/resolver
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/libsyscall/wrappers/spawn)
 target_compile_definitions(pthread_dyld PRIVATE
     VARIANT_DYLD=1
     VARIANT_STATIC=1
@@ -51,8 +52,8 @@ target_compile_definitions(pthread_dyld PRIVATE
 target_compile_options(pthread_dyld PRIVATE
     -fno-builtin
     -fno-stack-protector
-    -include=mach/thread_policy.h
-    -include=mach/thread_switch.h)
+    "SHELL:-include mach/thread_policy.h"
+    "SHELL:-include mach/thread_switch.h")
 target_link_libraries(pthread_dyld PRIVATE
     AvailabilityHeaders
     clang_bootstrap_headers
