@@ -25,6 +25,7 @@ target_sources(libplatform_dyld PRIVATE
     ${libplatform_source_dir}/src/atomics/x86_64/OSAtomic.s
     ${libplatform_source_dir}/src/atomics/x86_64/pfz.s
     ${libplatform_source_dir}/src/os/lock.c
+    ${libplatform_source_dir}/src/os/semaphore.c
     ${libplatform_source_dir}/src/simple/getenv.c
     ${libplatform_source_dir}/src/simple/string_io.c
     ${libplatform_source_dir}/src/string/generic/bzero.c

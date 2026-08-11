@@ -137,6 +137,7 @@ target_sources(libc_dyld PRIVATE
     ${libc_source_dir}/string/strlcpy.c
     ${libc_source_dir}/string/FreeBSD/strnlen.c
     ${libc_source_dir}/secure/memset_chk.c
+    compat/flsl.c
     ${libc_source_dir}/uuid/uuidsrc/copy.c
     ${libc_source_dir}/x86_64/string/strcpy.s
     ${libc_source_dir}/x86_64/string/strlen.s

@@ -25,6 +25,7 @@ target_include_directories(unwind_dyld PRIVATE
     ${PUREDARWIN_SOURCE_DIR}/tools/cctools/include)
 target_compile_definitions(unwind_dyld PRIVATE
     FOR_DYLD=1
+    _LIBUNWIND_IS_BAREMETAL=1
     _LIBUNWIND_BUILDING_LIBRARY)
 target_compile_options(unwind_dyld PRIVATE -fno-exceptions -fno-rtti -funwind-tables)
 target_link_libraries(unwind_dyld PRIVATE
@@ -65,6 +66,7 @@ target_include_directories(cxxabi_dyld PRIVATE
     ${PUREDARWIN_SOURCE_DIR}/tools/cctools/include)
 target_compile_definitions(cxxabi_dyld PRIVATE
     LIBCXXABI_BUILDING_LIBRARY
+    _LIBCPP_HAS_NO_ALIGNED_ALLOCATION=1
     _LIBCPP_BUILDING_LIBRARY)
 target_link_libraries(cxxabi_dyld PRIVATE
     AvailabilityHeaders
@@ -88,6 +90,7 @@ target_include_directories(cxx_dyld PRIVATE
     ${PUREDARWIN_SOURCE_DIR}/tools/cctools/include)
 target_compile_definitions(cxx_dyld PRIVATE
     _LIBCPP_BUILDING_LIBRARY
+    _LIBCPP_HAS_NO_ALIGNED_ALLOCATION=1
     _LIBCPP_NO_EXCEPTIONS=1)
 target_compile_options(cxx_dyld PRIVATE -fno-rtti)
 target_link_libraries(cxx_dyld PRIVATE
