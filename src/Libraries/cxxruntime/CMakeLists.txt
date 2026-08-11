@@ -19,7 +19,8 @@ target_sources(unwind_dyld PRIVATE
     ${libunwind_source_dir}/UnwindRegistersSave.S)
 target_include_directories(unwind_dyld PRIVATE
     ${PUREDARWIN_LIBUNWIND_SOURCE_DIR}/include
-    ${libunwind_source_dir})
+    ${libunwind_source_dir}
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/dyld/include)
 target_compile_definitions(unwind_dyld PRIVATE _LIBUNWIND_BUILDING_LIBRARY)
 target_compile_options(unwind_dyld PRIVATE -fno-exceptions -fno-rtti -funwind-tables)
 target_link_libraries(unwind_dyld PRIVATE
