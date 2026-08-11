@@ -141,6 +141,39 @@ target_sources(libc_dyld PRIVATE
     ${libc_source_dir}/x86_64/string/strncpy.s
     ${libc_source_dir}/x86_64/string/strnlen.s
     ${libc_source_dir}/sys/_libc_init.c)
+set(libc_dyld_freebsd_sources
+    ${libc_source_dir}/gen/FreeBSD/arc4random.c
+    ${libc_source_dir}/gen/FreeBSD/closedir.c
+    ${libc_source_dir}/gen/FreeBSD/getcwd.c
+    ${libc_source_dir}/gen/FreeBSD/getpagesize.c
+    ${libc_source_dir}/gen/FreeBSD/opendir.c
+    ${libc_source_dir}/gen/FreeBSD/readdir.c
+    ${libc_source_dir}/gen/FreeBSD/scandir.c
+    ${libc_source_dir}/gen/FreeBSD/sysctl.c
+    ${libc_source_dir}/gen/FreeBSD/sysctlbyname.c
+    ${libc_source_dir}/gen/FreeBSD/telldir.c
+    ${libc_source_dir}/gen/FreeBSD/usleep.c
+    ${libc_source_dir}/stdlib/FreeBSD/atexit.c
+    ${libc_source_dir}/stdlib/FreeBSD/exit.c
+    ${libc_source_dir}/stdlib/FreeBSD/heapsort.c
+    ${libc_source_dir}/stdlib/FreeBSD/merge.c
+    ${libc_source_dir}/stdlib/FreeBSD/qsort.c
+    ${libc_source_dir}/stdlib/FreeBSD/reallocf.c
+    ${libc_source_dir}/stdlib/FreeBSD/realpath.c
+    ${libc_source_dir}/string/FreeBSD/strdup.c
+    ${libc_source_dir}/string/FreeBSD/strnlen.c
+    ${libc_source_dir}/string/FreeBSD/strrchr.c
+    ${libc_source_dir}/string/FreeBSD/strstr.c)
+set_source_files_properties(${libc_dyld_freebsd_sources} PROPERTIES
+    COMPILE_OPTIONS "-include;${libc_source_dir}/fbsdcompat/_fbsd_compat_.h")
+set_source_files_properties(
+    ${libc_source_dir}/gen/FreeBSD/closedir.c
+    ${libc_source_dir}/gen/FreeBSD/opendir.c
+    ${libc_source_dir}/gen/FreeBSD/readdir.c
+    ${libc_source_dir}/gen/FreeBSD/scandir.c
+    ${libc_source_dir}/gen/FreeBSD/telldir.c
+    PROPERTIES COMPILE_OPTIONS
+    "-include;${libc_source_dir}/fbsdcompat/_fbsd_compat_.h;-include;${libc_source_dir}/gen/__dirent.h")
 target_include_directories(libc_dyld PRIVATE
     ${libc_source_dir}/fbsdcompat
     ${libc_source_dir}/gen
@@ -167,6 +200,7 @@ target_link_libraries(libc_dyld PRIVATE
     libplatform_headers
     libplatform_private_headers
     libsystem_kernel_private_headers
+    libsystem_kernel_static
     pthread_common_headers
     xnu_headers
     xnu_private_headers)
