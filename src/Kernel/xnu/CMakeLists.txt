@@ -99,6 +99,12 @@ externalproject_add(xnu_headers.extproj
             BUILD_WERROR=0 DO_CTFMERGE=0 KERNEL_CONFIGS=RELEASE
             SRCROOT=${xnu_source_dir} OBJROOT=<BINARY_DIR>
             DSTROOT=${CMAKE_CURRENT_BINARY_DIR}/xnu_header_install
+    COMMAND ${CMAKE_COMMAND} -E create_symlink Versions/B/Headers
+        ${CMAKE_CURRENT_BINARY_DIR}/xnu_header_install/System/Library/Frameworks/System.framework/Headers
+    COMMAND ${CMAKE_COMMAND} -E create_symlink Versions/B/PrivateHeaders
+        ${CMAKE_CURRENT_BINARY_DIR}/xnu_header_install/System/Library/Frameworks/System.framework/PrivateHeaders
+    COMMAND ${CMAKE_COMMAND} -E create_symlink B
+        ${CMAKE_CURRENT_BINARY_DIR}/xnu_header_install/System/Library/Frameworks/System.framework/Versions/Current
     INSTALL_COMMAND true # installed during build
     USES_TERMINAL_CONFIGURE TRUE
     USES_TERMINAL_BUILD TRUE

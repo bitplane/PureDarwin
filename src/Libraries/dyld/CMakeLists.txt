@@ -57,14 +57,17 @@ target_include_directories(dyld_runtime PRIVATE
 target_include_directories(dyld_runtime PRIVATE
     ${PUREDARWIN_SOURCE_DIR}/src/Libraries/libSystem/corecrypto/include
     ${PUREDARWIN_SOURCE_DIR}/tools/cctools/include
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/libsyscall/wrappers/libproc
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/Libm/Source/Intel
     /usr/lib/llvm-14/include/c++/v1)
 target_link_libraries(dyld_runtime PRIVATE
     AvailabilityHeaders
+    CrashReporterClient_headers
     clang_bootstrap_headers
     corecrypto_static
     host_commoncrypto_headers
+    host_commoncrypto_private_headers
     libc_private_headers
     libsystem_kernel_private_headers
     libsystem_kernel_static
