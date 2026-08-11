@@ -222,6 +222,8 @@ target_include_directories(libsystem_kernel_static PRIVATE
     ${libsyscall_source_dir}/wrappers)
 target_include_directories(libsystem_kernel_static PRIVATE
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/dyld/include)
+target_include_directories(libsystem_kernel_static PRIVATE
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/iokit)
 target_include_directories(libsystem_kernel_static PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/internal_include)
 target_include_directories(libsystem_kernel_static PRIVATE ${libsyscall_source_dir}/../osfmk)
 
