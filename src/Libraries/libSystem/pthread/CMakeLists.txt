@@ -91,7 +91,7 @@ target_sources(pthread_runtime PRIVATE
 set_source_files_properties(
     ${pthread_source_dir}/src/variants/pthread_cancelable_cancel.c
     PROPERTIES COMPILE_OPTIONS
-    "-ULIBC_ALIAS_PTHREAD_COND_TIMEDWAIT;-ULIBC_ALIAS_PTHREAD_COND_WAIT;-ULIBC_ALIAS_PTHREAD_JOIN;-ULIBC_ALIAS_SIGWAIT")
+    "-U__DARWIN_NON_CANCELABLE;-D__DARWIN_NON_CANCELABLE=0")
 target_include_directories(pthread_runtime PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR}/private_include
     ${pthread_source_dir}
