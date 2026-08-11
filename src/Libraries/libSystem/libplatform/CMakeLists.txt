@@ -19,6 +19,27 @@ target_include_directories(libplatform_private_headers INTERFACE
     ${libplatform_source_dir}/private/os
 )
 
+add_darwin_static_library(libplatform_dyld)
+target_sources(libplatform_dyld PRIVATE
+    ${libplatform_source_dir}/src/atomics/x86_64/OSAtomic.s
+    ${libplatform_source_dir}/src/simple/getenv.c
+    ${libplatform_source_dir}/src/simple/string_io.c
+    ${libplatform_source_dir}/src/string/generic/bzero.c
+    ${libplatform_source_dir}/src/string/generic/memchr.c
+    ${libplatform_source_dir}/src/string/generic/memcmp.c
+    ${libplatform_source_dir}/src/string/generic/memmove.c
+    ${libplatform_source_dir}/src/string/generic/strchr.c
+    ${libplatform_source_dir}/src/string/generic/strcmp.c
+    ${libplatform_source_dir}/src/string/generic/strncmp.c)
+target_compile_definitions(libplatform_dyld PRIVATE VARIANT_STATIC=1)
+target_include_directories(libplatform_dyld PRIVATE
+    ${libplatform_source_dir}/include
+    ${libplatform_source_dir}/internal
+    ${libplatform_source_dir}/private)
+target_link_libraries(libplatform_dyld PRIVATE
+    libc_private_headers
+    libsystem_kernel_private_headers)
+
 install(
     FILES ${libplatform_source_dir}/include/setjmp.h ${libplatform_source_dir}/include/string_x86.h ${libplatform_source_dir}/include/ucontext.h
     DESTINATION usr/include COMPONENT DeveloperTools
