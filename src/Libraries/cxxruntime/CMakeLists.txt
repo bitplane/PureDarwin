@@ -25,6 +25,7 @@ target_compile_definitions(unwind_dyld PRIVATE _LIBUNWIND_BUILDING_LIBRARY)
 target_compile_options(unwind_dyld PRIVATE -fno-exceptions -fno-rtti -funwind-tables)
 target_link_libraries(unwind_dyld PRIVATE
     AvailabilityHeaders
+    architecture_headers
     clang_bootstrap_headers
     libc_public_headers
     pthread_common_headers
@@ -62,6 +63,7 @@ target_compile_definitions(cxxabi_dyld PRIVATE
 target_compile_options(cxxabi_dyld PRIVATE -fno-rtti)
 target_link_libraries(cxxabi_dyld PRIVATE
     AvailabilityHeaders
+    architecture_headers
     clang_bootstrap_headers
     libc_private_headers
     libc_public_headers
@@ -84,6 +86,7 @@ target_compile_definitions(cxx_dyld PRIVATE
 target_compile_options(cxx_dyld PRIVATE -fno-rtti)
 target_link_libraries(cxx_dyld PRIVATE
     AvailabilityHeaders
+    architecture_headers
     clang_bootstrap_headers
     libc_private_headers
     libc_public_headers
