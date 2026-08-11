@@ -47,7 +47,7 @@ target_compile_definitions(libplatform_dyld PRIVATE
     OS_UNFAIR_LOCK_INLINE=0)
 set_source_files_properties(${libplatform_source_dir}/src/os/lock.c PROPERTIES
     COMPILE_OPTIONS
-    "-I${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/osfmk;-include;${CMAKE_CURRENT_SOURCE_DIR}/dyld_private.h")
+    "-I${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/osfmk/mach;-include;${CMAKE_CURRENT_SOURCE_DIR}/dyld_private.h")
 set_source_files_properties(
     ${libplatform_source_dir}/src/atomics/init.c
     ${libplatform_source_dir}/src/atomics/x86_64/OSAtomic.s
