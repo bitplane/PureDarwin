@@ -62,7 +62,6 @@ target_include_directories(cxxabi_dyld PRIVATE
 target_compile_definitions(cxxabi_dyld PRIVATE
     LIBCXXABI_BUILDING_LIBRARY
     _LIBCPP_BUILDING_LIBRARY)
-target_compile_options(cxxabi_dyld PRIVATE -fno-rtti)
 target_link_libraries(cxxabi_dyld PRIVATE
     AvailabilityHeaders
     architecture_headers
