@@ -32,6 +32,7 @@ target_sources(libmalloc_runtime PRIVATE
     ${libmalloc_source_dir}/src/stack_logging_disk.c
     ${libmalloc_source_dir}/src/magazine_tiny.c)
 target_include_directories(libmalloc_runtime PRIVATE
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/dyld/include
     ${libmalloc_source_dir}/include
     ${libmalloc_source_dir}/private
     ${libmalloc_source_dir}/src
@@ -52,6 +53,7 @@ target_link_libraries(libmalloc_runtime PRIVATE
     libc_private_headers
     libplatform_headers
     libplatform_private_headers
+    libsystem_kernel
     libsystem_kernel_private_headers
     libsystem_private_headers
     pthread_common_headers
