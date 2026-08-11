@@ -55,8 +55,8 @@ target_compile_definitions(pthread_dyld PRIVATE
 target_compile_options(pthread_dyld PRIVATE
     -fno-builtin
     -fno-stack-protector
-    "SHELL:-include mach/thread_policy.h"
-    "SHELL:-include mach/thread_switch.h")
+    "$<$<COMPILE_LANGUAGE:C>:SHELL:-include mach/thread_policy.h>"
+    "$<$<COMPILE_LANGUAGE:C>:SHELL:-include mach/thread_switch.h>")
 target_link_libraries(pthread_dyld PRIVATE
     AvailabilityHeaders
     architecture_headers
