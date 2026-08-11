@@ -57,7 +57,9 @@ target_include_directories(dyld_runtime PRIVATE
 target_include_directories(dyld_runtime PRIVATE
     ${PUREDARWIN_SOURCE_DIR}/src/Libraries/libSystem/corecrypto/include
     ${PUREDARWIN_SOURCE_DIR}/tools/cctools/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/compat
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libplatform/private
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/libsyscall/wrappers/libproc
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/Libm/Source/Intel
     /usr/lib/llvm-14/include/c++/v1)
@@ -77,13 +79,11 @@ target_link_libraries(dyld_runtime PRIVATE
 target_compile_definitions(dyld_runtime PRIVATE
     BUILDING_DYLD=1
     DYLD_IN_PROCESS=1
-    DYLD_VERSION=519.2.2
-    _LIBCPP_NO_EXCEPTIONS=1)
+    DYLD_VERSION=519.2.2)
 target_compile_options(dyld_runtime PRIVATE
     -Os
     -stdlib=libc++
     -fno-builtin
-    -fno-exceptions
     -fno-rtti
     -Wno-four-char-constants
     -Wno-unknown-pragmas)
