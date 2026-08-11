@@ -187,6 +187,7 @@ target_include_directories(libc_dyld PRIVATE
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/dyld/include
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch/src/BlocksRuntime)
 target_compile_definitions(libc_dyld PRIVATE
+    HAVE_STDINT_H=1
     __LIBC__
     __DARWIN_UNIX03=1
     __DARWIN_64_BIT_INO_T=1
