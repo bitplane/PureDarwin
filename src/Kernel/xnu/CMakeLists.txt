@@ -74,6 +74,7 @@ externalproject_add(xnu_headers.extproj
             -D XNU_SRC=${xnu_source_dir}
             -D XNU_EXTERNAL_SOURCE=${xnu_external_source}
             -D XNU_OBJ=<BINARY_DIR>
+            -D PUREDARWIN_TARGET_TRIPLE=${PUREDARWIN_TARGET_TRIPLE}
             -D CODESIGN_ALLOCATE_PATH=$<TARGET_FILE:host_codesign_allocate>
             -D CTFCONVERT_PATH=$<TARGET_FILE:host_ctfconvert>
             -D CTFMERGE_PATH=$<TARGET_FILE:host_ctfmerge>
@@ -140,6 +141,7 @@ externalproject_add(xnu
             -D XNU_SRC=${xnu_source_dir}
             -D XNU_EXTERNAL_SOURCE=${xnu_external_source}
             -D XNU_OBJ=<BINARY_DIR>
+            -D PUREDARWIN_TARGET_TRIPLE=${PUREDARWIN_TARGET_TRIPLE}
             -D CODESIGN_ALLOCATE_PATH=$<TARGET_FILE:host_codesign_allocate>
             -D CTFCONVERT_PATH=$<TARGET_FILE:host_ctfconvert>
             -D CTFMERGE_PATH=$<TARGET_FILE:host_ctfmerge>
