@@ -49,6 +49,7 @@ target_compile_options(libmalloc_runtime PRIVATE
     -Wno-format-extra-args
     -Wno-format-invalid-specifier)
 target_link_libraries(libmalloc_runtime PRIVATE
+    architecture_headers
     AvailabilityHeaders
     clang_bootstrap_headers
     libc_private_headers
