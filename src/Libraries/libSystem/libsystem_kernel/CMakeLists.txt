@@ -225,6 +225,8 @@ target_include_directories(libsystem_kernel_static PRIVATE
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/dyld/include)
 target_include_directories(libsystem_kernel_static PRIVATE
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/iokit)
+target_include_directories(libsystem_kernel_static PRIVATE
+    ${PUREDARWIN_SOURCE_DIR}/tools/cctools/include)
 target_include_directories(libsystem_kernel_static PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/internal_include)
 
 target_compile_options(libsystem_kernel_static PRIVATE -fdollars-in-identifiers -no-cpp-precomp -fno-common -fno-stack-protector -fno-stack-check -momit-leaf-frame-pointer -Wno-nullability-completeness -Wno-implicit-function-declaration)
@@ -232,7 +234,7 @@ target_compile_options(libsystem_kernel_static PRIVATE -fdollars-in-identifiers 
 # We define LIBSYSCALL_INTERFACE to pass to the MIG compiler below. This will indicate we don't want 'internal' versions of the given MIG files.
 target_compile_definitions(libsystem_kernel_static PRIVATE _FORTIFY_SOURCE=0 __DARWIN_VERS_1050=1 NO_SYSCALL_LEGACY SYSCALL_PRE1050 LIBSYSCALL_INTERFACE PRIVATE=1)
 
-target_link_libraries(libsystem_kernel_static PRIVATE xnu_private_headers libsystem_kernel_private_headers libsyscall_traps)
+target_link_libraries(libsystem_kernel_static PRIVATE xnu_private_headers libplatform_headers libsystem_kernel_private_headers libsyscall_traps)
 target_link_libraries(libsystem_kernel_static PUBLIC xnu_headers pthread_common_headers AvailabilityHeaders)
 
 # Public header generation (no source files here due to macro definition issues)
