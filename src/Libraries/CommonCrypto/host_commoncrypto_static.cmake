@@ -1,6 +1,11 @@
 add_library(host_commoncrypto_static STATIC)
 target_include_directories(host_commoncrypto_static PUBLIC include)
-target_include_directories(host_commoncrypto_static PRIVATE include/Private libcn lib)
+target_include_directories(host_commoncrypto_static PRIVATE
+    include/Private
+    libcn
+    lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../libSystem/libdispatch
+)
 
 add_library(host_commoncrypto_headers INTERFACE)
 target_include_directories(host_commoncrypto_headers INTERFACE include)
