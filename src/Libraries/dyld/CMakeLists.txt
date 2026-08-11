@@ -52,7 +52,10 @@ target_include_directories(dyld_runtime PRIVATE
     ${dyld_source_dir}/launch-cache
     ${dyld_source_dir}/src
     ${dyld_source_dir}/dyld3
+    ${dyld_source_dir}/dyld3/closured
     ${dyld_source_dir}/dyld3/shared-cache)
+target_include_directories(dyld_runtime PRIVATE
+    ${PUREDARWIN_SOURCE_DIR}/src/Libraries/libSystem/corecrypto/include)
 target_link_libraries(dyld_runtime PRIVATE
     AvailabilityHeaders
     clang_bootstrap_headers
