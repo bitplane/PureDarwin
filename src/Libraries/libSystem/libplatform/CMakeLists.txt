@@ -35,7 +35,16 @@ target_sources(libplatform_dyld PRIVATE
     ${libplatform_source_dir}/src/string/generic/strchr.c
     ${libplatform_source_dir}/src/string/generic/strcmp.c
     ${libplatform_source_dir}/src/string/generic/strncmp.c)
-target_compile_definitions(libplatform_dyld PRIVATE VARIANT_STATIC=1)
+target_compile_definitions(libplatform_dyld PRIVATE
+    PRIVATE=1
+    _FORTIFY_SOURCE=0
+    VARIANT_DYLD=1
+    VARIANT_NO_RESOLVERS=1
+    VARIANT_STATIC=1
+    OSATOMIC_USE_INLINED=0
+    OSATOMIC_DEPRECATED=0
+    OSSPINLOCK_USE_INLINED=1
+    OS_UNFAIR_LOCK_INLINE=0)
 target_include_directories(libplatform_dyld PRIVATE
     ${libplatform_source_dir}/include
     ${libplatform_source_dir}/internal
