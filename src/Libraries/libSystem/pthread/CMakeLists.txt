@@ -50,7 +50,9 @@ target_compile_definitions(pthread_dyld PRIVATE
     _FORTIFY_SOURCE=0)
 target_compile_options(pthread_dyld PRIVATE
     -fno-builtin
-    -fno-stack-protector)
+    -fno-stack-protector
+    -include mach/thread_policy.h
+    -include mach/thread_switch.h)
 target_link_libraries(pthread_dyld PRIVATE
     AvailabilityHeaders
     clang_bootstrap_headers
