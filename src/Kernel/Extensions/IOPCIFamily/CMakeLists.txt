@@ -19,7 +19,10 @@ target_sources(IOPCIFamily PRIVATE
 
 set_property(TARGET IOPCIFamily PROPERTY CXX_STANDARD 11)
 target_compile_options(IOPCIFamily PRIVATE -Wno-implicit-int-conversion -Wno-inconsistent-missing-override -Wno-sign-conversion -Wno-shadow)
-target_link_libraries(IOPCIFamily PRIVATE IOPCIFamilyHeaders)
+target_link_libraries(IOPCIFamily PRIVATE
+    IOACPIFamilyHeaders
+    IOPCIFamilyHeaders
+)
 install(TARGETS IOPCIFamily DESTINATION System/Library/Extensions COMPONENT BaseSystem)
 
 add_library(IOPCIFamilyHeaders INTERFACE)
