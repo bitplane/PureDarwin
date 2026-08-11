@@ -7,6 +7,9 @@ if(PUREDARWIN_EXTERNAL_SOURCE_ROOT)
     file(MAKE_DIRECTORY ${ioata_include_dir}/IOKit/storage/ata)
     file(COPY ${ioata_source_dir}/IOATAFamilyPriv.h
         DESTINATION ${ioata_include_dir}/IOKit/storage/ata)
+    file(MAKE_DIRECTORY ${ioata_include_dir}/IOKit/ndrvsupport)
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/include/IOMacOSTypes.h
+        DESTINATION ${ioata_include_dir}/IOKit/ndrvsupport)
     set(ioata_info_plist ${ioata_source_dir}/Info-IOATAFamily.plist)
 else()
     set(ioata_source_dir ${CMAKE_CURRENT_SOURCE_DIR})
