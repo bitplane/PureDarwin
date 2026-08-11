@@ -46,7 +46,15 @@ target_compile_definitions(libplatform_dyld PRIVATE
     OSSPINLOCK_DEPRECATED=0
     OS_UNFAIR_LOCK_INLINE=0)
 set_source_files_properties(${libplatform_source_dir}/src/os/lock.c PROPERTIES
-    COMPILE_OPTIONS "-include;${CMAKE_CURRENT_SOURCE_DIR}/dyld_private.h")
+    COMPILE_OPTIONS
+    "-I${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/osfmk;-include;${CMAKE_CURRENT_SOURCE_DIR}/dyld_private.h")
+set_source_files_properties(
+    ${libplatform_source_dir}/src/atomics/init.c
+    ${libplatform_source_dir}/src/atomics/x86_64/OSAtomic.s
+    ${libplatform_source_dir}/src/atomics/x86_64/pfz.s
+    PROPERTIES
+    COMPILE_DEFINITIONS PRIVATE=1
+    COMPILE_OPTIONS "-I${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/osfmk")
 target_include_directories(libplatform_dyld PRIVATE
     ${libplatform_source_dir}/include
     ${libplatform_source_dir}/internal
@@ -59,7 +67,6 @@ target_link_libraries(libplatform_dyld PRIVATE
     libsystem_kernel_private_headers
     pthread_common_headers
     pthread_common_private_headers
-    xnu_kernel_private_headers
     xnu_headers
     xnu_kernel_headers
     xnu_private_headers)
