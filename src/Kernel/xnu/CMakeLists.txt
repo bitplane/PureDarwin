@@ -163,7 +163,7 @@ externalproject_add(xnu
             -D FIREHOSE_KERNEL_LIBRARY_DIR=$<TARGET_FILE_DIR:libfirehose_kernel>
             -D FIREHOSE_KERNEL_HEADER_PATH=$<TARGET_PROPERTY:libfirehose_kernel,INTERFACE_INCLUDE_DIRECTORIES>
             -D PROFILE_RUNTIME_LIBRARY_PATH=${profile_runtime_library_path}
-            -D PTHREAD_HEADER_PATH=$<TARGET_PROPERTY:pthread_common_headers,INTERFACE_INCLUDE_DIRECTORIES>
+            -D PTHREAD_HEADER_PATH=${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libpthread/pthread
             -P ${CMAKE_CURRENT_SOURCE_DIR}/preprocess_files.cmake
     COMMAND
         make -C <SOURCE_DIR> install ${xnu_make_environment}
@@ -174,7 +174,7 @@ externalproject_add(xnu
             PUREDARWIN_FIREHOSE_LIBRARY_DIR=$<TARGET_FILE_DIR:libfirehose_kernel>
             PUREDARWIN_FIREHOSE_INCLUDE=$<TARGET_PROPERTY:libfirehose_kernel,INTERFACE_INCLUDE_DIRECTORIES>
             PUREDARWIN_PROFILE_RUNTIME=${profile_runtime_library_path}
-            PUREDARWIN_PTHREAD_INCLUDE=$<TARGET_PROPERTY:pthread_common_headers,INTERFACE_INCLUDE_DIRECTORIES>
+            PUREDARWIN_PTHREAD_INCLUDE=${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libpthread/pthread
             PUREDARWIN_AVAILABILITY_INCLUDE=$<TARGET_PROPERTY:AvailabilityHeaders,INTERFACE_INCLUDE_DIRECTORIES>
             SRCROOT=${xnu_source_dir} OBJROOT=<BINARY_DIR>
             SYMROOT=${CMAKE_CURRENT_BINARY_DIR}/xnu_sym DSTROOT=${CMAKE_CURRENT_BINARY_DIR}/xnu
