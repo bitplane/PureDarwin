@@ -129,7 +129,6 @@ target_sources(libc_dyld PRIVATE
 target_include_directories(libc_dyld PRIVATE
     ${libc_source_dir}/gen
     ${libc_source_dir}/gen/FreeBSD
-    ${libc_source_dir}/include
     ${libc_source_dir}/locale
     ${libc_source_dir}/stdlib
     ${libc_source_dir}/string
@@ -137,6 +136,7 @@ target_include_directories(libc_dyld PRIVATE
 target_link_libraries(libc_dyld PRIVATE
     AvailabilityHeaders
     clang_bootstrap_headers
+    libc_features
     libc_private_headers
     libsystem_kernel_private_headers
     pthread_common_headers
