@@ -66,13 +66,19 @@ chomp @sources;
 undef $f;
 
 # compiler options
-chomp(my $CC = `xcrun -find cc`);
+my $CC = $ENV{"CC"};
+if (!defined($CC) || $CC eq "") {
+	chomp($CC = `xcrun -find cc`);
+}
 my @CFLAGS = (
 	"-x assembler-with-cpp",
 	"-c",
 );
 
-chomp(my $LIBTOOL = `xcrun -find libtool`);
+my $LIBTOOL = $ENV{"LIBTOOL"};
+if (!defined($LIBTOOL) || $LIBTOOL eq "") {
+	chomp($LIBTOOL = `xcrun -find libtool`);
+}
 my @LIBTOOLFLAGS = (
 	"-static",
 );
@@ -87,7 +93,12 @@ for my $arch (@archs) {
 }
 
 # do each compile
-my $jobs = `sysctl -n hw.ncpu` + 2;
+my $jobs = $ENV{"JOBS"};
+if (!defined($jobs) || $jobs !~ /^\d+$/ || $jobs < 1) {
+	$jobs = `getconf _NPROCESSORS_ONLN 2>/dev/null`;
+	$jobs = `sysctl -n hw.ncpu 2>/dev/null` if $jobs !~ /^\d+$/ || $jobs < 1;
+	$jobs = 1 if $jobs !~ /^\d+$/ || $jobs < 1;
+}
 
 for my $src (@sources) {
 	if ($jobs == 0) {
