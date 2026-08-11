@@ -54,6 +54,7 @@ target_sources(dyld_runtime PRIVATE
     ${closured_protocol_source}
     common_digest.c
     compat/runtime.cpp
+    compat/version.c
     ${dyld_source_dir}/src/dyldStartup.s
     ${dyld_source_dir}/src/dyldInitialization.cpp
     ${dyld_source_dir}/src/dyld.cpp
@@ -133,6 +134,7 @@ target_compile_options(dyld_runtime PRIVATE
     -fno-rtti
     -Wno-four-char-constants
     -Wno-unknown-pragmas)
+target_link_options(dyld_runtime PRIVATE -Wl,-dead_strip)
 target_link_options(dyld_runtime PRIVATE
     -Wl,-dylinker
     -Wl,-dylinker_install_name,/usr/lib/dyld
