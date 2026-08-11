@@ -127,6 +127,7 @@ target_sources(libc_dyld PRIVATE
     ${libc_source_dir}/string/strncpy.c
     ${libc_source_dir}/uuid/uuidsrc/copy.c)
 target_include_directories(libc_dyld PRIVATE
+    ${libc_source_dir}/fbsdcompat
     ${libc_source_dir}/gen
     ${libc_source_dir}/gen/FreeBSD
     ${libc_source_dir}/locale
