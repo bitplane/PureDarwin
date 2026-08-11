@@ -39,6 +39,8 @@ target_include_directories(pthread_dyld PRIVATE
     ${pthread_source_dir}/src
     ${pthread_source_dir}/src/resolver
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/libsyscall/wrappers/spawn)
+target_include_directories(pthread_dyld BEFORE PRIVATE
+    $<TARGET_PROPERTY:xnu_private_headers,INTERFACE_INCLUDE_DIRECTORIES>)
 target_compile_definitions(pthread_dyld PRIVATE
     VARIANT_DYLD=1
     VARIANT_STATIC=1
