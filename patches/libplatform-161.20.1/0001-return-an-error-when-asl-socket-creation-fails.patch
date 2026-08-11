@@ -1,0 +1,13 @@
+diff --git a/src/simple/asl.c b/src/simple/asl.c
+index c5ef86f..4edb8ef 100644
+--- a/src/simple/asl.c
++++ b/src/simple/asl.c
+@@ -131,7 +131,7 @@ static int
+ _simple_asl_connect(const char *log_path)
+ {
+ 	int fd = socket(AF_UNIX, SOCK_DGRAM, 0);
+-	if (fd == -1) return;
++	if (fd == -1) return -1;
+ 
+ 	fcntl(fd, F_SETFD, FD_CLOEXEC);
+ 
