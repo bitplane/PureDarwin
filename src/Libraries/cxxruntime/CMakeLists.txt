@@ -23,7 +23,9 @@ target_include_directories(unwind_dyld PRIVATE
     ${PUREDARWIN_LIBCXX_SOURCE_DIR}/include
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/dyld/include
     ${PUREDARWIN_SOURCE_DIR}/tools/cctools/include)
-target_compile_definitions(unwind_dyld PRIVATE _LIBUNWIND_BUILDING_LIBRARY)
+target_compile_definitions(unwind_dyld PRIVATE
+    FOR_DYLD=1
+    _LIBUNWIND_BUILDING_LIBRARY)
 target_compile_options(unwind_dyld PRIVATE -fno-exceptions -fno-rtti -funwind-tables)
 target_link_libraries(unwind_dyld PRIVATE
     AvailabilityHeaders
@@ -78,8 +80,7 @@ target_link_libraries(cxxabi_dyld PRIVATE
 add_darwin_static_library(cxx_dyld)
 target_sources(cxx_dyld PRIVATE
     ${PUREDARWIN_LIBCXX_SOURCE_DIR}/src/new.cpp
-    ${PUREDARWIN_LIBCXX_SOURCE_DIR}/src/stdexcept.cpp
-    ${PUREDARWIN_LIBCXX_SOURCE_DIR}/src/string.cpp)
+    ${PUREDARWIN_LIBCXX_SOURCE_DIR}/src/stdexcept.cpp)
 target_include_directories(cxx_dyld PRIVATE
     ${PUREDARWIN_LIBCXX_SOURCE_DIR}/include
     ${PUREDARWIN_LIBCXXABI_SOURCE_DIR}/include

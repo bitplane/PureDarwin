@@ -53,6 +53,7 @@ mig(${dyld_source_dir}/dyld3/closured/closuredProtocol.defs
 target_sources(dyld_runtime PRIVATE
     ${closured_protocol_source}
     common_digest.c
+    compat/runtime.cpp
     ${dyld_source_dir}/src/dyldStartup.s
     ${dyld_source_dir}/src/dyldInitialization.cpp
     ${dyld_source_dir}/src/dyld.cpp
@@ -100,6 +101,7 @@ target_include_directories(dyld_runtime PRIVATE
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/Libm/Source/Intel)
 target_link_libraries(dyld_runtime PRIVATE
     AvailabilityHeaders
+    CrashReporterClient
     CrashReporterClient_headers
     clang_bootstrap_headers
     corecrypto_static

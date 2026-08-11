@@ -32,6 +32,7 @@ target_sources(libplatform_dyld PRIVATE
     ${libplatform_source_dir}/src/string/generic/memcmp.c
     ${libplatform_source_dir}/src/string/generic/memmove.c
     ${libplatform_source_dir}/src/string/generic/memset_pattern.c
+    ${libplatform_source_dir}/src/string/generic/flsll.c
     ${libplatform_source_dir}/src/string/generic/strchr.c
     ${libplatform_source_dir}/src/string/generic/strcmp.c
     ${libplatform_source_dir}/src/string/generic/strncmp.c)
