@@ -47,6 +47,7 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/syscalls.a
         ${CMAKE_CURRENT_BINARY_DIR}/sys/stubs.list ${CMAKE_CURRENT_BINARY_DIR}/syscalls.a
         --target=${PUREDARWIN_TARGET_TRIPLE}
         -D__APPLE_API_PRIVATE
+        -I${PUREDARWIN_EXTERNAL_SOURCE_ROOT}
         -I${PUREDARWIN_BINARY_DIR}/src/Kernel/xnu/xnu_header_install/usr/include
         -I${PUREDARWIN_BINARY_DIR}/src/Kernel/xnu/xnu_header_install/System/Library/Frameworks/System.framework/Versions/B/PrivateHeaders
         -I${libsyscall_source_dir}/../EXTERNAL_HEADERS
