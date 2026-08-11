@@ -40,7 +40,9 @@ target_link_libraries(libplatform_dyld PRIVATE
     AvailabilityHeaders
     architecture_headers
     libc_private_headers
-    libsystem_kernel_private_headers)
+    libsystem_kernel_private_headers
+    xnu_headers
+    xnu_private_headers)
 
 install(
     FILES ${libplatform_source_dir}/include/setjmp.h ${libplatform_source_dir}/include/string_x86.h ${libplatform_source_dir}/include/ucontext.h
