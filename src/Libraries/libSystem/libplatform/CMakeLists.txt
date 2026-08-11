@@ -73,6 +73,92 @@ target_link_libraries(libplatform_dyld PRIVATE
     xnu_kernel_headers
     xnu_private_headers)
 
+add_darwin_object_library(libplatform_runtime)
+target_sources(libplatform_runtime PRIVATE
+    ${libplatform_source_dir}/src/init.c
+    ${libplatform_source_dir}/src/force_libplatform_to_build.c
+    ${libplatform_source_dir}/src/atomics/init.c
+    ${libplatform_source_dir}/src/atomics/common/MKGetTimeBaseInfo.c
+    ${libplatform_source_dir}/src/atomics/x86_64/OSAtomic.s
+    ${libplatform_source_dir}/src/atomics/x86_64/pfz.s
+    ${libplatform_source_dir}/src/cachecontrol/generic/cache.c
+    ${libplatform_source_dir}/src/cachecontrol/x86_64/cache.s
+    ${libplatform_source_dir}/src/os/alloc_once.c
+    ${libplatform_source_dir}/src/os/atomic.c
+    ${libplatform_source_dir}/src/os/lock.c
+    ${libplatform_source_dir}/src/os/semaphore.c
+    ${libplatform_source_dir}/src/setjmp/generic/setjmperr.c
+    ${libplatform_source_dir}/src/setjmp/generic/sigtramp.c
+    ${libplatform_source_dir}/src/setjmp/x86_64/_setjmp.s
+    ${libplatform_source_dir}/src/setjmp/x86_64/_sigtramp.s
+    ${libplatform_source_dir}/src/setjmp/x86_64/setjmp.s
+    ${libplatform_source_dir}/src/simple/asl.c
+    ${libplatform_source_dir}/src/simple/getenv.c
+    ${libplatform_source_dir}/src/simple/string_io.c
+    ${libplatform_source_dir}/src/string/generic/bzero.c
+    ${libplatform_source_dir}/src/string/generic/ffsll.c
+    ${libplatform_source_dir}/src/string/generic/flsll.c
+    ${libplatform_source_dir}/src/string/generic/memccpy.c
+    ${libplatform_source_dir}/src/string/generic/memchr.c
+    ${libplatform_source_dir}/src/string/generic/memcmp.c
+    ${libplatform_source_dir}/src/string/generic/memmove.c
+    ${libplatform_source_dir}/src/string/generic/memset_pattern.c
+    ${libplatform_source_dir}/src/string/generic/strchr.c
+    ${libplatform_source_dir}/src/string/generic/strcmp.c
+    ${libplatform_source_dir}/src/string/generic/strncmp.c
+    ${libplatform_source_dir}/src/ucontext/generic/getmcontext.c
+    ${libplatform_source_dir}/src/ucontext/generic/makecontext.c
+    ${libplatform_source_dir}/src/ucontext/generic/setcontext.c
+    ${libplatform_source_dir}/src/ucontext/generic/swapcontext.c
+    ${libplatform_source_dir}/src/ucontext/x86_64/_ctx_start.s
+    ${libplatform_source_dir}/src/ucontext/x86_64/_setcontext.s
+    ${libplatform_source_dir}/src/ucontext/x86_64/getcontext.s)
+target_include_directories(libplatform_runtime PRIVATE
+    ${libplatform_source_dir}/include
+    ${libplatform_source_dir}/internal
+    ${libplatform_source_dir}/private
+    ${libplatform_source_dir}/src/os/resolver)
+target_compile_definitions(libplatform_runtime PRIVATE
+    PRIVATE=1
+    _FORTIFY_SOURCE=0
+    OSATOMIC_USE_INLINED=0
+    OSATOMIC_DEPRECATED=0
+    OSSPINLOCK_USE_INLINED=0
+    OSSPINLOCK_DEPRECATED=0
+    OS_UNFAIR_LOCK_INLINE=0)
+target_compile_options(libplatform_runtime PRIVATE
+    -fdollars-in-identifiers
+    -fno-common
+    -fno-stack-protector
+    -momit-leaf-frame-pointer)
+target_link_libraries(libplatform_runtime PRIVATE
+    AvailabilityHeaders
+    architecture_headers
+    clang_bootstrap_headers
+    libc_private_headers
+    libsystem_kernel_private_headers
+    libsystem_private_headers
+    pthread_common_headers
+    pthread_common_private_headers
+    xnu_headers
+    xnu_kernel_headers
+    xnu_private_headers)
+set_source_files_properties(
+    ${libplatform_source_dir}/src/atomics/init.c
+    ${libplatform_source_dir}/src/atomics/x86_64/OSAtomic.s
+    ${libplatform_source_dir}/src/atomics/x86_64/pfz.s
+    PROPERTIES
+    COMPILE_DEFINITIONS PRIVATE=1
+    COMPILE_OPTIONS "-I${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/osfmk")
+
+add_darwin_circular_library(libsystem_platform
+    INSTALL_NAME /usr/lib/system/libsystem_platform.dylib
+    OBJECT_LIBRARIES libplatform_runtime
+    STRONG_DEPENDENCIES libsystem_kernel)
+target_link_options(libsystem_platform PRIVATE
+    "LINKER:-alias_list,${libplatform_source_dir}/xcodeconfig/libplatform.aliases")
+install(TARGETS libsystem_platform DESTINATION usr/lib/system COMPONENT BaseSystem)
+
 install(
     FILES ${libplatform_source_dir}/include/setjmp.h ${libplatform_source_dir}/include/string_x86.h ${libplatform_source_dir}/include/ucontext.h
     DESTINATION usr/include COMPONENT DeveloperTools
