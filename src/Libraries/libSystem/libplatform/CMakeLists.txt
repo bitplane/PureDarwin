@@ -37,6 +37,8 @@ target_include_directories(libplatform_dyld PRIVATE
     ${libplatform_source_dir}/internal
     ${libplatform_source_dir}/private)
 target_link_libraries(libplatform_dyld PRIVATE
+    AvailabilityHeaders
+    architecture_headers
     libc_private_headers
     libsystem_kernel_private_headers)
 
