@@ -43,10 +43,14 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E env ARCHS="arm64 x86_64"
         SRCROOT=${libc_source_dir}
         DERIVED_FILES_DIR=${CMAKE_CURRENT_BINARY_DIR}
+        ACTION=installhdrs
         PLATFORM_NAME=macosx
         VARIANT_PLATFORM_NAME=macosx
         RC_BRIDGE=NO
         DEPLOYMENT_LOCATION=NO
+        DSTROOT=${libc_headers_dir}
+        PUBLIC_HEADERS_FOLDER_PATH=usr/include
+        PRIVATE_HEADERS_FOLDER_PATH=usr/local/include
         BUILT_PRODUCTS_DIR=${libc_headers_dir}
         SDK_INSTALL_HEADERS_ROOT=""
         sh -c "${libc_scripts_dir}/headers.sh"

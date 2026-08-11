@@ -1,13 +1,23 @@
 # TODO: Build libsystem_platform.dylib here.
 
+if(PUREDARWIN_EXTERNAL_SOURCE_ROOT)
+    set(libplatform_source_dir ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libplatform)
+else()
+    set(libplatform_source_dir ${CMAKE_CURRENT_SOURCE_DIR})
+endif()
+
+if(NOT EXISTS ${libplatform_source_dir}/include/setjmp.h)
+    message(FATAL_ERROR "libplatform source tree not found: ${libplatform_source_dir}")
+endif()
+
 add_library(libplatform_headers INTERFACE)
-target_include_directories(libplatform_headers INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(libplatform_headers INTERFACE ${libplatform_source_dir}/include)
 
 add_library(libplatform_private_headers INTERFACE)
-target_include_directories(libplatform_headers INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/private)
+target_include_directories(libplatform_private_headers INTERFACE ${libplatform_source_dir}/private)
 
 install(
-    FILES include/setjmp.h include/string_x86.h include/ucontext.h
+    FILES ${libplatform_source_dir}/include/setjmp.h ${libplatform_source_dir}/include/string_x86.h ${libplatform_source_dir}/include/ucontext.h
     DESTINATION usr/include COMPONENT DeveloperTools
 )
 
