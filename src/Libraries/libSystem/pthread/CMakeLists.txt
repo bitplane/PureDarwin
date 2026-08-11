@@ -148,8 +148,9 @@ add_darwin_circular_library(libsystem_pthread
     INSTALL_NAME /usr/lib/system/libsystem_pthread.dylib
     OBJECT_LIBRARIES pthread_runtime
     SIBLINGS libsystem_platform
-    STRONG_DEPENDENCIES libsystem_kernel)
+    STRONG_DEPENDENCIES libsystem_kernel
+    LINK_OPTIONS "LINKER:-umbrella,System")
 target_link_options(libsystem_pthread PRIVATE
     "LINKER:-alias_list,${pthread_source_dir}/xcodescripts/pthread.aliases"
-    "LINKER:-umbrella,System")
+)
 install(TARGETS libsystem_pthread DESTINATION usr/lib/system COMPONENT BaseSystem)

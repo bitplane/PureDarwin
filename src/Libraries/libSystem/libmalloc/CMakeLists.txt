@@ -72,7 +72,8 @@ add_darwin_circular_library(libsystem_malloc
     INSTALL_NAME /usr/lib/system/libsystem_malloc.dylib
     OBJECT_LIBRARIES libmalloc_runtime
     SIBLINGS libsystem_platform libsystem_pthread
-    STRONG_DEPENDENCIES libsystem_kernel)
+    STRONG_DEPENDENCIES libsystem_kernel
+    LINK_OPTIONS "LINKER:-umbrella,System")
 target_link_options(libsystem_malloc PRIVATE
     "LINKER:-umbrella,System"
     "LINKER:-interposable_list,${libmalloc_source_dir}/xcodeconfig/interposable.list")
