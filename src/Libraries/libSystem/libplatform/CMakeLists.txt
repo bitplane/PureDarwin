@@ -21,13 +21,17 @@ target_include_directories(libplatform_private_headers INTERFACE
 
 add_darwin_static_library(libplatform_dyld)
 target_sources(libplatform_dyld PRIVATE
+    ${libplatform_source_dir}/src/atomics/init.c
     ${libplatform_source_dir}/src/atomics/x86_64/OSAtomic.s
+    ${libplatform_source_dir}/src/atomics/x86_64/pfz.s
+    ${libplatform_source_dir}/src/os/lock.c
     ${libplatform_source_dir}/src/simple/getenv.c
     ${libplatform_source_dir}/src/simple/string_io.c
     ${libplatform_source_dir}/src/string/generic/bzero.c
     ${libplatform_source_dir}/src/string/generic/memchr.c
     ${libplatform_source_dir}/src/string/generic/memcmp.c
     ${libplatform_source_dir}/src/string/generic/memmove.c
+    ${libplatform_source_dir}/src/string/generic/memset_pattern.c
     ${libplatform_source_dir}/src/string/generic/strchr.c
     ${libplatform_source_dir}/src/string/generic/strcmp.c
     ${libplatform_source_dir}/src/string/generic/strncmp.c)
