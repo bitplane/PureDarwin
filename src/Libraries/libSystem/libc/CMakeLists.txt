@@ -18,7 +18,7 @@ endif()
 add_custom_command(
     OUTPUT
         ${CMAKE_CURRENT_BINARY_DIR}/include/libc-features.h
-    COMMAND ${CMAKE_COMMAND} -E env ARCHS="x86_64 arm64" SRCROOT=${libc_source_dir} DERIVED_FILES_DIR=${CMAKE_CURRENT_BINARY_DIR}/include VARIANT_PLATFORM_NAME=macosx perl ${libc_scripts_dir}/generate_features.pl
+    COMMAND ${CMAKE_COMMAND} -E env ARCHS="x86_64 arm64" SRCROOT=${libc_source_dir} DERIVED_FILES_DIR=${CMAKE_CURRENT_BINARY_DIR}/include PLATFORM_NAME=macosx VARIANT_PLATFORM_NAME=macosx RC_BRIDGE=NO perl ${libc_scripts_dir}/generate_features.pl
     COMMENT "Generating libc-features.h"
 )
 
@@ -43,7 +43,9 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E env ARCHS="arm64 x86_64"
         SRCROOT=${libc_source_dir}
         DERIVED_FILES_DIR=${CMAKE_CURRENT_BINARY_DIR}
+        PLATFORM_NAME=macosx
         VARIANT_PLATFORM_NAME=macosx
+        RC_BRIDGE=NO
         DEPLOYMENT_LOCATION=NO
         BUILT_PRODUCTS_DIR=${libc_headers_dir}
         SDK_INSTALL_HEADERS_ROOT=""
