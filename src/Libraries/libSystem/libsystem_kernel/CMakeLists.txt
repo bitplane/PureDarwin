@@ -36,6 +36,7 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/syscalls.a
         CC=${CMAKE_C_COMPILER} LIBTOOL=$<TARGET_FILE:host_libtool>
         ${CMAKE_CURRENT_SOURCE_DIR}/scripts/compile-syscalls.pl
         ${CMAKE_CURRENT_BINARY_DIR}/sys/stubs.list ${CMAKE_CURRENT_BINARY_DIR}/syscalls.a
+        -D__APPLE_API_PRIVATE
         -I${PUREDARWIN_BINARY_DIR}/src/Kernel/xnu/xnu_header_install/usr/include
         -I${PUREDARWIN_BINARY_DIR}/src/Kernel/xnu/xnu_header_install/System/Library/Frameworks/System.framework/Versions/B/PrivateHeaders
         -I${PUREDARWIN_SOURCE_DIR}/src/Kernel/xnu/EXTERNAL_HEADERS
@@ -209,6 +210,7 @@ target_link_libraries(libsystem_kernel_static PUBLIC architecture_headers)
 target_include_directories(libsystem_kernel_static PUBLIC include ${CMAKE_CURRENT_BINARY_DIR}/public_include)
 target_include_directories(libsystem_kernel_static PRIVATE mach mach/mach mach/servers custom wrappers)
 target_include_directories(libsystem_kernel_static PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/internal_include)
+target_include_directories(libsystem_kernel_static PRIVATE ${PUREDARWIN_SOURCE_DIR}/src/Kernel/xnu/osfmk)
 
 target_compile_options(libsystem_kernel_static PRIVATE -fdollars-in-identifiers -no-cpp-precomp -fno-common -fno-stack-protector -fno-stack-check -momit-leaf-frame-pointer -Wno-nullability-completeness -Wno-implicit-function-declaration)
 
