@@ -3,6 +3,9 @@ set(dyld_source_dir ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/dyld)
 if(NOT EXISTS ${dyld_source_dir}/src/dyld.cpp)
     message(FATAL_ERROR "dyld source tree not found: ${dyld_source_dir}")
 endif()
+if(NOT EXISTS ${PUREDARWIN_LIBCXX_SOURCE_DIR}/include/vector)
+    message(FATAL_ERROR "libc++ source tree not found: ${PUREDARWIN_LIBCXX_SOURCE_DIR}")
+endif()
 
 add_darwin_executable(dyld_runtime NO_STANDARD_LIBRARIES)
 set_target_properties(dyld_runtime PROPERTIES
@@ -62,7 +65,7 @@ target_include_directories(dyld_runtime PRIVATE
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libplatform/private
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/libsyscall/wrappers/libproc
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/Libm/Source/Intel
-    /usr/lib/llvm-14/include/c++/v1)
+    ${PUREDARWIN_LIBCXX_SOURCE_DIR}/include)
 target_link_libraries(dyld_runtime PRIVATE
     AvailabilityHeaders
     CrashReporterClient_headers
