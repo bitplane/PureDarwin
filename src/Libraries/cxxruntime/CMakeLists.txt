@@ -23,8 +23,10 @@ target_include_directories(unwind_dyld PRIVATE
 target_compile_definitions(unwind_dyld PRIVATE _LIBUNWIND_BUILDING_LIBRARY)
 target_compile_options(unwind_dyld PRIVATE -fno-exceptions -fno-rtti -funwind-tables)
 target_link_libraries(unwind_dyld PRIVATE
+    AvailabilityHeaders
     clang_bootstrap_headers
     libc_public_headers
+    pthread_common_headers
     xnu_headers)
 
 set(libcxxabi_source_dir ${PUREDARWIN_LIBCXXABI_SOURCE_DIR}/src)
@@ -58,10 +60,12 @@ target_compile_definitions(cxxabi_dyld PRIVATE
     _LIBCPP_BUILDING_LIBRARY)
 target_compile_options(cxxabi_dyld PRIVATE -fno-rtti)
 target_link_libraries(cxxabi_dyld PRIVATE
+    AvailabilityHeaders
     clang_bootstrap_headers
     libc_private_headers
     libc_public_headers
     libsystem_kernel_private_headers
+    pthread_common_headers
     unwind_dyld
     xnu_headers)
 
@@ -78,9 +82,11 @@ target_compile_definitions(cxx_dyld PRIVATE
     _LIBCPP_NO_EXCEPTIONS=1)
 target_compile_options(cxx_dyld PRIVATE -fno-rtti)
 target_link_libraries(cxx_dyld PRIVATE
+    AvailabilityHeaders
     clang_bootstrap_headers
     libc_private_headers
     libc_public_headers
     libsystem_kernel_private_headers
+    pthread_common_headers
     cxxabi_dyld
     xnu_headers)
