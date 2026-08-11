@@ -5,10 +5,12 @@ if(PUREDARWIN_EXTERNAL_SOURCE_ROOT)
     file(MAKE_DIRECTORY ${iostorage_include_dir}/IOKit/storage)
     file(COPY ${iostorage_headers} DESTINATION ${iostorage_include_dir}/IOKit/storage)
     set(iostorage_info_plist ${iostorage_source_dir}/Info.plist)
+    set(iostorage_cxx_standard 14)
 else()
     set(iostorage_source_dir ${CMAKE_CURRENT_SOURCE_DIR})
     set(iostorage_include_dir ${CMAKE_CURRENT_SOURCE_DIR}/include)
     set(iostorage_info_plist Info.plist)
+    set(iostorage_cxx_standard 17)
 endif()
 
 add_kext_bundle(IOStorageFamily INFO_PLIST ${iostorage_info_plist} KERNEL_PRIVATE
@@ -29,7 +31,7 @@ target_sources(IOStorageFamily PRIVATE
 )
 target_include_directories(IOStorageFamily PRIVATE ${iostorage_include_dir})
 target_compile_options(IOStorageFamily PRIVATE -Wno-implicit-int-conversion -Wno-sign-conversion -Wno-deprecated-declarations)
-set_property(TARGET IOStorageFamily PROPERTY CXX_STANDARD 17)
+set_property(TARGET IOStorageFamily PROPERTY CXX_STANDARD ${iostorage_cxx_standard})
 install(TARGETS IOStorageFamily DESTINATION System/Library/Extensions COMPONENT BaseSystem)
 
 # FIXME: Re-enable these when we have our own tools for handling image resource files.
