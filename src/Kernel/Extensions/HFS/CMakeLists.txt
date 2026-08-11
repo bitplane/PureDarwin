@@ -56,7 +56,9 @@ target_sources(HFS PRIVATE
 target_include_directories(HFS PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${hfs_core_dir})
-target_link_libraries(HFS PRIVATE IOStorageFamilyHeaders)
+target_link_libraries(HFS PRIVATE
+    IOStorageFamilyHeaders
+    corecrypto_headers)
 target_compile_options(HFS PRIVATE
     -include ${hfs_core_dir}/kext-config.h
     -Wno-implicit-int-conversion

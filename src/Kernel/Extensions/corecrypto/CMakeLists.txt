@@ -31,6 +31,8 @@ target_sources(corecrypto.kext PRIVATE
     kext/cc_kext_main.c
 )
 
-target_include_directories(corecrypto.kext PRIVATE include)
+add_library(corecrypto_headers INTERFACE)
+target_include_directories(corecrypto_headers INTERFACE include)
+target_link_libraries(corecrypto.kext PRIVATE corecrypto_headers)
 target_link_libraries(corecrypto.kext PRIVATE xnu_kernel_private_headers)
 set_property(TARGET corecrypto.kext PROPERTY CXX_STANDARD 11)
