@@ -182,7 +182,8 @@ target_include_directories(libc_dyld PRIVATE
     ${libc_source_dir}/stdlib
     ${libc_source_dir}/string
     ${libc_source_dir}/uuid/uuidsrc
-    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/dyld/include)
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/dyld/include
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch/src/BlocksRuntime)
 target_compile_definitions(libc_dyld PRIVATE
     __LIBC__
     __DARWIN_UNIX03=1
