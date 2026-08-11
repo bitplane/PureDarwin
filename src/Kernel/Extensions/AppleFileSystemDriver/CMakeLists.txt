@@ -10,7 +10,8 @@ target_sources(AppleFileSystemDriver PRIVATE
 target_include_directories(AppleFileSystemDriver PRIVATE ${applefs_source_dir})
 target_link_libraries(AppleFileSystemDriver PRIVATE
     HFSHeaders
-    IOStorageFamilyHeaders)
+    IOStorageFamilyHeaders
+    libc_kernel_headers)
 target_compile_options(AppleFileSystemDriver PRIVATE
     -Wno-implicit-int-conversion
     -Wno-sign-conversion)
