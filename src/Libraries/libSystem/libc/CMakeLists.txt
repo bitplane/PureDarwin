@@ -108,10 +108,7 @@ target_include_directories(libc_kernel_headers INTERFACE ${libc_headers_dir}/Sys
 add_darwin_static_library(libc_dyld)
 target_sources(libc_dyld PRIVATE
     ${libc_source_dir}/gen/FreeBSD/arc4random.c
-    ${libc_source_dir}/gen/FreeBSD/closedir.c
     ${libc_source_dir}/gen/FreeBSD/getcwd.c
-    ${libc_source_dir}/gen/FreeBSD/opendir.c
-    ${libc_source_dir}/gen/FreeBSD/readdir.c
     ${libc_source_dir}/gen/FreeBSD/sysctlbyname.c
     ${libc_source_dir}/secure/memset_chk.c
     ${libc_source_dir}/stdlib/FreeBSD/qsort.c
@@ -139,6 +136,7 @@ target_link_libraries(libc_dyld PRIVATE
     clang_bootstrap_headers
     libc_features
     libc_private_headers
+    libplatform_headers
     libsystem_kernel_private_headers
     pthread_common_headers
     xnu_headers
