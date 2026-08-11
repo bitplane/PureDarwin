@@ -57,7 +57,8 @@ target_include_directories(dyld_runtime PRIVATE
 target_include_directories(dyld_runtime PRIVATE
     ${PUREDARWIN_SOURCE_DIR}/src/Libraries/libSystem/corecrypto/include
     ${PUREDARWIN_SOURCE_DIR}/tools/cctools/include
-    /usr/include/c++/v1)
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/libsyscall/wrappers/libproc
+    /usr/lib/llvm-14/include/c++/v1)
 target_link_libraries(dyld_runtime PRIVATE
     AvailabilityHeaders
     clang_bootstrap_headers
@@ -75,6 +76,7 @@ target_compile_definitions(dyld_runtime PRIVATE
     _LIBCPP_NO_EXCEPTIONS=1)
 target_compile_options(dyld_runtime PRIVATE
     -Os
+    -stdlib=libc++
     -fno-builtin
     -fno-exceptions
     -fno-rtti
