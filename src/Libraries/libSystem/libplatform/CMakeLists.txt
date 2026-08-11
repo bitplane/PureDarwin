@@ -36,7 +36,6 @@ target_sources(libplatform_dyld PRIVATE
     ${libplatform_source_dir}/src/string/generic/strcmp.c
     ${libplatform_source_dir}/src/string/generic/strncmp.c)
 target_compile_definitions(libplatform_dyld PRIVATE
-    PRIVATE=1
     _FORTIFY_SOURCE=0
     VARIANT_DYLD=1
     VARIANT_NO_RESOLVERS=1
@@ -46,6 +45,8 @@ target_compile_definitions(libplatform_dyld PRIVATE
     OSSPINLOCK_USE_INLINED=0
     OSSPINLOCK_DEPRECATED=0
     OS_UNFAIR_LOCK_INLINE=0)
+set_source_files_properties(${libplatform_source_dir}/src/os/lock.c PROPERTIES
+    COMPILE_OPTIONS "-include;${CMAKE_CURRENT_SOURCE_DIR}/dyld_private.h")
 target_include_directories(libplatform_dyld PRIVATE
     ${libplatform_source_dir}/include
     ${libplatform_source_dir}/internal
