@@ -54,8 +54,13 @@ function(add_kext_bundle name)
 
     file(READ ${SL_INFO_PLIST} kext_info_plist)
     string(REPLACE "\${EXECUTABLE_NAME}" "${SL_BUNDLE_NAME}" kext_info_plist "${kext_info_plist}")
+    string(REPLACE "$(EXECUTABLE_NAME)" "${SL_BUNDLE_NAME}" kext_info_plist "${kext_info_plist}")
     string(REPLACE "\${PRODUCT_NAME}" "${SL_BUNDLE_NAME}" kext_info_plist "${kext_info_plist}")
+    string(REPLACE "$(PRODUCT_NAME)" "${SL_BUNDLE_NAME}" kext_info_plist "${kext_info_plist}")
+    string(REPLACE "\${MODULE_NAME}" "${SL_BUNDLE_IDENTIFIER}" kext_info_plist "${kext_info_plist}")
+    string(REPLACE "$(MODULE_NAME)" "${SL_BUNDLE_IDENTIFIER}" kext_info_plist "${kext_info_plist}")
     string(REPLACE "$(PRODUCT_BUNDLE_IDENTIFIER)" "${SL_BUNDLE_IDENTIFIER}" kext_info_plist "${kext_info_plist}")
+    string(REPLACE "HFS_KEXT_VERSION" "${SL_BUNDLE_VERSION}" kext_info_plist "${kext_info_plist}")
     set(kext_info_plist_path ${CMAKE_CURRENT_BINARY_DIR}/${SL_BUNDLE_NAME}-Info.plist)
     file(WRITE ${kext_info_plist_path} "${kext_info_plist}")
 
