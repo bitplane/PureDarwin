@@ -19,6 +19,25 @@ string(REPLACE "${dyld_stale_image_pair}" ""
     dyld_image_loader_contents "${dyld_image_loader_contents}")
 file(WRITE ${dyld_image_loader_source} "${dyld_image_loader_contents}")
 
+set(dyld_sdk_root ${CMAKE_CURRENT_BINARY_DIR}/sdk)
+set(dyld_generated_include ${CMAKE_CURRENT_BINARY_DIR}/include)
+file(MAKE_DIRECTORY
+    ${dyld_sdk_root}/usr/local/libexec
+    ${dyld_generated_include}/mach-o)
+configure_file(
+    ${PUREDARWIN_SOURCE_DIR}/src/Libraries/AvailabilityVersions/availability.pl
+    ${dyld_sdk_root}/usr/local/libexec/availability.pl
+    COPYONLY)
+execute_process(
+    COMMAND ${CMAKE_COMMAND} -E env SDKROOT=${dyld_sdk_root}
+        perl ${dyld_source_dir}/bin/expand.pl
+    INPUT_FILE ${dyld_source_dir}/include/mach-o/dyld_priv.h
+    OUTPUT_FILE ${dyld_generated_include}/mach-o/dyld_priv.h
+    RESULT_VARIABLE dyld_expand_result)
+if(NOT dyld_expand_result EQUAL 0)
+    message(FATAL_ERROR "failed to generate dyld_priv.h")
+endif()
+
 add_darwin_executable(dyld_runtime NO_STANDARD_LIBRARIES)
 set_target_properties(dyld_runtime PROPERTIES
     OUTPUT_NAME dyld
@@ -63,12 +82,13 @@ set_source_files_properties(${closured_protocol_source}
 
 target_include_directories(dyld_runtime PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${dyld_generated_include}
     ${dyld_source_dir}/include
+    ${dyld_source_dir}/dyld3/shared-cache
     ${dyld_source_dir}/launch-cache
     ${dyld_source_dir}/src
     ${dyld_source_dir}/dyld3
-    ${dyld_source_dir}/dyld3/closured
-    ${dyld_source_dir}/dyld3/shared-cache)
+    ${dyld_source_dir}/dyld3/closured)
 target_include_directories(dyld_runtime PRIVATE
     ${PUREDARWIN_SOURCE_DIR}/src/Libraries/libSystem/corecrypto/include
     ${PUREDARWIN_SOURCE_DIR}/tools/cctools/include
