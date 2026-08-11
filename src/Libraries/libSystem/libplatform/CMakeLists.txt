@@ -47,6 +47,7 @@ target_link_libraries(libplatform_dyld PRIVATE
     libc_private_headers
     libsystem_kernel_private_headers
     pthread_common_headers
+    pthread_common_private_headers
     xnu_headers
     xnu_kernel_headers
     xnu_private_headers)

@@ -11,4 +11,5 @@ target_include_directories(pthread_common_headers INTERFACE
 
 add_library(pthread_common_private_headers INTERFACE)
 target_include_directories(pthread_common_private_headers INTERFACE
-    ${pthread_source_dir}/private)
+    ${pthread_source_dir}/private
+    ${pthread_source_dir}/src/resolver)
