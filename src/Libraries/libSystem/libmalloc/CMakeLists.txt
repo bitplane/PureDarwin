@@ -13,3 +13,58 @@ if(NOT EXISTS ${libmalloc_source_dir}/include/malloc/malloc.h)
 endif()
 
 target_include_directories(libmalloc_headers INTERFACE ${libmalloc_source_dir}/include)
+
+add_darwin_object_library(libmalloc_runtime)
+target_sources(libmalloc_runtime PRIVATE
+    ${libmalloc_source_dir}/src/radix_tree.c
+    ${libmalloc_source_dir}/src/bitarray.c
+    ${libmalloc_source_dir}/src/purgeable_malloc.c
+    ${libmalloc_source_dir}/src/magazine_large.c
+    ${libmalloc_source_dir}/src/magazine_malloc.c
+    ${libmalloc_source_dir}/src/magazine_small.c
+    ${libmalloc_source_dir}/src/magazine_rack.c
+    ${libmalloc_source_dir}/src/legacy_malloc.c
+    ${libmalloc_source_dir}/src/vm.c
+    ${libmalloc_source_dir}/src/magazine_lite.c
+    ${libmalloc_source_dir}/src/malloc.c
+    ${libmalloc_source_dir}/src/frozen_malloc.c
+    ${libmalloc_source_dir}/src/nano_malloc.c
+    ${libmalloc_source_dir}/src/stack_logging_disk.c
+    ${libmalloc_source_dir}/src/magazine_tiny.c)
+target_include_directories(libmalloc_runtime PRIVATE
+    ${libmalloc_source_dir}/include
+    ${libmalloc_source_dir}/private
+    ${libmalloc_source_dir}/src
+    ${libmalloc_source_dir}/resolver)
+target_compile_definitions(libmalloc_runtime PRIVATE
+    PRIVATE=1
+    NDEBUG
+    _FORTIFY_SOURCE=0
+    OSATOMIC_USE_INLINED=1
+    OS_UNFAIR_LOCK_INLINE=1)
+target_compile_options(libmalloc_runtime PRIVATE
+    -momit-leaf-frame-pointer
+    -Wno-format-extra-args
+    -Wno-format-invalid-specifier)
+target_link_libraries(libmalloc_runtime PRIVATE
+    AvailabilityHeaders
+    clang_bootstrap_headers
+    libc_private_headers
+    libplatform_headers
+    libplatform_private_headers
+    libsystem_kernel_private_headers
+    libsystem_private_headers
+    pthread_common_headers
+    pthread_common_private_headers
+    xnu_headers
+    xnu_private_headers)
+
+add_darwin_circular_library(libsystem_malloc
+    INSTALL_NAME /usr/lib/system/libsystem_malloc.dylib
+    OBJECT_LIBRARIES libmalloc_runtime
+    SIBLINGS libsystem_platform libsystem_pthread
+    STRONG_DEPENDENCIES libsystem_kernel)
+target_link_options(libsystem_malloc PRIVATE
+    "LINKER:-umbrella,System"
+    "LINKER:-interposable_list,${libmalloc_source_dir}/xcodeconfig/interposable.list")
+install(TARGETS libsystem_malloc DESTINATION usr/lib/system COMPONENT BaseSystem)
