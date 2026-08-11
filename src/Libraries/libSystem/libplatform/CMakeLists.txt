@@ -39,6 +39,7 @@ target_include_directories(libplatform_dyld PRIVATE
 target_link_libraries(libplatform_dyld PRIVATE
     AvailabilityHeaders
     architecture_headers
+    clang_bootstrap_headers
     libc_private_headers
     libsystem_kernel_private_headers
     pthread_common_headers
