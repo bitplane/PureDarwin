@@ -64,8 +64,8 @@ target_include_directories(dyld_runtime PRIVATE
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libplatform/private
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/libsyscall/wrappers/libproc
-    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/Libm/Source/Intel
-    ${PUREDARWIN_LIBCXX_SOURCE_DIR}/include)
+    ${PUREDARWIN_LIBCXX_SOURCE_DIR}/include
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/Libm/Source/Intel)
 target_link_libraries(dyld_runtime PRIVATE
     AvailabilityHeaders
     CrashReporterClient_headers
