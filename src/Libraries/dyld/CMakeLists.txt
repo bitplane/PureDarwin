@@ -19,6 +19,7 @@ mig(${dyld_source_dir}/dyld3/closured/closuredProtocol.defs
 
 target_sources(dyld_runtime PRIVATE
     ${closured_protocol_source}
+    common_digest.c
     ${dyld_source_dir}/src/dyldStartup.s
     ${dyld_source_dir}/src/dyldInitialization.cpp
     ${dyld_source_dir}/src/dyld.cpp
@@ -55,7 +56,8 @@ target_include_directories(dyld_runtime PRIVATE
 target_link_libraries(dyld_runtime PRIVATE
     AvailabilityHeaders
     clang_bootstrap_headers
-    commoncrypto_static
+    corecrypto_static
+    host_commoncrypto_headers
     libc_private_headers
     libsystem_kernel_private_headers
     libsystem_kernel_static
