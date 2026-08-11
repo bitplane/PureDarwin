@@ -88,6 +88,10 @@ target_sources(pthread_runtime PRIVATE
     ${pthread_source_dir}/src/pthread_atfork.c
     ${pthread_source_dir}/src/pthread_asm.s
     ${pthread_source_dir}/src/variants/pthread_cancelable_cancel.c)
+set_source_files_properties(
+    ${pthread_source_dir}/src/variants/pthread_cancelable_cancel.c
+    PROPERTIES COMPILE_OPTIONS
+    "-ULIBC_ALIAS_PTHREAD_COND_TIMEDWAIT;-ULIBC_ALIAS_PTHREAD_COND_WAIT;-ULIBC_ALIAS_PTHREAD_JOIN;-ULIBC_ALIAS_SIGWAIT")
 target_include_directories(pthread_runtime PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR}/private_include
     ${pthread_source_dir}
