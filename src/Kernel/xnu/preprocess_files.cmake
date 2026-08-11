@@ -6,10 +6,6 @@ if(XNU_EXTERNAL_SOURCE)
 
     file(READ ${XNU_SRC}/makedefs/MakeInc.def make_inc_def)
     string(REPLACE
-        "ARCH_FLAGS_X86_64\t  = -arch x86_64"
-        "ARCH_FLAGS_X86_64\t  = -target ${PUREDARWIN_TARGET_TRIPLE}"
-        make_inc_def "${make_inc_def}")
-    string(REPLACE
         "LD\t= $(KC++) -nostdlib"
         "LD\t= $(KC++) -nostdlib -fuse-ld=${LD_PATH}"
         make_inc_def "${make_inc_def}")
