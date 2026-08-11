@@ -2,11 +2,13 @@
 
 if(PUREDARWIN_EXTERNAL_SOURCE_ROOT)
     set(libc_source_dir ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libc)
+    set(libc_scripts_dir ${libc_source_dir}/xcodescripts)
 else()
     set(libc_source_dir ${CMAKE_CURRENT_SOURCE_DIR})
+    set(libc_scripts_dir ${libc_source_dir}/scripts)
 endif()
 
-if(NOT EXISTS ${libc_source_dir}/scripts/headers.sh)
+if(NOT EXISTS ${libc_scripts_dir}/headers.sh)
     message(FATAL_ERROR "Libc source tree not found: ${libc_source_dir}")
 endif()
 
@@ -16,7 +18,7 @@ endif()
 add_custom_command(
     OUTPUT
         ${CMAKE_CURRENT_BINARY_DIR}/include/libc-features.h
-    COMMAND ${CMAKE_COMMAND} -E env ARCHS="x86_64 arm64" SRCROOT=${libc_source_dir} DERIVED_FILES_DIR=${CMAKE_CURRENT_BINARY_DIR}/include VARIANT_PLATFORM_NAME=macosx perl ${libc_source_dir}/scripts/generate_features.pl
+    COMMAND ${CMAKE_COMMAND} -E env ARCHS="x86_64 arm64" SRCROOT=${libc_source_dir} DERIVED_FILES_DIR=${CMAKE_CURRENT_BINARY_DIR}/include VARIANT_PLATFORM_NAME=macosx perl ${libc_scripts_dir}/generate_features.pl
     COMMENT "Generating libc-features.h"
 )
 
@@ -45,7 +47,7 @@ add_custom_command(
         DEPLOYMENT_LOCATION=NO
         BUILT_PRODUCTS_DIR=${libc_headers_dir}
         SDK_INSTALL_HEADERS_ROOT=""
-        sh -c "${libc_source_dir}/scripts/headers.sh"
+        sh -c "${libc_scripts_dir}/headers.sh"
     COMMAND ${CMAKE_COMMAND} -E touch ${libc_headers_dir}/libc_headers.stamp
     COMMENT "Copying libC headers..."
 )
