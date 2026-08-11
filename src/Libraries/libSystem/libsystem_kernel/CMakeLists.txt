@@ -66,6 +66,7 @@ set_property(TARGET libsyscall_traps PROPERTY IMPORTED_LOCATION ${CMAKE_CURRENT_
 
 add_library(libsystem_kernel_private_headers INTERFACE)
 target_include_directories(libsystem_kernel_private_headers INTERFACE
+    ${libsyscall_source_dir}
     ${libsyscall_source_dir}/mach
     ${libsyscall_source_dir}/wrappers)
 
