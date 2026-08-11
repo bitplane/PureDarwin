@@ -103,6 +103,8 @@ target_link_libraries(dyld_runtime PRIVATE
     CrashReporterClient_headers
     clang_bootstrap_headers
     corecrypto_static
+    cxx_dyld
+    cxxabi_dyld
     host_commoncrypto_headers
     host_commoncrypto_private_headers
     libc_dyld
@@ -112,11 +114,13 @@ target_link_libraries(dyld_runtime PRIVATE
     libplatform_dyld
     libplatform_headers
     pthread_common_private_headers
+    unwind_dyld
     xnu_private_headers)
 target_compile_definitions(dyld_runtime PRIVATE
     BUILDING_DYLD=1
     DYLD_IN_PROCESS=1
-    DYLD_VERSION=519.2.2)
+    DYLD_VERSION=519.2.2
+    _LIBCPP_NO_EXCEPTIONS=1)
 target_compile_options(dyld_runtime PRIVATE
     -Os
     -stdlib=libc++
