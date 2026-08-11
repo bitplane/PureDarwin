@@ -108,21 +108,39 @@ target_include_directories(libc_kernel_headers INTERFACE ${libc_headers_dir}/Sys
 add_darwin_static_library(libc_dyld)
 target_sources(libc_dyld PRIVATE
     ${libc_source_dir}/gen/FreeBSD/arc4random.c
+    ${libc_source_dir}/gen/FreeBSD/closedir.c
+    ${libc_source_dir}/gen/dirfd.c
     ${libc_source_dir}/gen/FreeBSD/getcwd.c
+    ${libc_source_dir}/gen/FreeBSD/getpagesize.c
+    ${libc_source_dir}/gen/nanosleep.c
+    ${libc_source_dir}/gen/FreeBSD/opendir.c
+    ${libc_source_dir}/gen/FreeBSD/readdir.c
+    ${libc_source_dir}/gen/FreeBSD/scandir.c
+    ${libc_source_dir}/gen/FreeBSD/sysctl.c
     ${libc_source_dir}/gen/FreeBSD/sysctlbyname.c
-    ${libc_source_dir}/secure/memset_chk.c
+    ${libc_source_dir}/gen/FreeBSD/telldir.c
+    ${libc_source_dir}/gen/FreeBSD/usleep.c
+    ${libc_source_dir}/stdlib/FreeBSD/atexit.c
+    ${libc_source_dir}/stdlib/FreeBSD/exit.c
+    ${libc_source_dir}/sys/gettimeofday.c
+    ${libc_source_dir}/stdlib/FreeBSD/heapsort.c
+    ${libc_source_dir}/stdlib/FreeBSD/merge.c
     ${libc_source_dir}/stdlib/FreeBSD/qsort.c
+    ${libc_source_dir}/stdlib/FreeBSD/reallocf.c
     ${libc_source_dir}/stdlib/FreeBSD/realpath.c
+    ${libc_source_dir}/string/bcopy.c
     ${libc_source_dir}/string/FreeBSD/strdup.c
-    ${libc_source_dir}/string/FreeBSD/strlen.c
     ${libc_source_dir}/string/FreeBSD/strrchr.c
     ${libc_source_dir}/string/FreeBSD/strstr.c
     ${libc_source_dir}/string/strcat.c
-    ${libc_source_dir}/string/strcpy.c
     ${libc_source_dir}/string/strlcat.c
     ${libc_source_dir}/string/strlcpy.c
-    ${libc_source_dir}/string/strncpy.c
-    ${libc_source_dir}/uuid/uuidsrc/copy.c)
+    ${libc_source_dir}/string/FreeBSD/strnlen.c
+    ${libc_source_dir}/x86_64/string/strcpy.s
+    ${libc_source_dir}/x86_64/string/strlen.s
+    ${libc_source_dir}/x86_64/string/strncpy.s
+    ${libc_source_dir}/x86_64/string/strnlen.s
+    ${libc_source_dir}/sys/_libc_init.c)
 target_include_directories(libc_dyld PRIVATE
     ${libc_source_dir}/fbsdcompat
     ${libc_source_dir}/gen
@@ -131,7 +149,16 @@ target_include_directories(libc_dyld PRIVATE
     ${libc_source_dir}/stdlib
     ${libc_source_dir}/string
     ${libc_source_dir}/uuid/uuidsrc)
-target_compile_definitions(libc_dyld PRIVATE VARIANT_STATIC=1)
+target_compile_definitions(libc_dyld PRIVATE
+    __LIBC__
+    __DARWIN_UNIX03=1
+    __DARWIN_64_BIT_INO_T=1
+    __DARWIN_NON_CANCELABLE=0
+    __DARWIN_VERS_1050=1
+    _FORTIFY_SOURCE=0
+    VARIANT_STATIC=1
+    VARIANT_CANCELABLE=1
+    VARIANT_DARWINEXTSN=1)
 target_link_libraries(libc_dyld PRIVATE
     AvailabilityHeaders
     clang_bootstrap_headers
