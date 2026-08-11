@@ -1,5 +1,11 @@
 set(hfs_source_dir ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/hfs)
 set(hfs_core_dir ${hfs_source_dir}/core)
+set(hfs_include_dir ${CMAKE_CURRENT_BINARY_DIR}/include)
+file(MAKE_DIRECTORY ${hfs_include_dir}/hfs)
+file(COPY ${hfs_core_dir}/hfs_format.h DESTINATION ${hfs_include_dir}/hfs)
+
+add_library(HFSHeaders INTERFACE)
+target_include_directories(HFSHeaders INTERFACE ${hfs_include_dir})
 
 add_kext_bundle(HFS KERNEL_PRIVATE
     INFO_PLIST ${hfs_core_dir}/macosx-Info.plist
