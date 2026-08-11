@@ -1,6 +1,16 @@
 find_program(dsymutil_path NAMES dsymutil llvm-dsymutil REQUIRED)
 find_program(bash_path NAMES bash REQUIRED)
 
+if(PUREDARWIN_EXTERNAL_SOURCE_ROOT)
+    set(xnu_source_dir ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu)
+else()
+    set(xnu_source_dir ${CMAKE_CURRENT_SOURCE_DIR})
+endif()
+
+if(NOT EXISTS ${xnu_source_dir}/Makefile)
+    message(FATAL_ERROR "XNU source tree not found: ${xnu_source_dir}")
+endif()
+
 set(xnu_host_cflags "")
 if(NOT APPLE AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64)")
     # XNU's make-built host tools do not inherit the CMake host options.
@@ -34,11 +44,11 @@ set(xnu_make_environment
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xnu_header_install)
 externalproject_add(xnu_headers.extproj
     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/xnu_header_build
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}
+    SOURCE_DIR ${xnu_source_dir}
     CONFIGURE_COMMAND true # disable auto CMake configure
     BUILD_COMMAND
         cmake
-            -D XNU_SRC=${CMAKE_CURRENT_SOURCE_DIR}
+            -D XNU_SRC=${xnu_source_dir}
             -D XNU_OBJ=<BINARY_DIR>
             -D CODESIGN_ALLOCATE_PATH=$<TARGET_FILE:host_codesign_allocate>
             -D CTFCONVERT_PATH=$<TARGET_FILE:host_ctfconvert>
@@ -59,7 +69,7 @@ externalproject_add(xnu_headers.extproj
         make -C <SOURCE_DIR> installhdrs ${xnu_make_environment}
             ARCH_CONFIGS=X86_64 BUILD_LTO=0
             BUILD_WERROR=0 DO_CTFMERGE=0 KERNEL_CONFIGS=RELEASE
-            SRCROOT=${CMAKE_CURRENT_SOURCE_DIR} OBJROOT=<BINARY_DIR>
+            SRCROOT=${xnu_source_dir} OBJROOT=<BINARY_DIR>
             DSTROOT=${CMAKE_CURRENT_BINARY_DIR}/xnu_header_install
     INSTALL_COMMAND true # installed during build
     USES_TERMINAL_CONFIGURE TRUE
@@ -98,11 +108,11 @@ target_include_directories(xnu_kernel_private_headers INTERFACE
 
 externalproject_add(xnu
     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/xnu_build
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}
+    SOURCE_DIR ${xnu_source_dir}
     CONFIGURE_COMMAND true # disable auto CMake configure
     BUILD_COMMAND
         cmake
-            -D XNU_SRC=${CMAKE_CURRENT_SOURCE_DIR}
+            -D XNU_SRC=${xnu_source_dir}
             -D XNU_OBJ=<BINARY_DIR>
             -D CODESIGN_ALLOCATE_PATH=$<TARGET_FILE:host_codesign_allocate>
             -D CTFCONVERT_PATH=$<TARGET_FILE:host_ctfconvert>
@@ -128,7 +138,7 @@ externalproject_add(xnu
         make -C <SOURCE_DIR> install ${xnu_make_environment}
             ARCH_CONFIGS=X86_64 BUILD_LTO=0
             BUILD_WERROR=0 DO_CTFMERGE=0 KERNEL_CONFIGS=RELEASE
-            SRCROOT=${CMAKE_CURRENT_SOURCE_DIR} OBJROOT=<BINARY_DIR>
+            SRCROOT=${xnu_source_dir} OBJROOT=<BINARY_DIR>
             SYMROOT=${CMAKE_CURRENT_BINARY_DIR}/xnu_sym DSTROOT=${CMAKE_CURRENT_BINARY_DIR}/xnu
     INSTALL_COMMAND true # installed during build
     USES_TERMINAL_CONFIGURE TRUE
