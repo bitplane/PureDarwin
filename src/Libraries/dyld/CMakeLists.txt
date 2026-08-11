@@ -83,6 +83,7 @@ set_source_files_properties(${closured_protocol_source}
 target_include_directories(dyld_runtime PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR}
     ${dyld_generated_include}
+    ${dyld_generated_include}/mach-o
     ${dyld_source_dir}/include
     ${dyld_source_dir}/dyld3/shared-cache
     ${dyld_source_dir}/launch-cache
