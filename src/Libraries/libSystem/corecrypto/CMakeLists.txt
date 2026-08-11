@@ -21,6 +21,7 @@ target_link_libraries(corecrypto_user PRIVATE
 )
 
 add_darwin_static_library(corecrypto_static)
+target_include_directories(corecrypto_static PUBLIC include)
 target_sources(corecrypto_static PRIVATE
     $<TARGET_OBJECTS:corecrypto_shared>
     $<TARGET_OBJECTS:corecrypto_user>

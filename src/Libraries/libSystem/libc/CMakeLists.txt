@@ -134,6 +134,7 @@ target_include_directories(libc_dyld PRIVATE
 target_link_libraries(libc_dyld PRIVATE
     AvailabilityHeaders
     clang_bootstrap_headers
+    corecrypto_static
     libc_features
     libc_private_headers
     libplatform_headers
