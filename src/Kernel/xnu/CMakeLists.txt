@@ -3,8 +3,10 @@ find_program(bash_path NAMES bash REQUIRED)
 
 if(PUREDARWIN_EXTERNAL_SOURCE_ROOT)
     set(xnu_source_dir ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu)
+    set(xnu_external_source TRUE)
 else()
     set(xnu_source_dir ${CMAKE_CURRENT_SOURCE_DIR})
+    set(xnu_external_source FALSE)
 endif()
 
 if(NOT EXISTS ${xnu_source_dir}/Makefile)
@@ -31,12 +33,31 @@ set(xnu_make_environment
     SDKROOT_RESOLVED=/
     HOST_SDKROOT_RESOLVED=/
     PLATFORM=MacOSX
+    SDKVERSION=10.13
     HOST_OS_VERSION=11.0
+    CC=${CMAKE_C_COMPILER}
+    CXX=${CMAKE_CXX_COMPILER}
     PUREDARWIN_HOST_CCTOOLS_INCLUDE=${PUREDARWIN_SOURCE_DIR}/tools/cctools/include
     PUREDARWIN_HOST_LIBMACHO=$<TARGET_FILE:host_libmacho>
     PUREDARWIN_HOST_LIBSTUFF=$<TARGET_FILE:host_libstuff>
     PUREDARWIN_HOST_CFLAGS=${xnu_host_cflags}
+    HOST_CC=${CMAKE_C_COMPILER}
+    HOST_FLEX=flex
+    HOST_BISON=bison
     HOST_GM4=m4
+    HOST_CODESIGN=true
+    MIG=${PUREDARWIN_SOURCE_DIR}/tools/mig/mig.sh
+    MIGCOM=$<TARGET_FILE:migcom>
+    STRIP=$<TARGET_FILE:host_strip>
+    LIPO=$<TARGET_FILE:host_lipo>
+    LIBTOOL=$<TARGET_FILE:host_libtool>
+    NM=$<TARGET_FILE:host_nm>
+    NMEDIT=$<TARGET_FILE:host_nmedit>
+    UNIFDEF=$<TARGET_FILE:unifdef>
+    DSYMUTIL=${dsymutil_path}
+    CTFCONVERT=$<TARGET_FILE:host_ctfconvert>
+    CTFMERGE=$<TARGET_FILE:host_ctfmerge>
+    CTFINSERT=$<TARGET_FILE:host_ctf_insert>
     SHELL=${bash_path}
     PUREDARWIN_TARGET_TRIPLE=${PUREDARWIN_TARGET_TRIPLE}
 )
@@ -49,6 +70,7 @@ externalproject_add(xnu_headers.extproj
     BUILD_COMMAND
         cmake
             -D XNU_SRC=${xnu_source_dir}
+            -D XNU_EXTERNAL_SOURCE=${xnu_external_source}
             -D XNU_OBJ=<BINARY_DIR>
             -D CODESIGN_ALLOCATE_PATH=$<TARGET_FILE:host_codesign_allocate>
             -D CTFCONVERT_PATH=$<TARGET_FILE:host_ctfconvert>
@@ -113,6 +135,7 @@ externalproject_add(xnu
     BUILD_COMMAND
         cmake
             -D XNU_SRC=${xnu_source_dir}
+            -D XNU_EXTERNAL_SOURCE=${xnu_external_source}
             -D XNU_OBJ=<BINARY_DIR>
             -D CODESIGN_ALLOCATE_PATH=$<TARGET_FILE:host_codesign_allocate>
             -D CTFCONVERT_PATH=$<TARGET_FILE:host_ctfconvert>
@@ -130,6 +153,7 @@ externalproject_add(xnu
             -D UNIFDEF_PATH=$<TARGET_FILE:unifdef>
             -D DSYMUTIL_PATH=${dsymutil_path}
             -D FIREHOSE_KERNEL_LIBRARY_PATH=$<TARGET_FILE:libfirehose_kernel>
+            -D FIREHOSE_KERNEL_LIBRARY_DIR=$<TARGET_FILE_DIR:libfirehose_kernel>
             -D FIREHOSE_KERNEL_HEADER_PATH=$<TARGET_PROPERTY:libfirehose_kernel,INTERFACE_INCLUDE_DIRECTORIES>
             -D PROFILE_RUNTIME_LIBRARY_PATH=${profile_runtime_library_path}
             -D PTHREAD_HEADER_PATH=$<TARGET_PROPERTY:pthread_common_headers,INTERFACE_INCLUDE_DIRECTORIES>
