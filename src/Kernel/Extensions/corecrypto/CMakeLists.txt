@@ -1,8 +1,8 @@
 add_kext_bundle(corecrypto.kext INFO_PLIST kext/Info.plist KERNEL_PRIVATE
+    BUNDLE_NAME corecrypto
     BUNDLE_IDENTIFIER org.puredarwin.kec.corecrypto BUNDLE_VERSION 1.0d1
     MAIN_FUNCTION cc_kext_start ANTIMAIN_FUNCTION cc_kext_stop
 )
-set_property(TARGET corecrypto.kext PROPERTY OUTPUT_NAME corecrypto)
 
 target_sources(corecrypto.kext PRIVATE
     cc_clear.c
@@ -34,4 +34,3 @@ target_sources(corecrypto.kext PRIVATE
 target_include_directories(corecrypto.kext PRIVATE include)
 target_link_libraries(corecrypto.kext PRIVATE xnu_kernel_private_headers)
 set_property(TARGET corecrypto.kext PROPERTY CXX_STANDARD 11)
-install(TARGETS corecrypto.kext DESTINATION System/Library/Extensions COMPONENT BaseSystem)

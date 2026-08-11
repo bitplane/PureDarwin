@@ -40,5 +40,3 @@ add_library(IOATAFamilyHeaders INTERFACE)
 target_include_directories(IOATAFamilyHeaders INTERFACE ${ioata_include_dir})
 add_library(IOATAFamilyPrivateHeaders INTERFACE)
 target_include_directories(IOATAFamilyPrivateHeaders INTERFACE ${ioata_private_include_dir} ${ioata_include_dir})
-
-install(TARGETS IOATAFamily DESTINATION System/Library/Extensions COMPONENT BaseSystem)

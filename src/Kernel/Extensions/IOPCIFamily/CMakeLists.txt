@@ -23,7 +23,6 @@ target_link_libraries(IOPCIFamily PRIVATE
     IOACPIFamilyHeaders
     IOPCIFamilyHeaders
 )
-install(TARGETS IOPCIFamily DESTINATION System/Library/Extensions COMPONENT BaseSystem)
 
 add_library(IOPCIFamilyHeaders INTERFACE)
 target_include_directories(IOPCIFamilyHeaders INTERFACE ${iopci_source_dir})

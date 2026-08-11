@@ -7,4 +7,3 @@ target_sources(ApplePS2Controller PRIVATE
 
 set_property(TARGET ApplePS2Controller PROPERTY CXX_STANDARD 11)
 target_compile_options(ApplePS2Controller PRIVATE -Wno-implicit-int-conversion)
-install(TARGETS ApplePS2Controller DESTINATION System/Library/Extensions COMPONENT BaseSystem)

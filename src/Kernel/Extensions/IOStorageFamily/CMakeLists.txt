@@ -32,7 +32,6 @@ target_sources(IOStorageFamily PRIVATE
 target_include_directories(IOStorageFamily PRIVATE ${iostorage_include_dir})
 target_compile_options(IOStorageFamily PRIVATE -Wno-implicit-int-conversion -Wno-sign-conversion -Wno-deprecated-declarations)
 set_property(TARGET IOStorageFamily PROPERTY CXX_STANDARD ${iostorage_cxx_standard})
-install(TARGETS IOStorageFamily DESTINATION System/Library/Extensions COMPONENT BaseSystem)
 
 # FIXME: Re-enable these when we have our own tools for handling image resource files.
 # add_bundle_iconset(IOStorageFamily IconResources/External.iconset)

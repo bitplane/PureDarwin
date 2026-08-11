@@ -1,5 +1,12 @@
 function(add_kext_bundle name)
-    cmake_parse_arguments(SL "KERNEL_PRIVATE" "MACOSX_VERSION_MIN;INFO_PLIST;BUNDLE_IDENTIFIER;BUNDLE_VERSION;MAIN_FUNCTION;ANTIMAIN_FUNCTION" "" ${ARGN})
+    cmake_parse_arguments(SL "KERNEL_PRIVATE" "MACOSX_VERSION_MIN;INFO_PLIST;BUNDLE_IDENTIFIER;BUNDLE_VERSION;BUNDLE_NAME;INSTALL_DESTINATION;MAIN_FUNCTION;ANTIMAIN_FUNCTION" "" ${ARGN})
+
+    if(NOT SL_BUNDLE_NAME)
+        set(SL_BUNDLE_NAME ${name})
+    endif()
+    if(NOT SL_INSTALL_DESTINATION)
+        set(SL_INSTALL_DESTINATION System/Library/Extensions)
+    endif()
 
     if(SL_MACOSX_VERSION_MIN)
         add_darwin_shared_library(${name} MODULE MACOSX_VERSION_MIN ${SL_MACOSX_VERSION_MIN})
@@ -9,6 +16,7 @@ function(add_kext_bundle name)
 
     set_property(TARGET ${name} PROPERTY PREFIX "")
     set_property(TARGET ${name} PROPERTY SUFFIX "")
+    set_property(TARGET ${name} PROPERTY OUTPUT_NAME ${SL_BUNDLE_NAME})
 
     target_compile_definitions(${name} PRIVATE TARGET_OS_OSX KERNEL)
     target_compile_options(${name} PRIVATE
@@ -43,6 +51,23 @@ function(add_kext_bundle name)
     endif()
 
     add_kmod_info(${name} MAIN_FUNCTION ${SL_MAIN_FUNCTION} ANTIMAIN_FUNCTION ${SL_ANTIMAIN_FUNCTION})
+
+    file(READ ${SL_INFO_PLIST} kext_info_plist)
+    string(REPLACE "\${EXECUTABLE_NAME}" "${SL_BUNDLE_NAME}" kext_info_plist "${kext_info_plist}")
+    string(REPLACE "\${PRODUCT_NAME}" "${SL_BUNDLE_NAME}" kext_info_plist "${kext_info_plist}")
+    string(REPLACE "$(PRODUCT_BUNDLE_IDENTIFIER)" "${SL_BUNDLE_IDENTIFIER}" kext_info_plist "${kext_info_plist}")
+    set(kext_info_plist_path ${CMAKE_CURRENT_BINARY_DIR}/${SL_BUNDLE_NAME}-Info.plist)
+    file(WRITE ${kext_info_plist_path} "${kext_info_plist}")
+
+    set(kext_install_root ${SL_INSTALL_DESTINATION}/${SL_BUNDLE_NAME}.kext/Contents)
+    set(kext_install_component KernelExtension-${SL_BUNDLE_NAME})
+    install(TARGETS ${name}
+        DESTINATION ${kext_install_root}/MacOS
+        COMPONENT ${kext_install_component})
+    install(FILES ${kext_info_plist_path}
+        DESTINATION ${kext_install_root}
+        RENAME Info.plist
+        COMPONENT ${kext_install_component})
 endfunction()
 
 function(add_kmod_info target)
