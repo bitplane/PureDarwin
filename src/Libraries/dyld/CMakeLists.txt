@@ -7,6 +7,18 @@ if(NOT EXISTS ${PUREDARWIN_LIBCXX_SOURCE_DIR}/include/vector)
     message(FATAL_ERROR "libc++ source tree not found: ${PUREDARWIN_LIBCXX_SOURCE_DIR}")
 endif()
 
+set(dyld_image_loader_source ${CMAKE_CURRENT_BINARY_DIR}/ImageLoader.cpp)
+file(READ ${dyld_source_dir}/src/ImageLoader.cpp dyld_image_loader_contents)
+set(dyld_stale_image_pair "VECTOR_NEVER_DESTRUCTED_IMPL(ImagePair);")
+string(FIND "${dyld_image_loader_contents}" "${dyld_stale_image_pair}"
+    dyld_stale_image_pair_offset)
+if(dyld_stale_image_pair_offset EQUAL -1)
+    message(FATAL_ERROR "dyld ImagePair compatibility patch no longer applies")
+endif()
+string(REPLACE "${dyld_stale_image_pair}" ""
+    dyld_image_loader_contents "${dyld_image_loader_contents}")
+file(WRITE ${dyld_image_loader_source} "${dyld_image_loader_contents}")
+
 add_darwin_executable(dyld_runtime NO_STANDARD_LIBRARIES)
 set_target_properties(dyld_runtime PROPERTIES
     OUTPUT_NAME dyld
@@ -31,7 +43,7 @@ target_sources(dyld_runtime PRIVATE
     ${dyld_source_dir}/src/dyld_gdb.cpp
     ${dyld_source_dir}/src/glue.c
     ${dyld_source_dir}/src/ImageLoaderMegaDylib.cpp
-    ${dyld_source_dir}/src/ImageLoader.cpp
+    ${dyld_image_loader_source}
     ${dyld_source_dir}/src/ImageLoaderMachO.cpp
     ${dyld_source_dir}/src/stub_binding_helper.s
     ${dyld_source_dir}/src/dyldNew.cpp
