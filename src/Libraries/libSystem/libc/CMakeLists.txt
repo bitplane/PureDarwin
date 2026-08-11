@@ -201,6 +201,7 @@ target_link_libraries(libc_dyld PRIVATE
     libc_private_headers
     libplatform_headers
     libplatform_private_headers
+    libsystem_private_headers
     libsystem_kernel_private_headers
     libsystem_kernel_static
     pthread_common_headers
