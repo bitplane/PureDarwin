@@ -14,7 +14,10 @@ add_library(libplatform_headers INTERFACE)
 target_include_directories(libplatform_headers INTERFACE ${libplatform_source_dir}/include)
 
 add_library(libplatform_private_headers INTERFACE)
-target_include_directories(libplatform_private_headers INTERFACE ${libplatform_source_dir}/private)
+target_include_directories(libplatform_private_headers INTERFACE
+    ${libplatform_source_dir}/private
+    ${libplatform_source_dir}/private/os
+)
 
 install(
     FILES ${libplatform_source_dir}/include/setjmp.h ${libplatform_source_dir}/include/string_x86.h ${libplatform_source_dir}/include/ucontext.h
