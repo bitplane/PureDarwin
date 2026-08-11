@@ -59,7 +59,8 @@ target_include_directories(cxxabi_dyld PRIVATE
     ${PUREDARWIN_LIBCXX_SOURCE_DIR}/include
     ${PUREDARWIN_LIBUNWIND_SOURCE_DIR}/include
     ${libcxxabi_source_dir}
-    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/dyld/include)
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/dyld/include
+    ${PUREDARWIN_SOURCE_DIR}/tools/cctools/include)
 target_compile_definitions(cxxabi_dyld PRIVATE
     LIBCXXABI_BUILDING_LIBRARY
     _LIBCPP_BUILDING_LIBRARY)
@@ -82,7 +83,8 @@ target_sources(cxx_dyld PRIVATE
 target_include_directories(cxx_dyld PRIVATE
     ${PUREDARWIN_LIBCXX_SOURCE_DIR}/include
     ${PUREDARWIN_LIBCXXABI_SOURCE_DIR}/include
-    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/dyld/include)
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/dyld/include
+    ${PUREDARWIN_SOURCE_DIR}/tools/cctools/include)
 target_compile_definitions(cxx_dyld PRIVATE
     _LIBCPP_BUILDING_LIBRARY
     _LIBCPP_NO_EXCEPTIONS=1)
