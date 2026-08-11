@@ -91,6 +91,7 @@ externalproject_add(xnu_headers.extproj
             -P ${CMAKE_CURRENT_SOURCE_DIR}/preprocess_files.cmake
     COMMAND
         make -C <SOURCE_DIR> installhdrs ${xnu_make_environment}
+            MAKE_SYMBOL_ALIASING=<BINARY_DIR>/bsd/sys/make_symbol_aliasing.sh
             ARCH_CONFIGS=X86_64 BUILD_LTO=0
             BUILD_WERROR=0 DO_CTFMERGE=0 KERNEL_CONFIGS=RELEASE
             SRCROOT=${xnu_source_dir} OBJROOT=<BINARY_DIR>
@@ -162,6 +163,7 @@ externalproject_add(xnu
             -P ${CMAKE_CURRENT_SOURCE_DIR}/preprocess_files.cmake
     COMMAND
         make -C <SOURCE_DIR> install ${xnu_make_environment}
+            MAKE_SYMBOL_ALIASING=<BINARY_DIR>/bsd/sys/make_symbol_aliasing.sh
             ARCH_CONFIGS=X86_64 BUILD_LTO=0
             BUILD_WERROR=0 DO_CTFMERGE=0 KERNEL_CONFIGS=RELEASE
             SRCROOT=${xnu_source_dir} OBJROOT=<BINARY_DIR>
