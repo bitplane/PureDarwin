@@ -15,6 +15,7 @@ target_include_directories(pthread_common_private_headers INTERFACE
     ${pthread_source_dir}/src/resolver)
 
 add_darwin_static_library(pthread_dyld)
+add_dependencies(pthread_dyld libsystem_kernel_static)
 target_sources(pthread_dyld PRIVATE
     ${pthread_source_dir}/src/resolver/resolver.c
     ${pthread_source_dir}/src/qos.c
