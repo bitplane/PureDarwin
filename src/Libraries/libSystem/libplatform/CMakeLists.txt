@@ -44,6 +44,7 @@ target_link_libraries(libplatform_dyld PRIVATE
     libsystem_kernel_private_headers
     pthread_common_headers
     xnu_headers
+    xnu_kernel_headers
     xnu_private_headers)
 
 install(
