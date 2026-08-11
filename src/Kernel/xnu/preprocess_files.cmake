@@ -37,6 +37,8 @@ if(XNU_EXTERNAL_SOURCE)
         "${AVAILABILITY_PL_PATH}"
         make_symbol_aliasing "${make_symbol_aliasing}")
     file(WRITE ${XNU_OBJ}/bsd/sys/make_symbol_aliasing.sh "${make_symbol_aliasing}")
+    file(CHMOD ${XNU_OBJ}/bsd/sys/make_symbol_aliasing.sh
+        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 else()
     configure_file(${CMAKE_CURRENT_LIST_DIR}/cmake/MakeInc.cmd.in ${XNU_OBJ}/makedefs/MakeInc.cmd @ONLY)
     configure_file(${CMAKE_CURRENT_LIST_DIR}/cmake/MakeInc.def.in ${XNU_OBJ}/makedefs/MakeInc.def @ONLY)
