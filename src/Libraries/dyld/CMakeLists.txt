@@ -105,6 +105,7 @@ target_link_libraries(dyld_runtime PRIVATE
     corecrypto_static
     host_commoncrypto_headers
     host_commoncrypto_private_headers
+    libc_dyld
     libc_private_headers
     libsystem_kernel_private_headers
     libsystem_kernel_static

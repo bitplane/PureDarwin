@@ -104,3 +104,41 @@ target_include_directories(libc_private_headers INTERFACE ${libc_headers_dir}/us
 target_include_directories(libc_kernel_headers INTERFACE ${libc_headers_dir}/System/Library/Frameworks/Kernel.framework/Versions/A/PrivateHeaders)
 
 # END HEADER INTERFACE
+
+add_darwin_static_library(libc_dyld)
+target_sources(libc_dyld PRIVATE
+    ${libc_source_dir}/gen/FreeBSD/arc4random.c
+    ${libc_source_dir}/gen/FreeBSD/closedir.c
+    ${libc_source_dir}/gen/FreeBSD/getcwd.c
+    ${libc_source_dir}/gen/FreeBSD/opendir.c
+    ${libc_source_dir}/gen/FreeBSD/readdir.c
+    ${libc_source_dir}/gen/FreeBSD/sysctlbyname.c
+    ${libc_source_dir}/secure/memset_chk.c
+    ${libc_source_dir}/stdlib/FreeBSD/qsort.c
+    ${libc_source_dir}/stdlib/FreeBSD/realpath.c
+    ${libc_source_dir}/string/FreeBSD/strdup.c
+    ${libc_source_dir}/string/FreeBSD/strlen.c
+    ${libc_source_dir}/string/FreeBSD/strrchr.c
+    ${libc_source_dir}/string/FreeBSD/strstr.c
+    ${libc_source_dir}/string/strcat.c
+    ${libc_source_dir}/string/strcpy.c
+    ${libc_source_dir}/string/strlcat.c
+    ${libc_source_dir}/string/strlcpy.c
+    ${libc_source_dir}/string/strncpy.c
+    ${libc_source_dir}/uuid/uuidsrc/copy.c)
+target_include_directories(libc_dyld PRIVATE
+    ${libc_source_dir}/gen
+    ${libc_source_dir}/gen/FreeBSD
+    ${libc_source_dir}/include
+    ${libc_source_dir}/locale
+    ${libc_source_dir}/stdlib
+    ${libc_source_dir}/string
+    ${libc_source_dir}/uuid/uuidsrc)
+target_link_libraries(libc_dyld PRIVATE
+    AvailabilityHeaders
+    clang_bootstrap_headers
+    libc_private_headers
+    libsystem_kernel_private_headers
+    pthread_common_headers
+    xnu_headers
+    xnu_private_headers)
