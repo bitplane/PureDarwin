@@ -53,7 +53,9 @@ target_sources(HFS PRIVATE
     ${hfs_core_dir}/hfs_xattr.c
     ${hfs_core_dir}/rangelist.c)
 
-target_include_directories(HFS PRIVATE ${hfs_core_dir})
+target_include_directories(HFS PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${hfs_core_dir})
 target_link_libraries(HFS PRIVATE IOStorageFamilyHeaders)
 target_compile_options(HFS PRIVATE
     -include ${hfs_core_dir}/kext-config.h
