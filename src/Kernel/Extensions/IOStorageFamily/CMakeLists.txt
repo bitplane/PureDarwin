@@ -1,20 +1,33 @@
-add_kext_bundle(IOStorageFamily INFO_PLIST Info.plist KERNEL_PRIVATE
+if(PUREDARWIN_EXTERNAL_SOURCE_ROOT)
+    set(iostorage_source_dir ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/IOStorageFamily)
+    set(iostorage_include_dir ${CMAKE_CURRENT_BINARY_DIR}/external_include)
+    file(GLOB iostorage_headers ${iostorage_source_dir}/*.h)
+    file(MAKE_DIRECTORY ${iostorage_include_dir}/IOKit/storage)
+    file(COPY ${iostorage_headers} DESTINATION ${iostorage_include_dir}/IOKit/storage)
+    set(iostorage_info_plist ${iostorage_source_dir}/Info.plist)
+else()
+    set(iostorage_source_dir ${CMAKE_CURRENT_SOURCE_DIR})
+    set(iostorage_include_dir ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    set(iostorage_info_plist Info.plist)
+endif()
+
+add_kext_bundle(IOStorageFamily INFO_PLIST ${iostorage_info_plist} KERNEL_PRIVATE
     BUNDLE_IDENTIFIER com.apple.iokit.IOStorageFamily BUNDLE_VERSION 2.1)
 
 target_sources(IOStorageFamily PRIVATE
-    IOAppleLabelScheme.cpp
-    IOApplePartitionScheme.cpp
-    IOBlockStorageDevice.cpp
-    IOBlockStorageDriver.cpp
-    IOFDiskPartitionScheme.cpp
-    IOFilterScheme.cpp
-    IOGUIDPartitionScheme.cpp
-    IOMedia.cpp
-    IOMediaBSDClient.cpp
-    IOPartitionScheme.cpp
-    IOStorage.cpp
+    ${iostorage_source_dir}/IOAppleLabelScheme.cpp
+    ${iostorage_source_dir}/IOApplePartitionScheme.cpp
+    ${iostorage_source_dir}/IOBlockStorageDevice.cpp
+    ${iostorage_source_dir}/IOBlockStorageDriver.cpp
+    ${iostorage_source_dir}/IOFDiskPartitionScheme.cpp
+    ${iostorage_source_dir}/IOFilterScheme.cpp
+    ${iostorage_source_dir}/IOGUIDPartitionScheme.cpp
+    ${iostorage_source_dir}/IOMedia.cpp
+    ${iostorage_source_dir}/IOMediaBSDClient.cpp
+    ${iostorage_source_dir}/IOPartitionScheme.cpp
+    ${iostorage_source_dir}/IOStorage.cpp
 )
-target_include_directories(IOStorageFamily PRIVATE include)
+target_include_directories(IOStorageFamily PRIVATE ${iostorage_include_dir})
 target_compile_options(IOStorageFamily PRIVATE -Wno-implicit-int-conversion -Wno-sign-conversion -Wno-deprecated-declarations)
 set_property(TARGET IOStorageFamily PROPERTY CXX_STANDARD 17)
 install(TARGETS IOStorageFamily DESTINATION System/Library/Extensions COMPONENT BaseSystem)
@@ -27,7 +40,7 @@ install(TARGETS IOStorageFamily DESTINATION System/Library/Extensions COMPONENT 
 
 
 add_library(IOStorageFamilyHeaders INTERFACE)
-target_include_directories(IOStorageFamilyHeaders INTERFACE include)
+target_include_directories(IOStorageFamilyHeaders INTERFACE ${iostorage_include_dir})
 
 
 add_darwin_object_library(IOStorageFamilyUserHeaders)
@@ -54,12 +67,12 @@ set(HEADERS
 )
 foreach(file IN LISTS HEADERS)
     add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/user_include/IOKit/storage/${file}
-        COMMAND $<TARGET_FILE:unifdef> -UKERNEL -o ${CMAKE_CURRENT_BINARY_DIR}/user_include/IOKit/storage/${file} ${CMAKE_CURRENT_SOURCE_DIR}/include/IOKit/storage/${file}
-        DEPENDS unifdef ${CMAKE_CURRENT_SOURCE_DIR}/include/IOKit/storage/${file}
+        COMMAND $<TARGET_FILE:unifdef> -UKERNEL -o ${CMAKE_CURRENT_BINARY_DIR}/user_include/IOKit/storage/${file} ${iostorage_include_dir}/IOKit/storage/${file}
+        DEPENDS unifdef ${iostorage_include_dir}/IOKit/storage/${file}
         COMMENT "unifdef ${file}" VERBATIM
     )
     target_sources(IOStorageFamilyUserHeaders PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/user_include/IOKit/storage/${file})
 endforeach()
 
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/user_include/IOKit/storage DESTINATION System/Library/Frameworks/IOKit.framework/Versions/A/Headers/IOKit COMPONENT DeveloperTools)
-install(DIRECTORY include/IOKit/storage DESTINATION System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit COMPONENT DeveloperTools)
+install(DIRECTORY ${iostorage_include_dir}/IOKit/storage DESTINATION System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit COMPONENT DeveloperTools)
