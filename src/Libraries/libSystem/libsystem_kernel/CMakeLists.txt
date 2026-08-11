@@ -219,6 +219,7 @@ target_include_directories(libsystem_kernel_static PRIVATE
     ${libsyscall_source_dir}/mach/mach
     ${libsyscall_source_dir}/mach/servers
     ${libsyscall_source_dir}/custom
+    ${libsyscall_source_dir}/os
     ${libsyscall_source_dir}/wrappers)
 target_include_directories(libsystem_kernel_static PRIVATE
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/dyld/include)
