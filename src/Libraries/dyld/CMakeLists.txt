@@ -81,6 +81,7 @@ set_source_files_properties(${closured_protocol_source}
     PROPERTIES OBJECT_DEPENDS ${closured_protocol_header})
 
 target_include_directories(dyld_runtime PRIVATE
+    $<TARGET_PROPERTY:libc_public_headers,INTERFACE_INCLUDE_DIRECTORIES>
     ${CMAKE_CURRENT_BINARY_DIR}
     ${dyld_generated_include}
     ${dyld_generated_include}/mach-o
@@ -96,6 +97,7 @@ target_include_directories(dyld_runtime PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/compat
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libplatform/private
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/libsyscall/mach
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/libsyscall/wrappers/libproc
     ${PUREDARWIN_LIBCXX_SOURCE_DIR}/include
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/Libm/Source/Intel)

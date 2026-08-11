@@ -1,4 +1,7 @@
-#include <mach-o/dyld_priv.h>
+struct mach_header;
+
+extern "C" const mach_header*
+dyld_image_header_containing_address(const void* address);
 
 namespace dyld {
 [[noreturn]] void halt(const char* message);
@@ -11,15 +14,10 @@ const mach_header* dyld_image_header_containing_address(const void* address)
 }
 }
 
-namespace std {
-inline namespace __1 {
-template <bool>
-struct __basic_string_common;
+extern "C" [[noreturn]] void libcxx_string_length_error()
+    __asm("__ZNKSt3__121__basic_string_commonILb1EE20__throw_length_errorEv");
 
-template <>
-[[noreturn]] void __basic_string_common<true>::__throw_length_error() const
+extern "C" [[noreturn]] void libcxx_string_length_error()
 {
     dyld::halt("libc++ string length error");
-}
-}
 }
