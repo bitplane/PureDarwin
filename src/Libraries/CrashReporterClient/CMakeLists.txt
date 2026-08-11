@@ -3,8 +3,7 @@ add_library(CrashReporterClient_headers INTERFACE)
 
 target_sources(CrashReporterClient PRIVATE CrashReporterClient.c)
 
-# For stdint.h
-target_link_libraries(CrashReporterClient PUBLIC xnu_kernel_headers)
+target_link_libraries(CrashReporterClient PRIVATE clang_bootstrap_headers)
 
 target_include_directories(CrashReporterClient_headers INTERFACE include)
 target_link_libraries(CrashReporterClient PUBLIC CrashReporterClient_headers)
