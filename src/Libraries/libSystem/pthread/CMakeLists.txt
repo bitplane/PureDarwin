@@ -52,6 +52,7 @@ target_link_libraries(pthread_dyld PRIVATE
     AvailabilityHeaders
     clang_bootstrap_headers
     libc_private_headers
+    libplatform_headers
     libplatform_private_headers
     libsystem_kernel_private_headers
     libsystem_private_headers
