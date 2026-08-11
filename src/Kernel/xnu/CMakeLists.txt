@@ -46,6 +46,7 @@ set(xnu_make_environment
     HOST_BISON=bison
     HOST_GM4=m4
     PYTHON=python3
+    SKIP_LLD_MACRO_SYNTAX_CHECK=1
     HOST_CODESIGN=true
     HOST_CODESIGN_ALLOCATE=$<TARGET_FILE:host_codesign_allocate>
     EMBEDDED_DEVICE_MAP=false
