@@ -95,12 +95,6 @@ externalproject_add(xnu_headers.extproj
             MAKE_SYMBOL_ALIASING=<BINARY_DIR>/bsd/sys/make_symbol_aliasing.sh
             ARCH_CONFIGS=X86_64 BUILD_LTO=0
             BUILD_WERROR=0 DO_CTFMERGE=0 KERNEL_CONFIGS=RELEASE
-            PUREDARWIN_LD_PATH=$<TARGET_FILE:host_ld>
-            PUREDARWIN_FIREHOSE_LIBRARY_DIR=$<TARGET_FILE_DIR:libfirehose_kernel>
-            PUREDARWIN_FIREHOSE_INCLUDE=$<TARGET_PROPERTY:libfirehose_kernel,INTERFACE_INCLUDE_DIRECTORIES>
-            PUREDARWIN_PROFILE_RUNTIME=${profile_runtime_library_path}
-            PUREDARWIN_PTHREAD_INCLUDE=$<TARGET_PROPERTY:pthread_common_headers,INTERFACE_INCLUDE_DIRECTORIES>
-            PUREDARWIN_AVAILABILITY_INCLUDE=$<TARGET_PROPERTY:AvailabilityHeaders,INTERFACE_INCLUDE_DIRECTORIES>
             SRCROOT=${xnu_source_dir} OBJROOT=<BINARY_DIR>
             DSTROOT=${CMAKE_CURRENT_BINARY_DIR}/xnu_header_install
     INSTALL_COMMAND true # installed during build
@@ -174,6 +168,12 @@ externalproject_add(xnu
             MAKE_SYMBOL_ALIASING=<BINARY_DIR>/bsd/sys/make_symbol_aliasing.sh
             ARCH_CONFIGS=X86_64 BUILD_LTO=0
             BUILD_WERROR=0 DO_CTFMERGE=0 KERNEL_CONFIGS=RELEASE
+            PUREDARWIN_LD_PATH=$<TARGET_FILE:host_ld>
+            PUREDARWIN_FIREHOSE_LIBRARY_DIR=$<TARGET_FILE_DIR:libfirehose_kernel>
+            PUREDARWIN_FIREHOSE_INCLUDE=$<TARGET_PROPERTY:libfirehose_kernel,INTERFACE_INCLUDE_DIRECTORIES>
+            PUREDARWIN_PROFILE_RUNTIME=${profile_runtime_library_path}
+            PUREDARWIN_PTHREAD_INCLUDE=$<TARGET_PROPERTY:pthread_common_headers,INTERFACE_INCLUDE_DIRECTORIES>
+            PUREDARWIN_AVAILABILITY_INCLUDE=$<TARGET_PROPERTY:AvailabilityHeaders,INTERFACE_INCLUDE_DIRECTORIES>
             SRCROOT=${xnu_source_dir} OBJROOT=<BINARY_DIR>
             SYMROOT=${CMAKE_CURRENT_BINARY_DIR}/xnu_sym DSTROOT=${CMAKE_CURRENT_BINARY_DIR}/xnu
     INSTALL_COMMAND true # installed during build
