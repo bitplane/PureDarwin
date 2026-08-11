@@ -33,6 +33,7 @@ target_sources(libmalloc_runtime PRIVATE
     ${libmalloc_source_dir}/src/magazine_tiny.c)
 target_include_directories(libmalloc_runtime PRIVATE
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/dyld/include
+    ${PUREDARWIN_SOURCE_DIR}/tools/cctools/include
     ${libmalloc_source_dir}/include
     ${libmalloc_source_dir}/private
     ${libmalloc_source_dir}/src
