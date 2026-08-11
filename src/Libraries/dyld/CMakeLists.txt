@@ -40,8 +40,7 @@ endif()
 
 add_darwin_executable(dyld_runtime NO_STANDARD_LIBRARIES)
 set_target_properties(dyld_runtime PROPERTIES
-    OUTPUT_NAME dyld
-    ENABLE_EXPORTS TRUE)
+    OUTPUT_NAME dyld)
 
 set(closured_protocol_header ${CMAKE_CURRENT_BINARY_DIR}/closuredProtocol.h)
 set(closured_protocol_source ${CMAKE_CURRENT_BINARY_DIR}/closuredProtocolUser.c)
