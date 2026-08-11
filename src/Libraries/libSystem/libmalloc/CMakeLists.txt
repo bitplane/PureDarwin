@@ -39,6 +39,7 @@ target_include_directories(libmalloc_runtime PRIVATE
     ${libmalloc_source_dir}/src
     ${libmalloc_source_dir}/resolver)
 target_compile_definitions(libmalloc_runtime PRIVATE
+    DARWINTEST=1
     PRIVATE=1
     NDEBUG
     _FORTIFY_SOURCE=0
