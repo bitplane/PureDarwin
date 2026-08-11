@@ -15,6 +15,7 @@ endif()
 target_include_directories(libmalloc_headers INTERFACE ${libmalloc_source_dir}/include)
 
 add_darwin_object_library(libmalloc_runtime)
+add_dependencies(libmalloc_runtime libsystem_kernel)
 target_sources(libmalloc_runtime PRIVATE
     ${libmalloc_source_dir}/src/radix_tree.c
     ${libmalloc_source_dir}/src/bitarray.c
@@ -40,6 +41,7 @@ target_include_directories(libmalloc_runtime PRIVATE
     ${libmalloc_source_dir}/src
     ${libmalloc_source_dir}/resolver)
 target_include_directories(libmalloc_runtime BEFORE PRIVATE
+    $<TARGET_PROPERTY:libsystem_kernel,INTERFACE_INCLUDE_DIRECTORIES>
     $<TARGET_PROPERTY:xnu_private_headers,INTERFACE_INCLUDE_DIRECTORIES>)
 target_compile_definitions(libmalloc_runtime PRIVATE
     DARWINTEST=1
@@ -59,7 +61,6 @@ target_link_libraries(libmalloc_runtime PRIVATE
     libc_private_headers
     libplatform_headers
     libplatform_private_headers
-    libsystem_kernel
     libsystem_kernel_private_headers
     libsystem_private_headers
     pthread_common_headers
