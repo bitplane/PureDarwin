@@ -19,6 +19,8 @@ target_link_libraries(host_commoncrypto_static PRIVATE
     host_commoncrypto_headers
     host_commoncrypto_private_headers
 )
+target_compile_definitions(host_commoncrypto_static PRIVATE
+    "__unused=__attribute__((unused))")
 
 target_sources(host_commoncrypto_static PRIVATE
     libcn/adler32.c
