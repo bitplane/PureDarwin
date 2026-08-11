@@ -43,7 +43,8 @@ target_compile_definitions(libplatform_dyld PRIVATE
     VARIANT_STATIC=1
     OSATOMIC_USE_INLINED=0
     OSATOMIC_DEPRECATED=0
-    OSSPINLOCK_USE_INLINED=1
+    OSSPINLOCK_USE_INLINED=0
+    OSSPINLOCK_DEPRECATED=0
     OS_UNFAIR_LOCK_INLINE=0)
 target_include_directories(libplatform_dyld PRIVATE
     ${libplatform_source_dir}/include
@@ -57,6 +58,7 @@ target_link_libraries(libplatform_dyld PRIVATE
     libsystem_kernel_private_headers
     pthread_common_headers
     pthread_common_private_headers
+    xnu_kernel_private_headers
     xnu_headers
     xnu_kernel_headers
     xnu_private_headers)
