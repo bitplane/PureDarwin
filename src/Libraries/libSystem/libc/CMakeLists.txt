@@ -1,12 +1,22 @@
 # Currently, just expose standard headers under include
 
+if(PUREDARWIN_EXTERNAL_SOURCE_ROOT)
+    set(libc_source_dir ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libc)
+else()
+    set(libc_source_dir ${CMAKE_CURRENT_SOURCE_DIR})
+endif()
+
+if(NOT EXISTS ${libc_source_dir}/scripts/headers.sh)
+    message(FATAL_ERROR "Libc source tree not found: ${libc_source_dir}")
+endif()
+
 # We need to generate libc-features.h for even the public headers to work
 # THIS IS NOT TRUE. sys/cdefs.h in the include/ directory here IS NOT the actual public header.
 # We need to exclude it from our search paths.
 add_custom_command(
     OUTPUT
         ${CMAKE_CURRENT_BINARY_DIR}/include/libc-features.h
-    COMMAND ${CMAKE_COMMAND} -E env ARCHS="x86_64 arm64" SRCROOT=${CMAKE_CURRENT_SOURCE_DIR} DERIVED_FILES_DIR=${CMAKE_CURRENT_BINARY_DIR}/include VARIANT_PLATFORM_NAME=macosx perl ${CMAKE_CURRENT_SOURCE_DIR}/scripts/generate_features.pl
+    COMMAND ${CMAKE_COMMAND} -E env ARCHS="x86_64 arm64" SRCROOT=${libc_source_dir} DERIVED_FILES_DIR=${CMAKE_CURRENT_BINARY_DIR}/include VARIANT_PLATFORM_NAME=macosx perl ${libc_source_dir}/scripts/generate_features.pl
     COMMENT "Generating libc-features.h"
 )
 
@@ -29,13 +39,13 @@ set(libc_headers_dir ${CMAKE_CURRENT_BINARY_DIR}/headers)
 add_custom_command(
     OUTPUT ${libc_headers_dir}/libc_headers.stamp
     COMMAND ${CMAKE_COMMAND} -E env ARCHS="arm64 x86_64"
-        SRCROOT=${CMAKE_CURRENT_SOURCE_DIR}
+        SRCROOT=${libc_source_dir}
         DERIVED_FILES_DIR=${CMAKE_CURRENT_BINARY_DIR}
         VARIANT_PLATFORM_NAME=macosx
         DEPLOYMENT_LOCATION=NO
         BUILT_PRODUCTS_DIR=${libc_headers_dir}
         SDK_INSTALL_HEADERS_ROOT=""
-        sh -c "${CMAKE_CURRENT_SOURCE_DIR}/scripts/headers.sh"
+        sh -c "${libc_source_dir}/scripts/headers.sh"
     COMMAND ${CMAKE_COMMAND} -E touch ${libc_headers_dir}/libc_headers.stamp
     COMMENT "Copying libC headers..."
 )
