@@ -59,6 +59,7 @@ target_compile_options(pthread_dyld PRIVATE
     "SHELL:-include mach/thread_switch.h")
 target_link_libraries(pthread_dyld PRIVATE
     AvailabilityHeaders
+    architecture_headers
     clang_bootstrap_headers
     libc_private_headers
     libplatform_headers
