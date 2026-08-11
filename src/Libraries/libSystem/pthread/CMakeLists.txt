@@ -16,6 +16,8 @@ target_include_directories(pthread_common_private_headers INTERFACE
 
 add_darwin_static_library(pthread_dyld)
 add_dependencies(pthread_dyld libsystem_kernel_static)
+file(COPY ${pthread_source_dir}/private/
+    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/private_include/pthread)
 target_sources(pthread_dyld PRIVATE
     ${pthread_source_dir}/src/resolver/resolver.c
     ${pthread_source_dir}/src/qos.c
@@ -31,6 +33,7 @@ target_sources(pthread_dyld PRIVATE
     ${pthread_source_dir}/src/pthread_atfork.c
     ${pthread_source_dir}/src/pthread_asm.s)
 target_include_directories(pthread_dyld PRIVATE
+    ${CMAKE_CURRENT_BINARY_DIR}/private_include
     ${pthread_source_dir}
     ${pthread_source_dir}/private
     ${pthread_source_dir}/src
