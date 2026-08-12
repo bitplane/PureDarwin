@@ -151,13 +151,11 @@ def source_paths(project, target_name, source_root=None, include_flags=False):
                 if path:
                     if source_root is not None and not (source_root / path).exists():
                         parts = list(PurePosixPath(path).parts)
-                        collapsed = [
-                            part for index, part in enumerate(parts)
-                            if index == 0 or part != parts[index - 1]
-                        ]
-                        alternative = str(PurePosixPath(*collapsed))
-                        if (source_root / alternative).exists():
-                            path = alternative
+                        for index in range(1, len(parts)):
+                            alternative = str(PurePosixPath(*parts[index:]))
+                            if (source_root / alternative).exists():
+                                path = alternative
+                                break
                     if include_flags:
                         flags = objects[build_file_id].get("settings", {}).get(
                             "COMPILER_FLAGS", "")
