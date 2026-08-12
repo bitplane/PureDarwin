@@ -1,0 +1,13 @@
+diff --git a/libdarwin/dirstat.c b/libdarwin/dirstat.c
+index 12fe613..7205383 100644
+--- a/libdarwin/dirstat.c
++++ b/libdarwin/dirstat.c
+@@ -36,7 +36,7 @@
+ #include "dirstat.h"
+ #include "dirstat_collection.h"
+ 
+-#if !TARGET_OS_SIMULATOR
++#if !TARGET_OS_SIMULATOR && __has_include(<apfs/apfs_fsctl.h>)
+ #define HAS_APFS
+ #endif
+ 

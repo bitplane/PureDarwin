@@ -1,0 +1,36 @@
+diff --git a/libdarwin/variant.c b/libdarwin/variant.c
+index 1a242e4..18a9e0f 100644
+--- a/libdarwin/variant.c
++++ b/libdarwin/variant.c
+@@ -28,5 +28,11 @@
+ #include <sys/types.h>
+ #include <dispatch/dispatch.h>
+-#include <xpc/xpc.h>
+-#include <xpc/private.h>
++#if __has_include(<xpc/xpc.h>)
++# include <xpc/xpc.h>
++# include <xpc/private.h>
++#else
++# define PUREDARWIN_NO_XPC 1
++# undef TARGET_OS_SIMULATOR
++# define TARGET_OS_SIMULATOR 1
++#endif
+ #include <System/sys/csr.h>
+@@ -330,6 +335,9 @@ static bool _check_internal_release_type(void)
+ #else
+ 
+ static bool _check_internal_diags_profile() {
++#ifdef PUREDARWIN_NO_XPC
++	return false;
++#else
+ 	static enum check_status internal_diags_profile = S_UNKNOWN;
+ 
+ 	if (internal_diags_profile == S_UNKNOWN) {
+@@ -342,6 +350,7 @@ static bool _check_internal_diags_profile() {
+ 	}
+ 
+ 	return status2bool(internal_diags_profile);
++#endif
+ }
+ 
+ #endif

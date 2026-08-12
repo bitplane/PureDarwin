@@ -240,6 +240,7 @@ endfunction()
 
 function(add_libc_object_group name)
     add_darwin_object_library(${name})
+    set_property(TARGET ${name} PROPERTY POSITION_INDEPENDENT_CODE ON)
     target_compile_definitions(${name} PRIVATE
         HAVE_STDINT_H=1
         BUILDING_LIBC
@@ -311,6 +312,70 @@ function(add_libc_object_group name)
     )
 endfunction()
 
+execute_process(
+    COMMAND ${Python3_EXECUTABLE} ${PUREDARWIN_SOURCE_DIR}/scripts/xcconfig.py
+        ${libc_scripts_dir}/libc.xcconfig BASE_EXCLUDED_SOURCE_FILE_NAMES
+        CURRENT_ARCH=x86_64 PLATFORM_NAME=macosx
+    RESULT_VARIABLE result
+    OUTPUT_VARIABLE libc_arch_excluded_sources
+    ERROR_VARIABLE error_text
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+if(NOT result EQUAL 0)
+    message(FATAL_ERROR "Unable to read libc architecture exclusions: ${error_text}")
+endif()
+separate_arguments(libc_arch_excluded_sources UNIX_COMMAND
+    "${libc_arch_excluded_sources}")
+
+function(add_libc_pbx_group name target)
+    cmake_parse_arguments(GROUP "" "INCLUDE;EXCLUDE" "" ${ARGN})
+    execute_process(
+        COMMAND ${Python3_EXECUTABLE} ${PUREDARWIN_SOURCE_DIR}/scripts/pbx-sources.py
+            ${libc_source_dir}/Libc.xcodeproj/project.pbxproj ${target}
+            --xcconfig ${libc_scripts_dir}/libc.xcconfig
+        RESULT_VARIABLE result
+        OUTPUT_VARIABLE source_records
+        ERROR_VARIABLE error_text
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+    if(NOT result EQUAL 0)
+        message(FATAL_ERROR "Unable to read libc target ${target}: ${error_text}")
+    endif()
+    string(REPLACE "\n" ";" source_records "${source_records}")
+    set(group_sources)
+    foreach(record IN LISTS source_records)
+        string(REPLACE "\t" ";" fields "${record}")
+        list(GET fields 0 source)
+        set(source_path ${libc_source_dir}/${source})
+        get_filename_component(source_name ${source} NAME)
+        if(NOT EXISTS ${source_path})
+            continue()
+        endif()
+        if(NOT target STREQUAL "Platform")
+            list(FIND libc_arch_excluded_sources ${source_name} excluded_index)
+            if(NOT excluded_index EQUAL -1)
+                continue()
+            endif()
+        endif()
+        if(GROUP_INCLUDE AND NOT source_path MATCHES "${GROUP_INCLUDE}")
+            continue()
+        endif()
+        if(GROUP_EXCLUDE AND source_path MATCHES "${GROUP_EXCLUDE}")
+            continue()
+        endif()
+        list(APPEND group_sources ${source_path})
+        list(LENGTH fields field_count)
+        if(field_count GREATER 1)
+            list(GET fields 1 source_flags)
+            separate_arguments(source_flags UNIX_COMMAND "${source_flags}")
+            foreach(flag IN LISTS source_flags)
+                set_property(SOURCE ${source_path} APPEND PROPERTY COMPILE_OPTIONS
+                    "$<$<STREQUAL:$<TARGET_PROPERTY:NAME>,${name}>:${flag}>")
+            endforeach()
+        endif()
+    endforeach()
+    add_libc_object_group(${name})
+    target_sources(${name} PRIVATE ${group_sources})
+endfunction()
+
 function(add_libc_variant name variant target)
     execute_process(
         COMMAND ${Python3_EXECUTABLE} ${PUREDARWIN_SOURCE_DIR}/scripts/pbx-sources.py
@@ -343,8 +408,11 @@ function(add_libc_variant name variant target)
     endforeach()
     add_libc_object_group(${name})
     target_sources(${name} PRIVATE ${variant_sources})
-    target_include_directories(${name} BEFORE PRIVATE
-        ${libc_source_dir}/fbsdcompat)
+    # Variant sources include FreeBSD compatibility headers by quoted name,
+    # but must still use Libc's own <sys/cdefs.h> for ABI suffix selection.
+    target_compile_options(${name} PRIVATE
+        "SHELL:-iquote ${libc_source_dir}/fbsdcompat"
+        "SHELL:-include ${libc_source_dir}/fbsdcompat/sys/cdefs.h")
     execute_process(
         COMMAND ${Python3_EXECUTABLE} ${PUREDARWIN_SOURCE_DIR}/scripts/xcconfig.py
             ${libc_scripts_dir}/variants.xcconfig VARIANT_PREPROCESSOR_MACROS
@@ -358,6 +426,10 @@ function(add_libc_variant name variant target)
     endif()
     separate_arguments(variant_flags UNIX_COMMAND "${variant_flags}")
     target_compile_options(${name} PRIVATE ${variant_flags})
+    if(variant MATCHES "CANCELABLE")
+        target_compile_options(${name} PRIVATE
+            -U__DARWIN_NON_CANCELABLE -D__DARWIN_NON_CANCELABLE=0)
+    endif()
 endfunction()
 
 execute_process(
@@ -377,23 +449,14 @@ configure_file(
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libresolv/resolv.h
     ${CMAKE_CURRENT_BINARY_DIR}/resolver_headers/resolv.h COPYONLY)
 
-libc_pbx_sources(libc_platform_sources Platform)
-list(FILTER libc_platform_sources INCLUDE REGEX "/(darwin/init_cpu_capabilities\\.c|x86_64/)")
-add_libc_object_group(libc_platform_runtime)
-target_sources(libc_platform_runtime PRIVATE ${libc_platform_sources})
-
-libc_pbx_sources(libc_base_sources Base)
-list(FILTER libc_base_sources EXCLUDE REGEX
-    "/(darwin/kvm|gen/nlist|string/strcpy|string/strlen|string/strncpy|string/strnlen|sys/OSMemoryNotification)\\.c$")
-add_libc_object_group(libc_base_runtime)
-target_sources(libc_base_runtime PRIVATE ${libc_base_sources})
+add_libc_pbx_group(libc_platform_runtime Platform
+    INCLUDE "/(darwin/init_cpu_capabilities\\.c|x86_64/)")
+add_libc_pbx_group(libc_base_runtime Base)
 set_source_files_properties(${libc_source_dir}/gen/backtrace.c PROPERTIES
     COMPILE_OPTIONS "-include;mach/mach.h")
 
-libc_pbx_sources(libc_freebsd_sources FreeBSD)
-list(FILTER libc_freebsd_sources EXCLUDE REGEX "/gdtoa/FreeBSD/machdep_ldis(d|dd|Q)\\.c$")
-add_libc_object_group(libc_freebsd_runtime)
-target_sources(libc_freebsd_runtime PRIVATE ${libc_freebsd_sources})
+add_libc_pbx_group(libc_freebsd_runtime FreeBSD
+    EXCLUDE "/gdtoa/FreeBSD/machdep_ldis(d|dd|Q)\\.c$")
 # Apple's source release omits the user-space corecrypto DRBG used by the
 # normal arc4random variant.  Build Libc's complete entropy-backed fallback.
 set_source_files_properties(${libc_source_dir}/gen/FreeBSD/arc4random.c
@@ -416,25 +479,19 @@ set_source_files_properties(
 set_source_files_properties(${libc_source_dir}/stdio/FreeBSD/mktemp.c
     PROPERTIES COMPILE_DEFINITIONS "TRUE=1;FALSE=0")
 
-libc_pbx_sources(libc_netbsd_sources NetBSD)
-add_libc_object_group(libc_netbsd_runtime)
-target_sources(libc_netbsd_runtime PRIVATE ${libc_netbsd_sources})
+add_libc_pbx_group(libc_netbsd_runtime NetBSD)
 target_include_directories(libc_netbsd_runtime PRIVATE ${libc_source_dir}/nbsdcompat)
 target_compile_options(libc_netbsd_runtime PRIVATE
     "SHELL:-include ${libc_source_dir}/nbsdcompat/_nbsd_compat_.h")
 
-libc_pbx_sources(libc_tre_sources TRE)
-add_libc_object_group(libc_tre_runtime)
-target_sources(libc_tre_runtime PRIVATE ${libc_tre_sources})
+add_libc_pbx_group(libc_tre_runtime TRE)
 target_compile_definitions(libc_tre_runtime PRIVATE HAVE_CONFIG_H)
 target_include_directories(libc_tre_runtime PRIVATE
     ${libc_source_dir}/regex/FreeBSD
     ${libc_source_dir}/regex/TRE
     ${libc_source_dir}/regex/TRE/lib)
 
-libc_pbx_sources(libc_fortify_sources FortifySource)
-add_libc_object_group(libc_fortify_runtime)
-target_sources(libc_fortify_runtime PRIVATE ${libc_fortify_sources})
+add_libc_pbx_group(libc_fortify_runtime FortifySource)
 
 add_libc_variant(libc_cancelable_runtime CANCELABLE Variant_Cancelable)
 add_libc_variant(libc_darwinextsn_runtime DARWINEXTSN Variant_DarwinExtsn)
@@ -442,3 +499,42 @@ add_libc_variant(libc_darwinextsn_cancelable_runtime
     DARWINEXTSN_CANCELABLE Variant_DarwinExtsn_Cancelable)
 add_libc_variant(libc_pre1050_runtime PRE1050 Variant_Pre1050)
 add_libc_variant(libc_inode32_runtime INODE32 Variant_Inode32)
+
+add_darwin_circular_library(libsystem_c
+    INSTALL_NAME /usr/lib/system/libsystem_c.dylib
+    OBJECT_LIBRARIES
+        libc_platform_runtime
+        libc_base_runtime
+        libc_freebsd_runtime
+        libc_netbsd_runtime
+        libc_tre_runtime
+        libc_fortify_runtime
+        libc_cancelable_runtime
+        libc_darwinextsn_runtime
+        libc_darwinextsn_cancelable_runtime
+        libc_pre1050_runtime
+        libc_inode32_runtime
+    STRONG_SIBLINGS libsystem_platform
+    SIBLINGS libsystem_malloc libsystem_pthread libsystem_platform
+    STRONG_DEPENDENCIES CrashReporterClient libsystem_kernel
+    LINK_OPTIONS "LINKER:-umbrella,System")
+target_link_options(libsystem_c PRIVATE
+    "LINKER:-alias_list,${libc_scripts_dir}/alias.list")
+install(TARGETS libsystem_c DESTINATION usr/lib/system COMPONENT BaseSystem)
+
+libc_pbx_sources(libsystem_darwin_sources libsystem_darwin.dylib)
+add_libc_object_group(libsystem_darwin_runtime)
+target_sources(libsystem_darwin_runtime PRIVATE ${libsystem_darwin_sources})
+target_include_directories(libsystem_darwin_runtime PRIVATE
+    ${libc_source_dir}/libdarwin)
+add_darwin_circular_library(libsystem_darwin
+    INSTALL_NAME /usr/lib/system/libsystem_darwin.dylib
+    OBJECT_LIBRARIES libsystem_darwin_runtime
+    SIBLINGS
+        libsystem_c
+        libsystem_malloc
+        libsystem_platform
+        libsystem_pthread
+    STRONG_DEPENDENCIES libsystem_kernel
+    LINK_OPTIONS "LINKER:-umbrella,System")
+install(TARGETS libsystem_darwin DESTINATION usr/lib/system COMPONENT BaseSystem)

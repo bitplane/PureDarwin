@@ -172,24 +172,28 @@ def main():
     argument_parser.add_argument("project", type=Path)
     argument_parser.add_argument("target")
     argument_parser.add_argument("--flags", action="store_true")
+    argument_parser.add_argument("--xcconfig", type=Path)
     argument_parser.add_argument("--variant-xcconfig", type=Path)
     argument_parser.add_argument("--variant")
     arguments = argument_parser.parse_args()
 
     project = Parser(arguments.project.read_text()).value()
     source_root = arguments.project.parent.parent
-    include_flags = arguments.flags or arguments.variant_xcconfig
+    include_flags = (
+        arguments.flags or arguments.xcconfig or arguments.variant_xcconfig)
     items = source_paths(project, arguments.target, source_root, include_flags)
-    if arguments.variant_xcconfig:
-        if not arguments.variant:
-            argument_parser.error("--variant is required with --variant-xcconfig")
-        values = assignments(arguments.variant_xcconfig)
+    config_path = arguments.variant_xcconfig or arguments.xcconfig
+    if config_path:
+        values = assignments(config_path)
         values.update({
             "CURRENT_ARCH": "x86_64",
             "PLATFORM_NAME": "macosx",
             "SRCROOT": str(source_root),
-            "VARIANT": arguments.variant,
         })
+    if arguments.variant_xcconfig:
+        if not arguments.variant:
+            argument_parser.error("--variant is required with --variant-xcconfig")
+        values["VARIANT"] = arguments.variant
         included = resolve(
             values["VARIANT_INCLUDED_SOURCE_FILE_NAMES"], values).split()
         selected = [item for item in items if Path(item[0]).name in included]
@@ -201,7 +205,7 @@ def main():
     for item in items:
         if include_flags:
             path, flags = item
-            if arguments.variant_xcconfig:
+            if config_path:
                 flags = resolve(flags, values)
             print(f"{path}\t{flags}")
         else:
