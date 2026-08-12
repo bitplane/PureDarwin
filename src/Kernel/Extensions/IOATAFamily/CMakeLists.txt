@@ -35,6 +35,7 @@ target_sources(IOATAFamily PRIVATE
 )
 target_include_directories(IOATAFamily PRIVATE ${ioata_source_dir} ${ioata_include_dir})
 target_link_libraries(IOATAFamily PRIVATE IOStorageFamilyHeaders IOATAFamilyHeaders)
+target_compile_definitions(IOATAFamily PRIVATE ATA_DEBUG=1)
 target_compile_options(IOATAFamily PRIVATE -Wno-implicit-int-conversion -Wno-sign-conversion)
 
 add_library(IOATAFamilyHeaders INTERFACE)
