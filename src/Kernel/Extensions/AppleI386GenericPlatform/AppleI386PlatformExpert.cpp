@@ -97,7 +97,7 @@ IOService *AppleI386PlatformExpert::probe(IOService *provider, SInt32 *score) {
 }
 
 bool AppleI386PlatformExpert::init(OSDictionary *properties) {
-	if (!super::init()) return false;
+	if (!super::init(properties)) return false;
 
 	OSString *name = (OSString *)getProperty("InterruptControllerName");
 	if (name == 0) name = OSString::withCStringNoCopy("AppleI386CPUInterruptController");
