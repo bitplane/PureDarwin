@@ -448,7 +448,11 @@ target_include_directories(libresolv_headers INTERFACE
 add_libc_pbx_group(libc_platform_runtime Platform
     INCLUDE "/(darwin/init_cpu_capabilities\\.c|x86_64/)")
 add_libc_pbx_group(libc_base_runtime Base)
-target_sources(libc_base_runtime PRIVATE compat/flsl.c)
+target_sources(libc_base_runtime PRIVATE
+    compat/flsl.c
+    ${CMAKE_SOURCE_DIR}/tools/cctools/libmacho/getsecbyname.c)
+target_include_directories(libc_base_runtime PRIVATE
+    ${CMAKE_SOURCE_DIR}/tools/cctools/include)
 set_source_files_properties(${libc_source_dir}/gen/backtrace.c PROPERTIES
     COMPILE_OPTIONS "-include;mach/mach.h")
 
