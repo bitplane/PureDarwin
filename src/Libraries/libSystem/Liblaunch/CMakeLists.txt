@@ -49,12 +49,17 @@ target_compile_options(liblaunch_runtime PRIVATE
     "SHELL:-include os/base_private.h")
 target_compile_definitions(liblaunch_runtime PRIVATE
     PRIVATE=1
-    USE_OBJC=0)
+    PUREDARWIN_LIBLAUNCH_CLIENT=1
+    USE_OBJC=0
+    XPC_BUILDING_LAUNCHD=1
+    __DARWIN_NON_CANCELABLE=1
+    _DARWIN_USE_64_BIT_INODE=1)
 target_include_directories(liblaunch_runtime PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}/include
     ${liblaunch_source_dir}
     ${launchd_source_dir}/src
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/Libinfo/lookup.subproj
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch)
 target_link_libraries(liblaunch_runtime PRIVATE
     AvailabilityHeaders
