@@ -449,6 +449,10 @@ configure_file(
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libresolv/resolv.h
     ${CMAKE_CURRENT_BINARY_DIR}/resolver_headers/resolv.h COPYONLY)
 
+add_library(libresolv_headers INTERFACE)
+target_include_directories(libresolv_headers INTERFACE
+    ${CMAKE_CURRENT_BINARY_DIR}/resolver_headers)
+
 add_libc_pbx_group(libc_platform_runtime Platform
     INCLUDE "/(darwin/init_cpu_capabilities\\.c|x86_64/)")
 add_libc_pbx_group(libc_base_runtime Base)
