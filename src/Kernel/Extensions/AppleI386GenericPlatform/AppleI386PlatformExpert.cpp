@@ -100,8 +100,8 @@ bool AppleI386PlatformExpert::init(OSDictionary *properties) {
 	if (!super::init(properties)) return false;
 
 	OSString *name = (OSString *)getProperty("InterruptControllerName");
-	if (name == 0) name = OSString::withCStringNoCopy("AppleI386CPUInterruptController");
-	_interruptControllerName = OSSymbol::withString(name);
+	_interruptControllerName = name ? OSSymbol::withString(name)
+	                                : gPlatformInterruptControllerName;
 
 	return true;
 }
