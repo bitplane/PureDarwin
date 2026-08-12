@@ -49,14 +49,19 @@ target_sources(libdyld_runtime PRIVATE
     ${closured_protocol_header}
     ${closured_protocol_source})
 target_include_directories(libdyld_runtime PRIVATE
+    $<TARGET_PROPERTY:libc_public_headers,INTERFACE_INCLUDE_DIRECTORIES>
     ${CMAKE_CURRENT_BINARY_DIR}
     ${dyld_source_dir}/include
+    ${dyld_source_dir}/include/mach-o
     ${dyld_source_dir}/src
     ${dyld_source_dir}/dyld3
     ${dyld_source_dir}/dyld3/shared-cache
     ${dyld_source_dir}/dyld3/closured
+    ${PUREDARWIN_SOURCE_DIR}/src/Libraries/dyld/compat
     ${PUREDARWIN_SOURCE_DIR}/tools/cctools/include
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch/src/BlocksRuntime
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/launchd/liblaunch
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libplatform/private
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/libsyscall/mach
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/libsyscall/wrappers/libproc
