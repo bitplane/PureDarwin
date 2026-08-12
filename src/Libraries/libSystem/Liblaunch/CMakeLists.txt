@@ -60,11 +60,13 @@ target_include_directories(liblaunch_runtime PRIVATE
     ${liblaunch_source_dir}
     ${launchd_source_dir}/src
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/Libinfo/lookup.subproj
-    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch)
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/libsyscall/wrappers/libproc)
 target_link_libraries(liblaunch_runtime PRIVATE
     AvailabilityHeaders
     architecture_headers
     clang_bootstrap_headers
+    dyld_headers
     libc_private_headers
     libplatform_headers
     libplatform_private_headers
