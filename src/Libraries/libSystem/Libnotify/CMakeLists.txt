@@ -25,6 +25,7 @@ install(FILES
 
 add_darwin_object_library(libsystem_notify_runtime)
 set_property(TARGET libsystem_notify_runtime PROPERTY POSITION_INDEPENDENT_CODE ON)
+add_dependencies(libsystem_notify_runtime libsystem_kernel_static)
 
 set(libnotify_ipc_header ${CMAKE_CURRENT_BINARY_DIR}/notify_ipc.h)
 set(libnotify_ipc_source ${CMAKE_CURRENT_BINARY_DIR}/notify_ipcUser.c)

@@ -18,6 +18,7 @@ endforeach()
 
 add_darwin_object_library(libsystem_info_runtime)
 set_property(TARGET libsystem_info_runtime PROPERTY POSITION_INDEPENDENT_CODE ON)
+add_dependencies(libsystem_info_runtime libsystem_kernel_static)
 target_sources(libsystem_info_runtime PRIVATE ${libinfo_sources})
 target_compile_definitions(libsystem_info_runtime PRIVATE
     __DARWIN_NON_CANCELABLE=1
@@ -37,7 +38,9 @@ target_include_directories(libsystem_info_runtime PRIVATE
     ${libinfo_source_dir}/membership.subproj
     ${libinfo_source_dir}/nis.subproj
     ${libinfo_source_dir}/rpc.subproj
-    ${libinfo_source_dir}/util.subproj)
+    ${libinfo_source_dir}/util.subproj
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libresolv
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/mDNSResponder/mDNSShared)
 target_link_libraries(libsystem_info_runtime PRIVATE
     AvailabilityHeaders
     architecture_headers
