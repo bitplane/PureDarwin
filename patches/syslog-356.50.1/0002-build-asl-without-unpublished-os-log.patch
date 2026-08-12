@@ -1,0 +1,163 @@
+diff --git a/libsystem_asl.tproj/src/asl.c b/libsystem_asl.tproj/src/asl.c
+index 5e148ec..e0c80a0 100644
+--- a/libsystem_asl.tproj/src/asl.c
++++ b/libsystem_asl.tproj/src/asl.c
+@@ -54,8 +54,10 @@
+ #ifndef PUREDARWIN_NO_OS_ACTIVITY
+ #include <os/activity.h>
+ #endif
++#ifndef PUREDARWIN_NO_OS_LOG
+ #include <os/log.h>
+ #include <os/log_private.h>
++#endif
+ #include <asl_ipc.h>
+ #include <asl_client.h>
+ #include <asl_core.h>
+@@ -68,7 +70,11 @@
+ 
+ #define FETCH_BATCH	256
+ 
++#ifdef PUREDARWIN_NO_OS_LOG
++#define EVAL_DEFAULT_ACTION EVAL_SEND_ASL
++#else
+ #define EVAL_DEFAULT_ACTION (EVAL_SEND_ASL | EVAL_SEND_TRACE)
++#endif
+ #define EVAL_ASL (EVAL_SEND_ASL | EVAL_TEXT_FILE | EVAL_ASL_FILE)
+ 
+ /*
+@@ -89,6 +95,7 @@
+  */
+ #define SIZE_LIMIT_MSG "*** ASL MESSAGE SIZE (%u bytes) EXCEEDED MAXIMIMUM SIZE (%u bytes) ***"
+ 
++#ifndef PUREDARWIN_NO_OS_LOG
+ static const os_log_type_t shim_asl_to_log_type[8] = {
+ 	OS_LOG_TYPE_DEFAULT,    // ASL_LEVEL_EMERG
+ 	OS_LOG_TYPE_DEFAULT,    // ASL_LEVEL_ALERT
+@@ -99,6 +106,7 @@ static const os_log_type_t shim_asl_to_log_type[8] = {
+ 	OS_LOG_TYPE_INFO,       // ASL_LEVEL_INFO
+ 	OS_LOG_TYPE_DEBUG       // ASL_LEVEL_DEBUG
+ };
++#endif
+ 
+ /* forward */
+ static ASL_STATUS _asl_send_message(asl_object_t obj, uint32_t eval, asl_msg_t *msg, const char *mstring);
+@@ -780,6 +788,7 @@ asl_vlog(asl_object_t client, asl_object_t msg, int level, const char *format, v
+ 	uint32_t eval = _asl_evaluate_send(client, msg, level);
+ 	void *addr = __builtin_return_address(0);
+ 
++#ifndef PUREDARWIN_NO_OS_LOG
+ 	if ((eval & EVAL_SEND_TRACE) && os_log_shim_enabled(addr))
+ 	{
+ 		va_list ap_copy;
+@@ -796,7 +805,9 @@ asl_vlog(asl_object_t client, asl_object_t msg, int level, const char *format, v
+ 			status = _asl_lib_vlog_text(client, eval, msg, format, ap);
+ 		}
+ 	}
+-	else if (eval & EVAL_ASL)
++	else
++#endif
++	if (eval & EVAL_ASL)
+ 	{
+ 		status = _asl_lib_vlog(client, eval, msg, format, ap);
+ 	}
+@@ -847,6 +858,7 @@ asl_log(asl_object_t client, asl_object_t msg, int level, const char *format, ..
+ 	uint32_t eval = _asl_evaluate_send(client, msg, level);
+ 	void *addr = __builtin_return_address(0);
+ 
++#ifndef PUREDARWIN_NO_OS_LOG
+ 	if ((eval & EVAL_SEND_TRACE) && os_log_shim_enabled(addr))
+ 	{
+ 		va_list ap;
+@@ -866,7 +878,9 @@ asl_log(asl_object_t client, asl_object_t msg, int level, const char *format, ..
+ 			va_end(ap);
+ 		}
+ 	}
+-	else if (eval & EVAL_ASL)
++	else
++#endif
++	if (eval & EVAL_ASL)
+ 	{
+ 		va_list ap;
+ 		va_start(ap, format);
+@@ -892,6 +906,7 @@ asl_log_message(int level, const char *format, ...)
+ 	uint32_t eval = _asl_evaluate_send(NULL, NULL, level);
+ 	void *addr = __builtin_return_address(0);
+ 
++#ifndef PUREDARWIN_NO_OS_LOG
+ 	if ((eval & EVAL_SEND_TRACE) && os_log_shim_enabled(addr))
+ 	{
+ 		va_list ap;
+@@ -911,7 +926,9 @@ asl_log_message(int level, const char *format, ...)
+ 			va_end(ap);
+ 		}
+ 	}
+-	else if (eval & EVAL_ASL)
++	else
++#endif
++	if (eval & EVAL_ASL)
+ 	{
+ 		va_list ap;
+ 		va_start(ap, format);
+@@ -1539,6 +1556,7 @@ _asl_send_message(asl_object_t obj, uint32_t eval, asl_msg_t *msg, const char *m
+ 	return outstatus;
+ }
+ 
++#ifndef PUREDARWIN_NO_OS_LOG
+ static void
+ os_log_with_args_wrapper(void *addr, int level, const char *format, ...)
+ {
+@@ -1551,6 +1569,7 @@ os_log_with_args_wrapper(void *addr, int level, const char *format, ...)
+ 	os_log_with_args(OS_LOG_DEFAULT, type, format, ap, addr);
+ 	va_end(ap);
+ }
++#endif
+ 
+ /*
+  * asl_send: send a message 
+@@ -1568,6 +1587,7 @@ asl_client_internal_send(asl_object_t obj, asl_object_t msg, void *addr)
+ 
+ 	const char *message = asl_msg_get_val_for_key((asl_msg_t *)msg, ASL_KEY_MSG);
+ 
++#ifndef PUREDARWIN_NO_OS_LOG
+ 	if ((eval & EVAL_SEND_TRACE) && message && message[0] && os_log_shim_enabled(addr))
+ 	{
+ 		int level = ASL_LEVEL_DEBUG;
+@@ -1587,7 +1607,9 @@ asl_client_internal_send(asl_object_t obj, asl_object_t msg, void *addr)
+ 			status = _asl_send_message_text(NULL, NULL, obj, eval, (asl_msg_t *)msg, NULL, true);
+ 		}
+ 	}
+-	else if (eval & EVAL_ASL)
++	else
++#endif
++	if (eval & EVAL_ASL)
+ 	{
+ 		status = _asl_send_message(obj, eval, (asl_msg_t *)msg, NULL);
+ 	}
+diff --git a/libsystem_asl.tproj/src/asl_msg.c b/libsystem_asl.tproj/src/asl_msg.c
+index f1019e8..2726c89 100644
+--- a/libsystem_asl.tproj/src/asl_msg.c
++++ b/libsystem_asl.tproj/src/asl_msg.c
+@@ -3139,6 +3139,7 @@ _asl_log_args_to_xpc(asl_object_t client, asl_object_t msg, xpc_object_t dict)
+ 	_asl_msg_to_xpc(asl_client_kvdict((asl_client_t *)client), dict);
+ 	_asl_msg_to_xpc((asl_msg_t *)msg, dict);
+ }
++#endif
+ 
+ #pragma mark -
+ #pragma mark asl_object support
+diff --git a/libsystem_asl.tproj/src/asl_util.c b/libsystem_asl.tproj/src/asl_util.c
+index cef1b43..2ae0c73 100644
+--- a/libsystem_asl.tproj/src/asl_util.c
++++ b/libsystem_asl.tproj/src/asl_util.c
+@@ -343,3 +343,11 @@ asl_trigger_aslmanager(void)
+ 	xpc_release(connection);
+ 	return 0;
+ }
++#else
++int
++asl_trigger_aslmanager(void)
++{
++	errno = ENOTSUP;
++	return -1;
++}
++#endif

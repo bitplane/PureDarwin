@@ -35,6 +35,7 @@ target_sources(libsystem_asl_runtime PRIVATE
 target_compile_definitions(libsystem_asl_runtime PRIVATE
     PRIVATE=1
     PUREDARWIN_NO_OS_ACTIVITY=1
+    PUREDARWIN_NO_OS_LOG=1
     PUREDARWIN_NO_XPC=1
     USE_OBJC=0
     __DARWIN_NON_CANCELABLE=1)
@@ -48,6 +49,7 @@ target_include_directories(libsystem_asl_runtime PRIVATE
     ${libasl_source_dir}/src
     ${syslog_source_dir}/aslcommon
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/Libinfo/lookup.subproj
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/Libinfo/membership.subproj
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/launchd/liblaunch
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/bsd)
