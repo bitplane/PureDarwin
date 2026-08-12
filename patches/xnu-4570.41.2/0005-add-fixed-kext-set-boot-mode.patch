@@ -1,0 +1,14 @@
+diff --git a/libkern/c++/OSKext.cpp b/libkern/c++/OSKext.cpp
+--- a/libkern/c++/OSKext.cpp
++++ b/libkern/c++/OSKext.cpp
+@@ -687,6 +687,10 @@ OSKext::initialize(void)
+     }
+ 
+     PE_parse_boot_argn("keepsyms", &sKeepSymbols, sizeof(sKeepSymbols));
++    if (PE_parse_boot_argn("-no-kext-autounload", bootArgBuffer,
++                           sizeof(bootArgBuffer))) {
++        sAutounloadEnabled = false;
++    }
+ #if KASAN_DYNAMIC_BLACKLIST
+    /* needed for function lookup */
+    sKeepSymbols = true;
