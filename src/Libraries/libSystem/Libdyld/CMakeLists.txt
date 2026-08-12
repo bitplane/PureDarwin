@@ -79,10 +79,12 @@ target_link_libraries(libdyld_runtime PRIVATE
     architecture_headers
     clang_bootstrap_headers
     dyld_headers
+    libc_public_headers
     libc_private_headers
     libplatform_headers
     libsystem_kernel_private_headers
     libsystem_private_headers
+    pthread_common_headers
     pthread_common_private_headers
     xnu_headers
     xnu_private_headers)
