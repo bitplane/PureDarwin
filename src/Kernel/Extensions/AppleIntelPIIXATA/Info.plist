@@ -203,6 +203,8 @@
 	</dict>
 	<key>OSBundleLibraries</key>
 	<dict>
+		<key>com.apple.iokit.IOATABlockStorage</key>
+		<string>1.3.0</string>
 		<key>com.apple.iokit.IOATAFamily</key>
 		<string>1.5.0d1</string>
 		<key>com.apple.iokit.IOPCIFamily</key>
