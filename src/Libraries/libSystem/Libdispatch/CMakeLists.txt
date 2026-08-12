@@ -16,19 +16,23 @@ add_darwin_object_library(libdispatch_runtime)
 set_property(TARGET libdispatch_runtime PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 set(protocol_header ${CMAKE_CURRENT_BINARY_DIR}/protocol.h)
+set(protocol_source ${CMAKE_CURRENT_BINARY_DIR}/protocolUser.c)
 set(protocol_server_header ${CMAKE_CURRENT_BINARY_DIR}/protocolServer.h)
 set(protocol_server_source ${CMAKE_CURRENT_BINARY_DIR}/protocolServer.c)
 mig(${libdispatch_source_dir}/src/protocol.defs
     INCLUDES_FROM_TARGET libdispatch_runtime
     USER_HEADER ${protocol_header}
+    USER_SOURCE ${protocol_source}
     SERVER_HEADER ${protocol_server_header}
     SERVER_SOURCE ${protocol_server_source}
     NOVOUCHERS)
 
 set(firehose_header ${CMAKE_CURRENT_BINARY_DIR}/firehose.h)
+set(firehose_source ${CMAKE_CURRENT_BINARY_DIR}/firehoseUser.c)
 mig(${libdispatch_source_dir}/src/firehose/firehose.defs
     INCLUDES_FROM_TARGET libdispatch_runtime
     USER_HEADER ${firehose_header}
+    USER_SOURCE ${firehose_source}
     NOVOUCHERS)
 
 set(firehose_reply_server_header
@@ -63,7 +67,11 @@ target_sources(libdispatch_runtime PRIVATE
     ${libdispatch_source_dir}/src/time.c
     ${libdispatch_source_dir}/src/allocator.c
     ${libdispatch_source_dir}/src/benchmark.c
+    ${PUREDARWIN_COMPILER_RT_SOURCE_DIR}/lib/builtins/udivmodti4.c
+    ${PUREDARWIN_COMPILER_RT_SOURCE_DIR}/lib/builtins/udivti3.c
     ${firehose_header}
+    ${firehose_source}
+    ${protocol_source}
     ${protocol_server_source}
     ${firehose_reply_server_source})
 
@@ -75,6 +83,7 @@ target_include_directories(libdispatch_runtime PRIVATE
     ${libdispatch_source_dir}/src/BlocksRuntime
     ${libdispatch_source_dir}/src/event
     ${libdispatch_source_dir}/src/firehose
+    ${PUREDARWIN_COMPILER_RT_SOURCE_DIR}/lib/builtins
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/bsd
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/libsyscall/wrappers/libproc)
 target_compile_definitions(libdispatch_runtime PRIVATE
