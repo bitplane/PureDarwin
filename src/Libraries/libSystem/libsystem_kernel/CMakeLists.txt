@@ -217,7 +217,7 @@ target_link_libraries(libsystem_kernel_static PUBLIC architecture_headers)
 
 target_include_directories(libsystem_kernel_static PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/public_include)
 target_include_directories(libsystem_kernel_static PRIVATE
-    ${libsyscall_source_dir}/mach/mach
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/osfmk
     ${libsyscall_source_dir}/mach
     ${libsyscall_source_dir}/mach/servers
     ${libsyscall_source_dir}/custom
