@@ -29,7 +29,7 @@ grep -q '__has_include(<xpc/xpc.h>)' "$SOURCE_ROOT/libc/libdarwin/variant.c" || 
     patch -d "$SOURCE_ROOT/libc" -p1 < "$LIBC_VARIANT_PATCH"
 }
 
-if grep -q 'typeof(e) _e = (e);' "$LIBDISPATCH_INTERNAL"; then
+if ! grep -q 'long _e = (long)(e);' "$LIBDISPATCH_INTERNAL"; then
     patch -d "$SOURCE_ROOT/libdispatch" -p1 < "$LIBDISPATCH_ASSERT_PATCH"
 fi
 grep -q 'long _e = (long)(e);' "$LIBDISPATCH_INTERNAL"
