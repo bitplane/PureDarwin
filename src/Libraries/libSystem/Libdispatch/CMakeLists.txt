@@ -73,7 +73,8 @@ target_include_directories(libdispatch_runtime PRIVATE
     ${libdispatch_source_dir}/src
     ${libdispatch_source_dir}/src/BlocksRuntime
     ${libdispatch_source_dir}/src/event
-    ${libdispatch_source_dir}/src/firehose)
+    ${libdispatch_source_dir}/src/firehose
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/libsyscall/wrappers/libproc)
 target_compile_definitions(libdispatch_runtime PRIVATE
     __DARWIN_NON_CANCELABLE=1
     DISPATCH_USE_INTERNAL_WORKQUEUE=0
@@ -82,6 +83,7 @@ target_compile_definitions(libdispatch_runtime PRIVATE
 target_compile_options(libdispatch_runtime PRIVATE
     -fblocks
     -fno-exceptions
+    "SHELL:-include os/base_private.h"
     -Wno-deprecated-declarations)
 target_link_libraries(libdispatch_runtime PRIVATE
     AvailabilityHeaders
