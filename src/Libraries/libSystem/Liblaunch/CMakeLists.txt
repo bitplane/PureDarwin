@@ -5,6 +5,11 @@ if(NOT EXISTS ${liblaunch_source_dir}/liblaunch.c)
     message(FATAL_ERROR "launchd source tree not found: ${launchd_source_dir}")
 endif()
 
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/servers)
+configure_file(
+    ${liblaunch_source_dir}/bootstrap.h
+    ${CMAKE_CURRENT_BINARY_DIR}/include/servers/bootstrap.h COPYONLY)
+
 add_darwin_object_library(liblaunch_runtime)
 set_property(TARGET liblaunch_runtime PROPERTY POSITION_INDEPENDENT_CODE ON)
 
@@ -43,6 +48,7 @@ target_compile_options(liblaunch_runtime PRIVATE
     -fno-common)
 target_include_directories(liblaunch_runtime PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}/include
     ${liblaunch_source_dir}
     ${launchd_source_dir}/src
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch
@@ -73,4 +79,3 @@ add_darwin_circular_library(liblaunch
     LINK_OPTIONS "LINKER:-umbrella,System")
 target_link_libraries(liblaunch PRIVATE dispatch_firstpass)
 install(TARGETS liblaunch DESTINATION usr/lib/system COMPONENT BaseSystem)
-
