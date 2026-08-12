@@ -23,8 +23,6 @@ target_sources(System PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/missing_runtime.c)
 target_include_directories(System PRIVATE
     ${libsystem_source_dir}
-    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/dyld/include
-    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/dyld/include/mach-o
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libmalloc/src
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libplatform/include
