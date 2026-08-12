@@ -76,6 +76,7 @@ target_include_directories(libdispatch_runtime PRIVATE
     ${libdispatch_source_dir}/src/firehose
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/libsyscall/wrappers/libproc)
 target_compile_definitions(libdispatch_runtime PRIVATE
+    DISPATCH_USE_DTRACE=0
     __DARWIN_NON_CANCELABLE=1
     DISPATCH_USE_INTERNAL_WORKQUEUE=0
     HAVE_PTHREAD_WORKQUEUES=1
