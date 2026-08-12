@@ -26,6 +26,7 @@ function(add_darwin_circular_library name)
     endforeach()
 
     target_link_libraries(${firstpass_name} PRIVATE ${CIRCULAR_STRONG_DEPENDENCIES})
+    target_link_libraries(${firstpass_name} PRIVATE libdyld_bootstrap)
 
     add_darwin_shared_library(${name} INSTALL_NAME ${CIRCULAR_INSTALL_NAME})
     target_link_options(${name} PRIVATE ${CIRCULAR_LINK_OPTIONS})
@@ -44,4 +45,5 @@ function(add_darwin_circular_library name)
 
     target_link_libraries(${name} PRIVATE ${CIRCULAR_DEPENDENCIES})
     target_link_libraries(${name} PRIVATE ${CIRCULAR_STRONG_DEPENDENCIES})
+    target_link_libraries(${name} PRIVATE libdyld_bootstrap)
 endfunction()
