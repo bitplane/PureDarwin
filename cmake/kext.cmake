@@ -52,7 +52,18 @@ function(add_kext_bundle name)
 
     add_kmod_info(${name} MAIN_FUNCTION ${SL_MAIN_FUNCTION} ANTIMAIN_FUNCTION ${SL_ANTIMAIN_FUNCTION})
 
-    file(READ ${SL_INFO_PLIST} kext_info_plist)
+    execute_process(
+        COMMAND ${CMAKE_C_COMPILER} -E -P -x c
+            -DTARGET_OS_OSX=1 -DTARGET_OS_EMBEDDED=0
+            ${SL_INFO_PLIST}
+        OUTPUT_VARIABLE kext_info_plist
+        ERROR_VARIABLE kext_info_plist_error
+        RESULT_VARIABLE kext_info_plist_result
+    )
+    if(NOT kext_info_plist_result EQUAL 0)
+        message(FATAL_ERROR
+            "Failed to preprocess ${SL_INFO_PLIST}: ${kext_info_plist_error}")
+    endif()
     string(REPLACE "\${EXECUTABLE_NAME}" "${SL_BUNDLE_NAME}" kext_info_plist "${kext_info_plist}")
     string(REPLACE "$(EXECUTABLE_NAME)" "${SL_BUNDLE_NAME}" kext_info_plist "${kext_info_plist}")
     string(REPLACE "\${PRODUCT_NAME}" "${SL_BUNDLE_NAME}" kext_info_plist "${kext_info_plist}")
