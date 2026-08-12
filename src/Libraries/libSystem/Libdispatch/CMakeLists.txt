@@ -74,6 +74,7 @@ target_include_directories(libdispatch_runtime PRIVATE
     ${libdispatch_source_dir}/src/BlocksRuntime
     ${libdispatch_source_dir}/src/event
     ${libdispatch_source_dir}/src/firehose
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/bsd
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/libsyscall/wrappers/libproc)
 target_compile_definitions(libdispatch_runtime PRIVATE
     DISPATCH_USE_DTRACE=0
