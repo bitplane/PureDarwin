@@ -18,7 +18,8 @@ file(COPY ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch/private/
 add_library(libnotify_headers INTERFACE)
 target_include_directories(libnotify_headers INTERFACE
     ${libnotify_source_dir}
-    ${CMAKE_CURRENT_BINARY_DIR})
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}/include)
 install(FILES
     ${libnotify_source_dir}/notify.h
     DESTINATION usr/include COMPONENT DeveloperTools)
