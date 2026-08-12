@@ -31,6 +31,7 @@ target_sources(IOATAFamily PRIVATE
     ${ioata_source_dir}/IOATADevConfig.cpp
     ${ioata_source_dir}/IOATADevice.cpp
     ${ioata_source_dir}/IOATARegI386.cpp
+    ${ioata_source_dir}/IOPCIATA.cpp
 )
 target_include_directories(IOATAFamily PRIVATE ${ioata_source_dir} ${ioata_include_dir})
 target_link_libraries(IOATAFamily PRIVATE IOStorageFamilyHeaders IOATAFamilyHeaders)
