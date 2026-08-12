@@ -100,11 +100,10 @@ if ! grep -q 'all non-booter callers must be entitled' "$XNU_OSKEXT_SOURCE"; the
 fi
 grep -q 'all non-booter callers must be entitled' "$XNU_OSKEXT_SOURCE"
 
-if grep -A4 'mach_make_memory_entry( kernel_map' "$XNU_COMMPAGE_SOURCE" | grep -q '^[[:space:]]*uperm,'; then
+if ! grep -q 'Keep the kernel alias writable' "$XNU_COMMPAGE_SOURCE"; then
     patch -d "$SOURCE_ROOT/xnu" -p1 < "$XNU_COMMPAGE_PATCH"
 fi
-grep -A4 'mach_make_memory_entry( kernel_map' "$XNU_COMMPAGE_SOURCE" \
-    | grep -q 'VM_PROT_READ | VM_PROT_WRITE'
+grep -q 'Keep the kernel alias writable' "$XNU_COMMPAGE_SOURCE"
 
 if grep -q '^#define COM_APPLE_KEC' "$XNU_BOOTSTRAP_SOURCE"; then
     patch -d "$SOURCE_ROOT/xnu" -p1 < "$XNU_KEC_PATCH"
