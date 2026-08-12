@@ -24,6 +24,7 @@ add_dependencies(libsystem_info_runtime libsystem_kernel_static)
 target_sources(libsystem_info_runtime PRIVATE
     ${libinfo_sources}
     ${libinfo_source_dir}/dns.subproj/herror.c
+    ${libinfo_source_dir}/membership.subproj/membership.c
     compat/mdns_disabled.c)
 target_compile_definitions(libsystem_info_runtime PRIVATE
     __DARWIN_NON_CANCELABLE=1
