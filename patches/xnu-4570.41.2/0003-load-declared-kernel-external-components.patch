@@ -1,0 +1,29 @@
+diff --git a/libsa/bootstrap.cpp b/libsa/bootstrap.cpp
+--- a/libsa/bootstrap.cpp
++++ b/libsa/bootstrap.cpp
+@@ -839,8 +839,6 @@ KLDBootstrap::readBooterExtensions(void)
+ * general purpose IOKit probing begins.
+ *********************************************************************/
+ 
+-#define COM_APPLE_KEC  "com.apple.kec."
+-
+ void
+ KLDBootstrap::loadKernelExternalComponents(void)
+ {
+@@ -871,16 +869,6 @@ KLDBootstrap::loadKernelExternalComponents(void)
+ 
+     while ((bundleID = OSDynamicCast(OSString, keyIterator->getNextObject()))) {
+ 
+-        const char * bundle_id = bundleID->getCStringNoCopy();
+-        
+-       /* Skip extensions whose bundle IDs don't start with "com.apple.kec.".
+-        */
+-        if (!bundle_id ||
+-            (strncmp(bundle_id, COM_APPLE_KEC, CONST_STRLEN(COM_APPLE_KEC)) != 0)) {
+-
+-            continue;
+-        }
+-
+         theKext = OSDynamicCast(OSKext, extensionsDict->getObject(bundleID));
+         if (!theKext) {
+             continue;

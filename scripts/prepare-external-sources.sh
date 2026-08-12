@@ -32,6 +32,8 @@ XNU_OSKEXT_SOURCE=$SOURCE_ROOT/xnu/libkern/c++/OSKext.cpp
 XNU_BOOT_KEXT_PATCH=$SCRIPT_DIR/../patches/xnu-4570.41.2/0001-allow-kernel-boot-to-link-external-extensions.patch
 XNU_COMMPAGE_SOURCE=$SOURCE_ROOT/xnu/osfmk/i386/commpage/commpage.c
 XNU_COMMPAGE_PATCH=$SCRIPT_DIR/../patches/xnu-4570.41.2/0002-keep-kernel-commpage-mapping-writable.patch
+XNU_BOOTSTRAP_SOURCE=$SOURCE_ROOT/xnu/libsa/bootstrap.cpp
+XNU_KEC_PATCH=$SCRIPT_DIR/../patches/xnu-4570.41.2/0003-load-declared-kernel-external-components.patch
 
 if grep -q 'if (fd == -1) return;' "$ASL_SOURCE"; then
     patch -d "$SOURCE_ROOT/libplatform" -p1 < "$ASL_PATCH"
@@ -101,3 +103,8 @@ if grep -A4 'mach_make_memory_entry( kernel_map' "$XNU_COMMPAGE_SOURCE" | grep -
 fi
 grep -A4 'mach_make_memory_entry( kernel_map' "$XNU_COMMPAGE_SOURCE" \
     | grep -q 'VM_PROT_READ | VM_PROT_WRITE'
+
+if grep -q '^#define COM_APPLE_KEC' "$XNU_BOOTSTRAP_SOURCE"; then
+    patch -d "$SOURCE_ROOT/xnu" -p1 < "$XNU_KEC_PATCH"
+fi
+! grep -q '^#define COM_APPLE_KEC' "$XNU_BOOTSTRAP_SOURCE"
