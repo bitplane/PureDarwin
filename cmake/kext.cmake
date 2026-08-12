@@ -23,7 +23,7 @@ function(add_kext_bundle name)
         -ffreestanding
         $<$<COMPILE_LANGUAGE:CXX>:-fapple-kext>
     )
-    target_link_options(${name} PRIVATE "LINKER:-bundle")
+    target_link_options(${name} PRIVATE "LINKER:-kext")
     target_link_options(${name} PRIVATE "SHELL:-undefined dynamic_lookup")
 
     if(SL_KERNEL_PRIVATE)
