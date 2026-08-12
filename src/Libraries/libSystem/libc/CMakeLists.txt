@@ -449,6 +449,7 @@ add_libc_pbx_group(libc_platform_runtime Platform
     INCLUDE "/(darwin/init_cpu_capabilities\\.c|x86_64/)")
 add_libc_pbx_group(libc_base_runtime Base)
 target_sources(libc_base_runtime PRIVATE
+    compat/byteorder.c
     compat/flsl.c
     ${CMAKE_SOURCE_DIR}/tools/cctools/libmacho/getsecbyname.c)
 target_include_directories(libc_base_runtime PRIVATE
