@@ -13,3 +13,19 @@ add_subdirectory(libplatform)
 add_subdirectory(libmalloc)
 add_subdirectory(libsystem_kernel)
 add_subdirectory(pthread)
+
+add_custom_target(base_system_runtime DEPENDS
+    dispatch
+    libdyld
+    liblaunch
+    libsystem_asl
+    libsystem_blocks
+    libsystem_c
+    libsystem_darwin
+    libsystem_info
+    libsystem_kernel
+    libsystem_m
+    libsystem_malloc
+    libsystem_notify
+    libsystem_platform
+    libsystem_pthread)
