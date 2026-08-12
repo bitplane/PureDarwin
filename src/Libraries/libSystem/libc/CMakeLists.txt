@@ -533,7 +533,9 @@ add_darwin_circular_library(libsystem_c
     LINK_OPTIONS
         "LINKER:-umbrella,System"
         "LINKER:-undefined,dynamic_lookup")
-target_link_options(libsystem_c libsystem_c_firstpass PRIVATE
+target_link_options(libsystem_c PRIVATE
+    "LINKER:-alias_list,${libc_scripts_dir}/alias.list")
+target_link_options(libsystem_c_firstpass PRIVATE
     "LINKER:-alias_list,${libc_scripts_dir}/alias.list")
 install(TARGETS libsystem_c DESTINATION usr/lib/system COMPONENT BaseSystem)
 
