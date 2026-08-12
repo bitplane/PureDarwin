@@ -25,7 +25,6 @@ target_compile_definitions(libsystem_info_runtime PRIVATE
     __MigTypeCheck=1
     INET6=1
     CONFIG_MAC
-    DS_AVAILABLE
     SYNTH_ROOTFS)
 target_compile_options(libsystem_info_runtime PRIVATE
     -fno-common
@@ -40,7 +39,8 @@ target_include_directories(libsystem_info_runtime PRIVATE
     ${libinfo_source_dir}/rpc.subproj
     ${libinfo_source_dir}/util.subproj
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libresolv
-    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/mDNSResponder/mDNSShared)
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/mDNSResponder/mDNSShared
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/syslog/libsystem_asl.tproj/include)
 target_link_libraries(libsystem_info_runtime PRIVATE
     AvailabilityHeaders
     architecture_headers
