@@ -63,6 +63,7 @@ target_sources(libdispatch_runtime PRIVATE
     ${libdispatch_source_dir}/src/time.c
     ${libdispatch_source_dir}/src/allocator.c
     ${libdispatch_source_dir}/src/benchmark.c
+    ${firehose_header}
     ${protocol_server_source}
     ${firehose_reply_server_source})
 

@@ -1,0 +1,13 @@
+diff --git a/src/internal.h b/src/internal.h
+index e25d34b..74979b1 100644
+--- a/src/internal.h
++++ b/src/internal.h
+@@ -459,7 +459,7 @@
+ 		if (__builtin_constant_p(e)) { \
+ 			dispatch_static_assert(e); \
+ 		} else { \
+-			typeof(e) _e = (e); /* always eval 'e' */ \
++			long _e = (long)(e); /* always eval 'e' */ \
+ 			if (unlikely(DISPATCH_DEBUG && !_e)) { \
+ 				_dispatch_abort(__LINE__, (long)_e); \
+ 			} \
