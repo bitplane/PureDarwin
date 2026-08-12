@@ -10,7 +10,7 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy
         ${apple_i386_pci_source_dir}/AppleI386PCI.cpp
         ${apple_i386_pci_source}
-    COMMAND sed -i '/ioMemory->setMapping( kernel_task, 0 );/d'
+    COMMAND sed -i /ioMemory->setMapping/d
         ${apple_i386_pci_source}
     DEPENDS ${apple_i386_pci_source_dir}/AppleI386PCI.cpp
     VERBATIM
