@@ -12,6 +12,7 @@ target_sources(corecrypto.kext PRIVATE
 
     algorithms/aes_cbc.c
     algorithms/aes_ecb.c
+    algorithms/aes128.c
     algorithms/cckprng.c
     algorithms/md5_impl.cc
     algorithms/md5.c
@@ -20,12 +21,14 @@ target_sources(corecrypto.kext PRIVATE
     algorithms/pdcrypto_digest_update.c
     algorithms/pdcrypto_dummy.c
     algorithms/sha1_impl.cc
+    algorithms/sha1.c
     algorithms/sha256.cc
     algorithms/sha512.cc
     algorithms/yarrow/comp.c
     algorithms/yarrow/prng.c
     algorithms/yarrow/sha1mod.c
     algorithms/yarrow/smf.c
+    algorithms/yarrow/yarrowUtils.c
 
     kext/cc_functions.c
     kext/cc_kext_main.c

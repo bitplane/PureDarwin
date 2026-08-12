@@ -13,6 +13,7 @@ add_kext_bundle(pthread.kext INFO_PLIST ${pthread_info_plist} KERNEL_PRIVATE
 
 target_sources(pthread.kext PRIVATE
     ${pthread_source_dir}/kern/kern_init.c
+    ${pthread_source_dir}/kern/kern_policy.c
     ${pthread_source_dir}/kern/kern_support.c
     ${pthread_source_dir}/kern/kern_synch.c
 )
