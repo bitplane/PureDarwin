@@ -15,11 +15,15 @@ set(libinfo_sources)
 foreach(libinfo_source_path IN LISTS libinfo_source_paths)
     list(APPEND libinfo_sources ${libinfo_source_dir}/${libinfo_source_path})
 endforeach()
+list(FILTER libinfo_sources EXCLUDE REGEX
+    "/(dns|membership|nis|rpc|util)\\.subproj/|/(configuration_profile|mdns_module)\\.c$")
 
 add_darwin_object_library(libsystem_info_runtime)
 set_property(TARGET libsystem_info_runtime PROPERTY POSITION_INDEPENDENT_CODE ON)
 add_dependencies(libsystem_info_runtime libsystem_kernel_static)
-target_sources(libsystem_info_runtime PRIVATE ${libinfo_sources})
+target_sources(libsystem_info_runtime PRIVATE
+    ${libinfo_sources}
+    compat/mdns_disabled.c)
 target_compile_definitions(libsystem_info_runtime PRIVATE
     __DARWIN_NON_CANCELABLE=1
     __MigTypeCheck=1
@@ -38,9 +42,8 @@ target_include_directories(libsystem_info_runtime PRIVATE
     ${libinfo_source_dir}/nis.subproj
     ${libinfo_source_dir}/rpc.subproj
     ${libinfo_source_dir}/util.subproj
-    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/configd/dnsinfo
+    ${CMAKE_CURRENT_SOURCE_DIR}/compat
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libresolv
-    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/mDNSResponder/mDNSShared
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/syslog/libsystem_asl.tproj/include)
 target_link_libraries(libsystem_info_runtime PRIVATE
     AvailabilityHeaders
