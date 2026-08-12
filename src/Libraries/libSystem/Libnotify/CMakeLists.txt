@@ -14,6 +14,9 @@ file(COPY ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch/dispatch/
 file(COPY ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch/private/
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/include/dispatch
     FILES_MATCHING PATTERN "*.h")
+file(COPY ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch/os/
+    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/include/os
+    FILES_MATCHING PATTERN "*.h")
 
 add_library(libnotify_headers INTERFACE)
 target_include_directories(libnotify_headers INTERFACE
