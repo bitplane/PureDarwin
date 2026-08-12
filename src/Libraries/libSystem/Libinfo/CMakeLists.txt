@@ -64,10 +64,12 @@ add_darwin_circular_library(libsystem_info
     INSTALL_NAME /usr/lib/system/libsystem_info.dylib
     OBJECT_LIBRARIES libsystem_info_runtime
     SIBLINGS
+        dispatch
         libsystem_blocks
         libsystem_c
         libsystem_m
         libsystem_malloc
+        libsystem_notify
         libsystem_platform
         libsystem_pthread
     STRONG_DEPENDENCIES libsystem_kernel
