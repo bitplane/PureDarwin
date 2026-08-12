@@ -45,7 +45,8 @@ target_sources(liblaunch_runtime PRIVATE
     ${helper_server_source})
 target_compile_options(liblaunch_runtime PRIVATE
     -fblocks
-    -fno-common)
+    -fno-common
+    "SHELL:-include os/base_private.h")
 target_include_directories(liblaunch_runtime PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}/include
