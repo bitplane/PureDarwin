@@ -2,7 +2,7 @@ set(dyld_source_dir ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/dyld)
 
 add_darwin_shared_library(libdyld_bootstrap
     INSTALL_NAME /usr/lib/system/libdyld.dylib)
-set_target_properties(libdyld_bootstrap PROPERTIES OUTPUT_NAME dyld)
+set_target_properties(libdyld_bootstrap PROPERTIES OUTPUT_NAME dyld_bootstrap)
 set_target_properties(libdyld_bootstrap PROPERTIES LINKER_LANGUAGE C)
 target_sources(libdyld_bootstrap PRIVATE
     ${dyld_source_dir}/src/dyld_stub_binder.s)
