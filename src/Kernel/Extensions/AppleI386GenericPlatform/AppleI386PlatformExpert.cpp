@@ -132,13 +132,12 @@ bool AppleI386PlatformExpert::configure(IOService *provider) {
 	topLevel = OSDynamicCast(OSArray, getProperty("top-level"));
 
 	if (topLevel) {
-		while ((dict = OSDynamicCast(OSDictionary, topLevel->getObject(0)))) {
-			dict->retain();
-			topLevel->removeObject(0);
+		for (unsigned int index = 0; index < topLevel->getCount(); index++) {
+			dict = OSDynamicCast(OSDictionary, topLevel->getObject(index));
+			if (dict == 0) continue;
 			nub = createNub(dict);
 			if (nub == 0) continue;
 
-			dict->release();
 			nub->attach(this);
 			nub->registerService();
 		}
