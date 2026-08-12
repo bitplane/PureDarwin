@@ -34,8 +34,6 @@ XNU_COMMPAGE_SOURCE=$SOURCE_ROOT/xnu/osfmk/i386/commpage/commpage.c
 XNU_COMMPAGE_PATCH=$SCRIPT_DIR/../patches/xnu-4570.41.2/0002-keep-kernel-commpage-mapping-writable.patch
 XNU_BOOTSTRAP_SOURCE=$SOURCE_ROOT/xnu/libsa/bootstrap.cpp
 XNU_KEC_PATCH=$SCRIPT_DIR/../patches/xnu-4570.41.2/0003-load-declared-kernel-external-components.patch
-XNU_EXPORTS=$SOURCE_ROOT/xnu/config/Private.exports
-XNU_PRNG_EXPORT_PATCH=$SCRIPT_DIR/../patches/xnu-4570.41.2/0004-export-prng-registration-to-corecrypto.patch
 
 if grep -q 'if (fd == -1) return;' "$ASL_SOURCE"; then
     patch -d "$SOURCE_ROOT/libplatform" -p1 < "$ASL_PATCH"
@@ -109,8 +107,3 @@ if grep -q '^#define COM_APPLE_KEC' "$XNU_BOOTSTRAP_SOURCE"; then
     patch -d "$SOURCE_ROOT/xnu" -p1 < "$XNU_KEC_PATCH"
 fi
 ! grep -q '^#define COM_APPLE_KEC' "$XNU_BOOTSTRAP_SOURCE"
-
-if ! grep -q '^_register_and_init_prng$' "$XNU_EXPORTS"; then
-    patch -d "$SOURCE_ROOT/xnu" -p1 < "$XNU_PRNG_EXPORT_PATCH"
-fi
-grep -q '^_register_and_init_prng$' "$XNU_EXPORTS"
