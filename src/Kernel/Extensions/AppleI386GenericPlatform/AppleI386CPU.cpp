@@ -22,6 +22,7 @@
  */
 
 #include "AppleI386CPU.h"
+#include <IOKit/IOPlatformExpert.h>
 
 #undef super
 #define super IOCPU
@@ -40,6 +41,8 @@ bool AppleI386CPU::startCommon() {
 	if (cpuIC->initCPUInterruptController(1) != kIOReturnSuccess) return false;
 
 	cpuIC->attach(this);
+	getPlatform()->registerInterruptController(gPlatformInterruptControllerName,
+	                                           cpuIC);
 	cpuIC->registerCPUInterruptController();
 
 	setCPUState(kIOCPUStateUninitalized);
