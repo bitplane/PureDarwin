@@ -28,6 +28,8 @@ SYSLOG_ASL_UTIL_SOURCE=$SOURCE_ROOT/syslog/libsystem_asl.tproj/src/asl_util.c
 SYSLOG_BLOCKS_PATCH=$SCRIPT_DIR/../patches/syslog-356.50.1/0006-build-asl-utilities-without-blocks.patch
 SYSLOG_SOURCE=$SOURCE_ROOT/syslog/libsystem_asl.tproj/src/syslog.c
 SYSLOG_LEGACY_OS_LOG_PATCH=$SCRIPT_DIR/../patches/syslog-356.50.1/0007-build-syslog-without-unpublished-os-log.patch
+XNU_OSKEXT_SOURCE=$SOURCE_ROOT/xnu/libkern/c++/OSKext.cpp
+XNU_BOOT_KEXT_PATCH=$SCRIPT_DIR/../patches/xnu-4570.41.2/0001-allow-kernel-boot-to-link-external-extensions.patch
 
 if grep -q 'if (fd == -1) return;' "$ASL_SOURCE"; then
     patch -d "$SOURCE_ROOT/libplatform" -p1 < "$ASL_PATCH"
@@ -86,3 +88,8 @@ if ! grep -q 'PUREDARWIN_NO_OS_LOG' "$SYSLOG_SOURCE"; then
     patch -d "$SOURCE_ROOT/syslog" -p1 < "$SYSLOG_LEGACY_OS_LOG_PATCH"
 fi
 grep -q 'PUREDARWIN_NO_OS_LOG' "$SYSLOG_SOURCE"
+
+if ! grep -q 'all non-booter callers must be entitled' "$XNU_OSKEXT_SOURCE"; then
+    patch -d "$SOURCE_ROOT/xnu" -p1 < "$XNU_BOOT_KEXT_PATCH"
+fi
+grep -q 'all non-booter callers must be entitled' "$XNU_OSKEXT_SOURCE"

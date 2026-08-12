@@ -1,0 +1,38 @@
+diff --git a/libkern/c++/OSKext.cpp b/libkern/c++/OSKext.cpp
+--- a/libkern/c++/OSKext.cpp
++++ b/libkern/c++/OSKext.cpp
+@@ -1720,6 +1720,7 @@ OSKext::initWithBooterData(
+     if (!super::init()) {
+         goto finish;
+     }
++    flags.fromBooter = 1;
+ 
+     kextFileInfo = (_BooterKextFileInfo *)booterData->getBytesNoCopy();
+     if (!kextFileInfo) {
+@@ -5271,8 +5272,9 @@ OSKext::loadExecutable()
+         goto register_kmod;
+     }
+ 
+-    /* <rdar://problem/21444003> all callers must be entitled */
+-    if (FALSE == IOTaskHasEntitlement(current_task(), "com.apple.rootless.kext-management")) {
++    /* <rdar://problem/21444003> all non-booter callers must be entitled */
++    if (!flags.fromBooter &&
++        FALSE == IOTaskHasEntitlement(current_task(), "com.apple.rootless.kext-management")) {
+         OSKextLog(this,
+                   kOSKextLogErrorLevel | kOSKextLogLoadFlag,
+                   "Not entitled to link kext '%s'",
+@@ -7562 +7564,2 @@
+-        if (!hasApplePrefix || (!infoCopyrightIsValid && !readableCopyrightIsValid)) {
++        if (!flags.fromBooter &&
++            (!hasApplePrefix || (!infoCopyrightIsValid && !readableCopyrightIsValid))) {
+diff --git a/libkern/libkern/c++/OSKext.h b/libkern/libkern/c++/OSKext.h
+--- a/libkern/libkern/c++/OSKext.h
++++ b/libkern/libkern/c++/OSKext.h
+@@ -274,6 +274,7 @@ private:
+         unsigned int interface:1;
+         unsigned int kernelComponent:1;
+         unsigned int prelinked:1;
++        unsigned int fromBooter:1;
+         unsigned int loaded:1;
+         unsigned int dtraceInitialized:1;
+         unsigned int starting:1;
