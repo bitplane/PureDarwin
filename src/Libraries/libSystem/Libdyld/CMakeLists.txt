@@ -50,7 +50,9 @@ mig(${dyld_source_dir}/dyld3/closured/closuredProtocol.defs
     NOVOUCHERS)
 
 target_sources(libdyld_runtime PRIVATE
+    ${PUREDARWIN_SOURCE_DIR}/src/Libraries/dyld/common_digest.c
     ${libdyld_sources}
+    ${dyld_source_dir}/dyld3/libclosured-stub.cpp
     ${closured_protocol_header}
     ${closured_protocol_source})
 target_include_directories(libdyld_runtime PRIVATE
@@ -115,10 +117,18 @@ add_darwin_circular_library(libdyld
     INSTALL_NAME /usr/lib/system/libdyld.dylib
     OBJECT_LIBRARIES libdyld_runtime
     SIBLINGS
+        dispatch
+        liblaunch
+        libsystem_blocks
         libsystem_c
         libsystem_malloc
         libsystem_platform
         libsystem_pthread
+    DEPENDENCIES
+        corecrypto_static
+        cxx_dyld
+        cxxabi_dyld
+        unwind_dyld
     STRONG_DEPENDENCIES libsystem_kernel
     LINK_OPTIONS "LINKER:-umbrella,System")
 install(TARGETS libdyld DESTINATION usr/lib/system COMPONENT BaseSystem)
