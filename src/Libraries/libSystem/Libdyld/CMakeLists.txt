@@ -55,6 +55,7 @@ target_sources(libdyld_runtime PRIVATE
     ${closured_protocol_source})
 target_include_directories(libdyld_runtime PRIVATE
     $<TARGET_PROPERTY:libc_public_headers,INTERFACE_INCLUDE_DIRECTORIES>
+    ${CMAKE_CURRENT_SOURCE_DIR}/compat
     ${CMAKE_CURRENT_BINARY_DIR}
     ${dyld_source_dir}/include
     ${dyld_source_dir}/include/mach-o
