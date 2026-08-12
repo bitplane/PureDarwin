@@ -241,9 +241,13 @@ bool AppleIntelPIIXPATA::start( IOService * provider )
 	// enable interrupts
     _intSrc->enable();
 
+    DLOG("%s: interrupts ready\n", getName());
+
     // Attach to power management.
 
     initForPM( provider );
+
+    DLOG("%s: power management ready\n", getName());
 
 	
 	myACPINode = getACPIParent();
@@ -286,6 +290,8 @@ bool AppleIntelPIIXPATA::start( IOService * provider )
 	}
 
 	 
+
+    DLOG("%s: publishing devices\n", getName());
 
     // For each device discovered on the ATA bus (by super),
     // create a nub for that device and call registerService() to
