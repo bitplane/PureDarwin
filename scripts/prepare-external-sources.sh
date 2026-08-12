@@ -21,6 +21,9 @@ SYSLOG_ASL_MSG_HEADER=$SOURCE_ROOT/syslog/libsystem_asl.tproj/include/asl_msg.h
 SYSLOG_ASL_SOURCE=$SOURCE_ROOT/syslog/libsystem_asl.tproj/src/asl.c
 SYSLOG_OPTIONAL_SPI_PATCH=$SCRIPT_DIR/../patches/syslog-356.50.1/0001-build-asl-without-unpublished-spis.patch
 SYSLOG_OS_LOG_PATCH=$SCRIPT_DIR/../patches/syslog-356.50.1/0002-build-asl-without-unpublished-os-log.patch
+SYSLOG_ACTIVITY_PATCH=$SCRIPT_DIR/../patches/syslog-356.50.1/0003-build-asl-without-unpublished-activity.patch
+SYSLOG_ACTIVITY_REPAIR_PATCH=$SCRIPT_DIR/../patches/syslog-356.50.1/0004-complete-partial-activity-preparation.patch
+SYSLOG_ACTIVITY_METADATA_PATCH=$SCRIPT_DIR/../patches/syslog-356.50.1/0005-disable-unpublished-activity-metadata.patch
 
 if grep -q 'if (fd == -1) return;' "$ASL_SOURCE"; then
     patch -d "$SOURCE_ROOT/libplatform" -p1 < "$ASL_PATCH"
@@ -49,6 +52,21 @@ if ! grep -q 'PUREDARWIN_NO_XPC' "$SYSLOG_ASL_MSG_HEADER"; then
     patch -d "$SOURCE_ROOT/syslog" -p1 < "$SYSLOG_OPTIONAL_SPI_PATCH"
 fi
 grep -q 'PUREDARWIN_NO_XPC' "$SYSLOG_ASL_MSG_HEADER"
+
+if ! grep -B1 '#include <os/activity.h>' "$SYSLOG_ASL_SOURCE" | grep -q 'PUREDARWIN_NO_OS_ACTIVITY'; then
+    patch -d "$SOURCE_ROOT/syslog" -p1 < "$SYSLOG_ACTIVITY_PATCH"
+fi
+grep -B1 '#include <os/activity.h>' "$SYSLOG_ASL_SOURCE" | grep -q 'PUREDARWIN_NO_OS_ACTIVITY'
+
+if ! grep -B1 'os_activity_id_t osaid;' "$SYSLOG_ASL_SOURCE" | grep -q 'PUREDARWIN_NO_OS_ACTIVITY'; then
+    patch -d "$SOURCE_ROOT/syslog" -p1 < "$SYSLOG_ACTIVITY_REPAIR_PATCH"
+fi
+grep -B1 'os_activity_id_t osaid;' "$SYSLOG_ASL_SOURCE" | grep -q 'PUREDARWIN_NO_OS_ACTIVITY'
+
+if ! grep -B1 '/\* OSActivityID \*/' "$SYSLOG_ASL_SOURCE" | grep -q 'PUREDARWIN_NO_OS_ACTIVITY'; then
+    patch -d "$SOURCE_ROOT/syslog" -p1 < "$SYSLOG_ACTIVITY_METADATA_PATCH"
+fi
+grep -B1 '/\* OSActivityID \*/' "$SYSLOG_ASL_SOURCE" | grep -q 'PUREDARWIN_NO_OS_ACTIVITY'
 
 if ! grep -q 'PUREDARWIN_NO_OS_LOG' "$SYSLOG_ASL_SOURCE"; then
     patch -d "$SOURCE_ROOT/syslog" -p1 < "$SYSLOG_OS_LOG_PATCH"

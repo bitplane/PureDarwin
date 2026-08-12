@@ -20,39 +20,6 @@ diff --git a/libsystem_asl.tproj/include/asl_msg.h b/libsystem_asl.tproj/include
 +#endif
  
  __END_DECLS
-diff --git a/libsystem_asl.tproj/src/asl.c b/libsystem_asl.tproj/src/asl.c
---- a/libsystem_asl.tproj/src/asl.c
-+++ b/libsystem_asl.tproj/src/asl.c
-@@ -51,4 +51,6 @@
- #include <dispatch/dispatch.h>
- #include <libkern/OSAtomic.h>
-+#ifndef PUREDARWIN_NO_OS_ACTIVITY
- #include <os/activity.h>
-+#endif
- #include <os/log.h>
- #include <os/log_private.h>
-@@ -1028,4 +1030,6 @@ asl_base_msg(asl_client_t *asl, uint32_t level, const struct timeval *tv, const c
- 	char aux_val[64];
- 	asl_msg_t *aux;
- 	int status;
-+#ifndef PUREDARWIN_NO_OS_ACTIVITY
- 	os_activity_id_t osaid;
-+#endif
-@@ -1052,6 +1056,7 @@ asl_base_msg(asl_client_t *asl, uint32_t level, const struct timeval *tv, const c
- 	snprintf(aux_val, sizeof(aux_val), "%u", getpid());
- 	asl_msg_set_key_val(aux, ASL_KEY_PID, aux_val);
- 
-+#ifndef PUREDARWIN_NO_OS_ACTIVITY
- 	/* OSActivityID */
- 	osaid = os_activity_get_identifier(OS_ACTIVITY_CURRENT, NULL);
- 	if (osaid)
-@@ -1060,6 +1065,7 @@ asl_base_msg(asl_client_t *asl, uint32_t level, const struct timeval *tv, const c
- 		snprintf(aux_val, sizeof(aux_val), "0x%016llx", osaid);
- 		asl_msg_set_key_val(aux, ASL_KEY_OS_ACTIVITY_ID, aux_val);
- 	}
-+#endif
- 
- 	/* Sender */
 diff --git a/libsystem_asl.tproj/src/asl_msg.c b/libsystem_asl.tproj/src/asl_msg.c
 --- a/libsystem_asl.tproj/src/asl_msg.c
 +++ b/libsystem_asl.tproj/src/asl_msg.c

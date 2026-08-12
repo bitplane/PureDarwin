@@ -1,0 +1,11 @@
+diff --git a/libsystem_asl.tproj/src/asl.c b/libsystem_asl.tproj/src/asl.c
+--- a/libsystem_asl.tproj/src/asl.c
++++ b/libsystem_asl.tproj/src/asl.c
+@@ -1028,5 +1028,7 @@
+ 	char aux_val[64];
+ 	asl_msg_t *aux;
+ 	int status;
++#ifndef PUREDARWIN_NO_OS_ACTIVITY
+	os_activity_id_t osaid;
++#endif
+ 

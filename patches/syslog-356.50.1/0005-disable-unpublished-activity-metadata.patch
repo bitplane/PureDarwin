@@ -1,0 +1,18 @@
+diff --git a/libsystem_asl.tproj/src/asl.c b/libsystem_asl.tproj/src/asl.c
+--- a/libsystem_asl.tproj/src/asl.c
++++ b/libsystem_asl.tproj/src/asl.c
+@@ -1052,6 +1052,7 @@ asl_base_msg(asl_client_t *asl, uint32_t level, const struct timeval *tv, const c
+ 	snprintf(aux_val, sizeof(aux_val), "%u", getpid());
+ 	asl_msg_set_key_val(aux, ASL_KEY_PID, aux_val);
+ 
++#ifndef PUREDARWIN_NO_OS_ACTIVITY
+ 	/* OSActivityID */
+ 	osaid = os_activity_get_identifier(OS_ACTIVITY_CURRENT, NULL);
+ 	if (osaid)
+@@ -1060,6 +1061,7 @@ asl_base_msg(asl_client_t *asl, uint32_t level, const struct timeval *tv, const c
+ 		snprintf(aux_val, sizeof(aux_val), "0x%016llx", osaid);
+ 		asl_msg_set_key_val(aux, ASL_KEY_OS_ACTIVITY_ID, aux_val);
+ 	}
++#endif
+ 
+ 	/* Sender */

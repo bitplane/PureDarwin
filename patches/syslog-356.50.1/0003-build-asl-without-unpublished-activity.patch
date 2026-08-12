@@ -1,0 +1,11 @@
+diff --git a/libsystem_asl.tproj/src/asl.c b/libsystem_asl.tproj/src/asl.c
+--- a/libsystem_asl.tproj/src/asl.c
++++ b/libsystem_asl.tproj/src/asl.c
+@@ -51,4 +51,6 @@
+ #include <dispatch/dispatch.h>
+ #include <libkern/OSAtomic.h>
++#ifndef PUREDARWIN_NO_OS_ACTIVITY
+ #include <os/activity.h>
++#endif
+ #include <os/log.h>
+ #include <os/log_private.h>
