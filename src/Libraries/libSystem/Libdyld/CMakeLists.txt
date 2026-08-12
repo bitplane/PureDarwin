@@ -66,6 +66,7 @@ target_include_directories(libdyld_runtime PRIVATE
     ${dyld_source_dir}/dyld3/shared-cache
     ${dyld_source_dir}/dyld3/closured
     ${PUREDARWIN_SOURCE_DIR}/src/Libraries/dyld/compat
+    ${PUREDARWIN_SOURCE_DIR}/src/Libraries/libSystem/corecrypto/include
     ${PUREDARWIN_SOURCE_DIR}/tools/cctools/include
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch/src/BlocksRuntime
