@@ -517,6 +517,7 @@ add_darwin_circular_library(libsystem_c
     STRONG_SIBLINGS libsystem_platform
     SIBLINGS
         libsystem_blocks
+        libsystem_info
         libsystem_m
         libsystem_malloc
         libsystem_pthread
