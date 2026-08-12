@@ -67,8 +67,7 @@ target_sources(libdispatch_runtime PRIVATE
     ${libdispatch_source_dir}/src/time.c
     ${libdispatch_source_dir}/src/allocator.c
     ${libdispatch_source_dir}/src/benchmark.c
-    ${PUREDARWIN_COMPILER_RT_SOURCE_DIR}/lib/builtins/udivmodti4.c
-    ${PUREDARWIN_COMPILER_RT_SOURCE_DIR}/lib/builtins/udivti3.c
+    compat/udivti3.c
     ${firehose_header}
     ${firehose_source}
     ${protocol_source}
@@ -83,7 +82,6 @@ target_include_directories(libdispatch_runtime PRIVATE
     ${libdispatch_source_dir}/src/BlocksRuntime
     ${libdispatch_source_dir}/src/event
     ${libdispatch_source_dir}/src/firehose
-    ${PUREDARWIN_COMPILER_RT_SOURCE_DIR}/lib/builtins
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/bsd
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/libsyscall/wrappers/libproc)
 target_compile_definitions(libdispatch_runtime PRIVATE
