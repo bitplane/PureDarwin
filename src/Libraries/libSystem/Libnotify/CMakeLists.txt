@@ -89,4 +89,5 @@ add_darwin_circular_library(libsystem_notify
     STRONG_DEPENDENCIES libsystem_kernel
     LINK_OPTIONS "LINKER:-umbrella,System")
 target_link_libraries(libsystem_notify PRIVATE dispatch_firstpass)
+target_link_libraries(libsystem_notify PRIVATE liblaunch_firstpass)
 install(TARGETS libsystem_notify DESTINATION usr/lib/system COMPONENT BaseSystem)
