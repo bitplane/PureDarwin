@@ -50,7 +50,8 @@ target_compile_options(libsystem_notify_runtime PRIVATE
     -fblocks
     -fno-common
     -fno-exceptions
-    -include ${CMAKE_SOURCE_DIR}/src/Libraries/AvailabilityVersions/include/os/availability.h)
+    "SHELL:-include sys/fileport.h"
+    "SHELL:-include ${CMAKE_SOURCE_DIR}/src/Libraries/AvailabilityVersions/include/os/availability.h")
 target_include_directories(libsystem_notify_runtime BEFORE PRIVATE
     ${CMAKE_SOURCE_DIR}/src/Libraries/AvailabilityVersions/include)
 target_include_directories(libsystem_notify_runtime PRIVATE

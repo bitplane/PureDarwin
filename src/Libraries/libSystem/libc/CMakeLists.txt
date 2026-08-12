@@ -516,10 +516,13 @@ add_darwin_circular_library(libsystem_c
         libsystem_info
         libsystem_m
         libsystem_malloc
+        libsystem_notify
         libsystem_pthread
         libsystem_platform
     STRONG_DEPENDENCIES CrashReporterClient libsystem_kernel
-    LINK_OPTIONS "LINKER:-umbrella,System")
+    LINK_OPTIONS
+        "LINKER:-umbrella,System"
+        "LINKER:-undefined,dynamic_lookup")
 target_link_options(libsystem_c PRIVATE
     "LINKER:-alias_list,${libc_scripts_dir}/alias.list")
 install(TARGETS libsystem_c DESTINATION usr/lib/system COMPONENT BaseSystem)
