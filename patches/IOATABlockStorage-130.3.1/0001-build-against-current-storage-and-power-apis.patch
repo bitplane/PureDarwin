@@ -1,0 +1,90 @@
+diff --git a/IOATABlockStorageDevice.cpp b/IOATABlockStorageDevice.cpp
+index bca6060..2d3f441 100644
+--- a/IOATABlockStorageDevice.cpp
++++ b/IOATABlockStorageDevice.cpp
+@@ -434,10 +434,16 @@ IOATABlockStorageDevice::setProperties ( OSObject * properties )
+ IOReturn
+ IOATABlockStorageDevice::doAsyncReadWrite (
+ 											IOMemoryDescriptor *	buffer,
+-											UInt32					block,
+-											UInt32					nblks,
+-											IOStorageCompletion		completion )
++											UInt64					block,
++											UInt64					nblks,
++											IOStorageAttributes *	attributes,
++											IOStorageCompletion *		completion )
+ {
++	(void) attributes;
++	if ( block > 0xffffffffULL || nblks > 0xffffffffULL )
++	{
++		return kIOReturnBadArgument;
++	}
+ 	
+ 	// Block incoming I/O if we have been terminated
+ 	if ( isInactive ( ) != false )
+@@ -446,7 +452,7 @@ IOATABlockStorageDevice::doAsyncReadWrite (
+ 	}
+ 	
+ 	fProvider->checkPowerState ( );
+-	return fProvider->doAsyncReadWrite ( buffer, block, nblks, completion );
++	return fProvider->doAsyncReadWrite ( buffer, ( UInt32 ) block, ( UInt32 ) nblks, *completion );
+ 	
+ }
+ 
+diff --git a/IOATABlockStorageCommands.cpp b/IOATABlockStorageCommands.cpp
+index a82fe8d..ef88d1b 100644
+--- a/IOATABlockStorageCommands.cpp
++++ b/IOATABlockStorageCommands.cpp
+@@ -1374,7 +1374,7 @@ IOATABlockStorageDriver::sHandleCommandCompletion ( IOATACommand * cmd )
+ 		clientData.self->returnATACommandObject ( cmd );
+ 		
+ 		// Signal the completion routine that the request has been completed.
+-		IOStorage::complete ( clientData.completion.async,
++		IOStorage::complete ( &clientData.completion.async,
+ 							  result,
+ 							  bytesTransferred );
+ 		
+diff --git a/IOATABlockStorageDevice.h b/IOATABlockStorageDevice.h
+index a4da907..b6e4b64 100644
+--- a/IOATABlockStorageDevice.h
++++ b/IOATABlockStorageDevice.h
+@@ -69,9 +69,10 @@ public:
+ 	
+ 	
+ 	virtual IOReturn	doAsyncReadWrite ( 	IOMemoryDescriptor *	buffer,
+-											UInt32					block,
+-											UInt32					nblks,
+-											IOStorageCompletion		completion );
++											UInt64					block,
++											UInt64					nblks,
++											IOStorageAttributes *	attributes,
++											IOStorageCompletion *		completion );
+ 	
+ 	virtual IOReturn	doSyncReadWrite ( 	IOMemoryDescriptor *	buffer,
+ 											UInt32					block,
+diff --git a/IOATABlockStorageDriver.h b/IOATABlockStorageDriver.h
+index 1556ede..bad2af6 100644
+--- a/IOATABlockStorageDriver.h
++++ b/IOATABlockStorageDriver.h
+@@ -382,7 +382,7 @@ public:
+ 	// The initialPowerStateForDomainState() method is called by the power manager
+ 	// to ask us what state we should be in based on the power flags of our parent
+ 	// in the power tree.
+-	virtual UInt32		initialPowerStateForDomainState ( IOPMPowerFlags flags );
++	virtual unsigned long	initialPowerStateForDomainState ( IOPMPowerFlags flags );
+ 	
+ 	virtual IOReturn 	setPowerState ( UInt32			powerStateOrdinal,
+ 										IOService * 	whatDevice );
+diff --git a/IOATABlockStorageDriverPM.cpp b/IOATABlockStorageDriverPM.cpp
+index 1150a68..9aa518e 100644
+--- a/IOATABlockStorageDriverPM.cpp
++++ b/IOATABlockStorageDriverPM.cpp
+@@ -172,7 +172,7 @@ IOATABlockStorageDriver::powerDownHandler (	void * 			refCon,
+ //										initial state the device should be in.
+ //---------------------------------------------------------------------------
+ 
+-UInt32
++unsigned long
+ IOATABlockStorageDriver::initialPowerStateForDomainState (
+ 											IOPMPowerFlags	flags )
+ {

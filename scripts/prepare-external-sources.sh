@@ -34,6 +34,8 @@ XNU_COMMPAGE_SOURCE=$SOURCE_ROOT/xnu/osfmk/i386/commpage/commpage.c
 XNU_COMMPAGE_PATCH=$SCRIPT_DIR/../patches/xnu-4570.41.2/0002-keep-kernel-commpage-mapping-writable.patch
 XNU_BOOTSTRAP_SOURCE=$SOURCE_ROOT/xnu/libsa/bootstrap.cpp
 XNU_KEC_PATCH=$SCRIPT_DIR/../patches/xnu-4570.41.2/0003-load-declared-kernel-external-components.patch
+IOATA_BLOCK_DEVICE_SOURCE=$SOURCE_ROOT/IOATABlockStorage/IOATABlockStorageDevice.cpp
+IOATA_BLOCK_PATCH=$SCRIPT_DIR/../patches/IOATABlockStorage-130.3.1/0001-build-against-current-storage-and-power-apis.patch
 
 if grep -q 'if (fd == -1) return;' "$ASL_SOURCE"; then
     patch -d "$SOURCE_ROOT/libplatform" -p1 < "$ASL_PATCH"
@@ -107,3 +109,8 @@ if grep -q '^#define COM_APPLE_KEC' "$XNU_BOOTSTRAP_SOURCE"; then
     patch -d "$SOURCE_ROOT/xnu" -p1 < "$XNU_KEC_PATCH"
 fi
 ! grep -q '^#define COM_APPLE_KEC' "$XNU_BOOTSTRAP_SOURCE"
+
+if ! grep -q 'IOStorageAttributes \*' "$IOATA_BLOCK_DEVICE_SOURCE"; then
+    patch -d "$SOURCE_ROOT/IOATABlockStorage" -p1 < "$IOATA_BLOCK_PATCH"
+fi
+grep -q 'IOStorageAttributes \*' "$IOATA_BLOCK_DEVICE_SOURCE"
