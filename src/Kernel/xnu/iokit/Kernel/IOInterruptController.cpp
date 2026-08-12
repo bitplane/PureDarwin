@@ -305,11 +305,6 @@ IOInterruptController::enableInterrupt(IOService *nub, int source)
 	vectorNumber = *(IOInterruptVectorNumber *)vectorData->getBytesNoCopy();
 	vector = &vectors[vectorNumber];
 
-	kprintf("IOInterruptController::enableInterrupt %s vector %llu soft %d hard %d registered %d\n",
-	    getMetaClass()->getClassName(), (unsigned long long) vectorNumber,
-	    vector->interruptDisabledSoft, vector->interruptDisabledHard,
-	    vector->interruptRegistered);
-
 	if (vector->interruptDisabledSoft) {
 		vector->interruptDisabledSoft = 0;
 #if !defined(__i386__) && !defined(__x86_64__)
@@ -332,9 +327,6 @@ IOInterruptController::enableInterrupt(IOService *nub, int source)
 			OSSynchronizeIO();
 
 			enableVector(vectorNumber, vector);
-			kprintf("IOInterruptController::enableInterrupt %s enabled vector %llu\n",
-			    getMetaClass()->getClassName(),
-			    (unsigned long long) vectorNumber);
 		}
 	}
 

@@ -29,8 +29,4 @@ target_compile_options(IOATABlockStorage PRIVATE
     -Wno-implicit-int-conversion
     -Wno-sign-conversion
 )
-target_compile_definitions(IOATABlockStorage PRIVATE
-    ATA_BLOCK_STORAGE_DEVICE_DEBUGGING_LEVEL=3
-    ATA_BLOCK_STORAGE_DRIVER_DEBUGGING_LEVEL=3
-)
 add_dependencies(IOATABlockStorage IOATAFamily IOStorageFamily)

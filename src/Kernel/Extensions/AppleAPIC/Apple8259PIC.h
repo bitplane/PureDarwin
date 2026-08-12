@@ -110,7 +110,6 @@ protected:
 
     inline void writeInterruptMask( long irq )
     {
-        kprintf("Apple8259PIC::writeInterruptMask(%lu)\n", irq);
         if ( IS_SLAVE_VECTOR(irq) )
             outb( kPIC_OCW1(kPIC2BasePort), _interruptMasks >> 8 );
         else
@@ -119,14 +118,12 @@ protected:
 
     inline void disableInterrupt( long irq )
     {
-        kprintf("Apple8259PIC::disableInterrupt(%lu)", irq);
         _interruptMasks |= (1 << irq);
         writeInterruptMask(irq);
     }
 
     inline void enableInterrupt( long irq )
     {
-        kprintf("Apple8259PIC::enableInterrupt(%lu)", irq);
         _interruptMasks &= ~(1 << irq);
         writeInterruptMask(irq);
     }
