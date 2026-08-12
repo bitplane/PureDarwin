@@ -10,9 +10,7 @@ target_sources(AppleI386PCI PRIVATE
     ${apple_i386_pci_source_dir}/AppleI386PCI.cpp
 )
 target_compile_options(AppleI386PCI PRIVATE
-    -DI386_PIO_H
-    -include architecture/i386/pio.h
-    -include ${CMAKE_CURRENT_SOURCE_DIR}/PCIBusInfo.h
+    -include${CMAKE_CURRENT_SOURCE_DIR}/PCIBusInfo.h
     -Wno-deprecated-volatile
     -Wno-implicit-int-conversion
     -Wno-inconsistent-missing-override

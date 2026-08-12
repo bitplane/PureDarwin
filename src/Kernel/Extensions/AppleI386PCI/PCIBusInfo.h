@@ -1,6 +1,11 @@
 #ifndef PUREDARWIN_PCI_BUS_INFO_H
 #define PUREDARWIN_PCI_BUS_INFO_H
 
+#include <architecture/i386/pio.h>
+
+// The imported driver carries an obsolete private copy of these helpers.
+#define I386_PIO_H
+
 typedef struct {
     union {
         struct {
