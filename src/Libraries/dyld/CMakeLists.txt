@@ -59,6 +59,7 @@ mig(${dyld_source_dir}/dyld3/closured/closuredProtocol.defs
 target_sources(dyld_runtime PRIVATE
     ${closured_protocol_source}
     common_digest.c
+    compat/libcxx_abort.cpp
     compat/runtime.cpp
     compat/version.c
     ${dyld_source_dir}/src/dyldStartup.s
