@@ -512,6 +512,7 @@ add_darwin_circular_library(libsystem_c
         libc_inode32_runtime
     STRONG_SIBLINGS libsystem_platform
     SIBLINGS
+        libsystem_asl
         libsystem_blocks
         libsystem_info
         libsystem_m
