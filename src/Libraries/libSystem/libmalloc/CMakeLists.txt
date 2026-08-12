@@ -71,7 +71,7 @@ target_link_libraries(libmalloc_runtime PRIVATE
 add_darwin_circular_library(libsystem_malloc
     INSTALL_NAME /usr/lib/system/libsystem_malloc.dylib
     OBJECT_LIBRARIES libmalloc_runtime
-    SIBLINGS libsystem_platform libsystem_pthread
+    SIBLINGS libdyld libsystem_c libsystem_platform libsystem_pthread
     STRONG_DEPENDENCIES libsystem_kernel
     LINK_OPTIONS "LINKER:-umbrella,System")
 target_link_options(libsystem_malloc PRIVATE

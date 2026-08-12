@@ -546,6 +546,7 @@ add_darwin_circular_library(libsystem_darwin
     INSTALL_NAME /usr/lib/system/libsystem_darwin.dylib
     OBJECT_LIBRARIES libsystem_darwin_runtime
     SIBLINGS
+        dispatch
         libsystem_c
         libsystem_malloc
         libsystem_platform
