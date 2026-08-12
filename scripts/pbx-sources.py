@@ -3,6 +3,8 @@
 import argparse
 from pathlib import Path, PurePosixPath
 
+from xcconfig import assignments, resolve
+
 
 class Lexer:
     def __init__(self, text):
@@ -104,7 +106,7 @@ class Parser:
         return result
 
 
-def source_paths(project, target_name, source_root=None):
+def source_paths(project, target_name, source_root=None, include_flags=False):
     objects = project["objects"]
     targets = [
         value for value in objects.values()
@@ -156,7 +158,12 @@ def source_paths(project, target_name, source_root=None):
                         alternative = str(PurePosixPath(*collapsed))
                         if (source_root / alternative).exists():
                             path = alternative
-                    paths.append(path)
+                    if include_flags:
+                        flags = objects[build_file_id].get("settings", {}).get(
+                            "COMPILER_FLAGS", "")
+                        paths.append((path, flags))
+                    else:
+                        paths.append(path)
     return paths
 
 
@@ -164,12 +171,41 @@ def main():
     argument_parser = argparse.ArgumentParser()
     argument_parser.add_argument("project", type=Path)
     argument_parser.add_argument("target")
+    argument_parser.add_argument("--flags", action="store_true")
+    argument_parser.add_argument("--variant-xcconfig", type=Path)
+    argument_parser.add_argument("--variant")
     arguments = argument_parser.parse_args()
 
     project = Parser(arguments.project.read_text()).value()
     source_root = arguments.project.parent.parent
-    for path in source_paths(project, arguments.target, source_root):
-        print(path)
+    include_flags = arguments.flags or arguments.variant_xcconfig
+    items = source_paths(project, arguments.target, source_root, include_flags)
+    if arguments.variant_xcconfig:
+        if not arguments.variant:
+            argument_parser.error("--variant is required with --variant-xcconfig")
+        values = assignments(arguments.variant_xcconfig)
+        values.update({
+            "CURRENT_ARCH": "x86_64",
+            "PLATFORM_NAME": "macosx",
+            "SRCROOT": str(source_root),
+            "VARIANT": arguments.variant,
+        })
+        included = resolve(
+            values["VARIANT_INCLUDED_SOURCE_FILE_NAMES"], values).split()
+        selected = [item for item in items if Path(item[0]).name in included]
+        if len(selected) != len(included):
+            raise ValueError(
+                f"variant {arguments.variant} selected {len(selected)} "
+                f"of {len(included)} sources")
+        items = selected
+    for item in items:
+        if include_flags:
+            path, flags = item
+            if arguments.variant_xcconfig:
+                flags = resolve(flags, values)
+            print(f"{path}\t{flags}")
+        else:
+            print(item)
 
 
 if __name__ == "__main__":

@@ -311,6 +311,55 @@ function(add_libc_object_group name)
     )
 endfunction()
 
+function(add_libc_variant name variant target)
+    execute_process(
+        COMMAND ${Python3_EXECUTABLE} ${PUREDARWIN_SOURCE_DIR}/scripts/pbx-sources.py
+            ${libc_source_dir}/Libc.xcodeproj/project.pbxproj ${target}
+            --variant-xcconfig ${libc_scripts_dir}/variants.xcconfig
+            --variant ${variant}
+        RESULT_VARIABLE result
+        OUTPUT_VARIABLE source_records
+        ERROR_VARIABLE error_text
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+    if(NOT result EQUAL 0)
+        message(FATAL_ERROR "Unable to read libc variant ${variant}: ${error_text}")
+    endif()
+    string(REPLACE "\n" ";" source_records "${source_records}")
+    set(variant_sources)
+    foreach(record IN LISTS source_records)
+        string(REPLACE "\t" ";" fields "${record}")
+        list(GET fields 0 source)
+        list(APPEND variant_sources ${libc_source_dir}/${source})
+        list(LENGTH fields field_count)
+        if(field_count GREATER 1)
+            list(GET fields 1 source_flags)
+            separate_arguments(source_flags UNIX_COMMAND "${source_flags}")
+            foreach(flag IN LISTS source_flags)
+                set_property(SOURCE ${libc_source_dir}/${source} APPEND PROPERTY
+                    COMPILE_OPTIONS
+                    "$<$<STREQUAL:$<TARGET_PROPERTY:NAME>,${name}>:${flag}>")
+            endforeach()
+        endif()
+    endforeach()
+    add_libc_object_group(${name})
+    target_sources(${name} PRIVATE ${variant_sources})
+    target_include_directories(${name} BEFORE PRIVATE
+        ${libc_source_dir}/fbsdcompat)
+    execute_process(
+        COMMAND ${Python3_EXECUTABLE} ${PUREDARWIN_SOURCE_DIR}/scripts/xcconfig.py
+            ${libc_scripts_dir}/variants.xcconfig VARIANT_PREPROCESSOR_MACROS
+            VARIANT=${variant} PLATFORM_NAME=macosx CURRENT_ARCH=x86_64
+        RESULT_VARIABLE result
+        OUTPUT_VARIABLE variant_flags
+        ERROR_VARIABLE error_text
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+    if(NOT result EQUAL 0)
+        message(FATAL_ERROR "Unable to read libc variant flags ${variant}: ${error_text}")
+    endif()
+    separate_arguments(variant_flags UNIX_COMMAND "${variant_flags}")
+    target_compile_options(${name} PRIVATE ${variant_flags})
+endfunction()
+
 execute_process(
     COMMAND ${CMAKE_C_COMPILER} -print-resource-dir
     OUTPUT_VARIABLE PUREDARWIN_CLANG_RESOURCE_DIR
@@ -386,3 +435,10 @@ target_include_directories(libc_tre_runtime PRIVATE
 libc_pbx_sources(libc_fortify_sources FortifySource)
 add_libc_object_group(libc_fortify_runtime)
 target_sources(libc_fortify_runtime PRIVATE ${libc_fortify_sources})
+
+add_libc_variant(libc_cancelable_runtime CANCELABLE Variant_Cancelable)
+add_libc_variant(libc_darwinextsn_runtime DARWINEXTSN Variant_DarwinExtsn)
+add_libc_variant(libc_darwinextsn_cancelable_runtime
+    DARWINEXTSN_CANCELABLE Variant_DarwinExtsn_Cancelable)
+add_libc_variant(libc_pre1050_runtime PRE1050 Variant_Pre1050)
+add_libc_variant(libc_inode32_runtime INODE32 Variant_Inode32)
