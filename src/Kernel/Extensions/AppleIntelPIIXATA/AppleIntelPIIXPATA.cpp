@@ -686,7 +686,20 @@ UInt32 AppleIntelPIIXPATA::scanForDrives( void )
 
     IOSleep( 10 );
 
+    UInt8 status = *_tfStatusCmdReg;
+    UInt8 altStatus = *_tfAltSDevCReg;
+    UInt8 sectorCount = *_tfSCountReg;
+    UInt8 sectorNumber = *_tfSectorNReg;
+    UInt8 cylinderLow = *_tfCylLoReg;
+    UInt8 cylinderHigh = *_tfCylHiReg;
+
+    DLOG("%s: post-reset status=%02x alt=%02x count=%02x sector=%02x "
+         "cyl=%02x/%02x\n", getName(), status, altStatus, sectorCount,
+         sectorNumber, cylinderLow, cylinderHigh);
+
     unitsFound = super::scanForDrives();
+
+    DLOG("%s: scan found %u device(s)\n", getName(), unitsFound);
 
 #if ENABLE_VPC4_DRIVESCAN_WORKAROUND
     // FIXME: Hack for Darwin/x86 on VPC compatibility.
@@ -2025,4 +2038,3 @@ AppleIntelICHxPATAPolledAdapter::setOwner( AppleIntelPIIXPATA* myOwner )
     owner = myOwner;
     pollingActive = false;
 }
-
