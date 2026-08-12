@@ -238,8 +238,11 @@ bool AppleIntelPIIXPATA::start( IOService * provider )
 	// clean up any interrupt glitches left over from powering down the drive. 
 	*_bmStatusReg = kPIIX_IO_BMISX_IDEINTS;
 	
-	// enable interrupts
+    // enable interrupts
     _intSrc->enable();
+
+    DLOG("%s: provider interrupt enable returned %lx\n", getName(),
+         (unsigned long) _provider->enableInterrupt(0));
 
     DLOG("%s: interrupts ready\n", getName());
 
