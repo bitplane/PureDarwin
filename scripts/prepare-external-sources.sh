@@ -100,10 +100,10 @@ if ! grep -q 'all non-booter callers must be entitled' "$XNU_OSKEXT_SOURCE"; the
 fi
 grep -q 'all non-booter callers must be entitled' "$XNU_OSKEXT_SOURCE"
 
-if ! grep -q 'preserve rights for both commpage variants' "$XNU_COMMPAGE_SOURCE"; then
+if ! grep -q 'preserve user rights and kernel writes' "$XNU_COMMPAGE_SOURCE"; then
     patch -d "$SOURCE_ROOT/xnu" -p1 < "$XNU_COMMPAGE_PATCH"
 fi
-grep -q 'preserve rights for both commpage variants' "$XNU_COMMPAGE_SOURCE"
+grep -q 'preserve user rights and kernel writes' "$XNU_COMMPAGE_SOURCE"
 
 if grep -q '^#define COM_APPLE_KEC' "$XNU_BOOTSTRAP_SOURCE"; then
     patch -d "$SOURCE_ROOT/xnu" -p1 < "$XNU_KEC_PATCH"

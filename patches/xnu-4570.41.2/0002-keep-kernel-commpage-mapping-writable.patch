@@ -6,7 +6,7 @@ diff --git a/osfmk/i386/commpage/commpage.c b/osfmk/i386/commpage/commpage.c
  				    &size,		// size 
  				    kernel_addr,	// offset (address in kernel map)
 -				    uperm,	// protections as specified
-+				    VM_PROT_ALL,	// preserve rights for both commpage variants
++				    uperm | VM_PROT_WRITE,	// preserve user rights and kernel writes
  				    &handle,		// this is the object handle we get
  				    NULL )))		// parent_entry (what is this?)
  		panic("cannot make entry for commpage %d", kr);
