@@ -156,7 +156,7 @@ add_darwin_circular_library(libsystem_platform
     OBJECT_LIBRARIES libplatform_runtime
     STRONG_DEPENDENCIES libsystem_kernel
     LINK_OPTIONS "LINKER:-umbrella,System")
-target_link_options(libsystem_platform PRIVATE
+target_link_options(libsystem_platform libsystem_platform_firstpass PRIVATE
     "LINKER:-alias_list,${libplatform_source_dir}/xcodeconfig/libplatform.aliases")
 install(TARGETS libsystem_platform DESTINATION usr/lib/system COMPONENT BaseSystem)
 
