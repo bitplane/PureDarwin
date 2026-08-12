@@ -41,7 +41,8 @@ endif()
 add_library(dyld_headers INTERFACE)
 target_include_directories(dyld_headers INTERFACE
     ${dyld_generated_include}
-    ${dyld_source_dir}/include)
+    ${dyld_source_dir}/include
+    ${PUREDARWIN_SOURCE_DIR}/tools/cctools/include)
 
 add_darwin_executable(dyld_runtime NO_STANDARD_LIBRARIES)
 set_target_properties(dyld_runtime PROPERTIES

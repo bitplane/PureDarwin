@@ -38,6 +38,7 @@ target_include_directories(libsystem_info_runtime PRIVATE
     ${libinfo_source_dir}/nis.subproj
     ${libinfo_source_dir}/rpc.subproj
     ${libinfo_source_dir}/util.subproj
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/configd/dnsinfo
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libresolv
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/mDNSResponder/mDNSShared
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/syslog/libsystem_asl.tproj/include)
