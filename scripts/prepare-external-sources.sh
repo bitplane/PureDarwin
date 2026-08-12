@@ -20,10 +20,14 @@ LAUNCHD_CLIENT_PATCH=$SCRIPT_DIR/../patches/launchd-842.92.1/0001-keep-client-mi
 SYSLOG_ASL_MSG_HEADER=$SOURCE_ROOT/syslog/libsystem_asl.tproj/include/asl_msg.h
 SYSLOG_ASL_SOURCE=$SOURCE_ROOT/syslog/libsystem_asl.tproj/src/asl.c
 SYSLOG_OPTIONAL_SPI_PATCH=$SCRIPT_DIR/../patches/syslog-356.50.1/0001-build-asl-without-unpublished-spis.patch
-SYSLOG_OS_LOG_PATCH=$SCRIPT_DIR/../patches/syslog-356.50.1/0002-build-asl-without-unpublished-os-log.patch
+SYSLOG_ASL_OS_LOG_PATCH=$SCRIPT_DIR/../patches/syslog-356.50.1/0002-build-asl-without-unpublished-os-log.patch
 SYSLOG_ACTIVITY_PATCH=$SCRIPT_DIR/../patches/syslog-356.50.1/0003-build-asl-without-unpublished-activity.patch
 SYSLOG_ACTIVITY_REPAIR_PATCH=$SCRIPT_DIR/../patches/syslog-356.50.1/0004-complete-partial-activity-preparation.patch
 SYSLOG_ACTIVITY_METADATA_PATCH=$SCRIPT_DIR/../patches/syslog-356.50.1/0005-disable-unpublished-activity-metadata.patch
+SYSLOG_ASL_UTIL_SOURCE=$SOURCE_ROOT/syslog/libsystem_asl.tproj/src/asl_util.c
+SYSLOG_BLOCKS_PATCH=$SCRIPT_DIR/../patches/syslog-356.50.1/0006-build-asl-utilities-without-blocks.patch
+SYSLOG_SOURCE=$SOURCE_ROOT/syslog/libsystem_asl.tproj/src/syslog.c
+SYSLOG_LEGACY_OS_LOG_PATCH=$SCRIPT_DIR/../patches/syslog-356.50.1/0007-build-syslog-without-unpublished-os-log.patch
 
 if grep -q 'if (fd == -1) return;' "$ASL_SOURCE"; then
     patch -d "$SOURCE_ROOT/libplatform" -p1 < "$ASL_PATCH"
@@ -69,6 +73,16 @@ fi
 grep -B1 '/\* OSActivityID \*/' "$SYSLOG_ASL_SOURCE" | grep -q 'PUREDARWIN_NO_OS_ACTIVITY'
 
 if ! grep -q 'PUREDARWIN_NO_OS_LOG' "$SYSLOG_ASL_SOURCE"; then
-    patch -d "$SOURCE_ROOT/syslog" -p1 < "$SYSLOG_OS_LOG_PATCH"
+    patch -d "$SOURCE_ROOT/syslog" -p1 < "$SYSLOG_ASL_OS_LOG_PATCH"
 fi
 grep -q 'PUREDARWIN_NO_OS_LOG' "$SYSLOG_ASL_SOURCE"
+
+if ! grep -B1 '#include <Block.h>' "$SYSLOG_ASL_UTIL_SOURCE" | grep -q 'PUREDARWIN_NO_XPC'; then
+    patch -d "$SOURCE_ROOT/syslog" -p1 < "$SYSLOG_BLOCKS_PATCH"
+fi
+grep -B1 '#include <Block.h>' "$SYSLOG_ASL_UTIL_SOURCE" | grep -q 'PUREDARWIN_NO_XPC'
+
+if ! grep -q 'PUREDARWIN_NO_OS_LOG' "$SYSLOG_SOURCE"; then
+    patch -d "$SOURCE_ROOT/syslog" -p1 < "$SYSLOG_LEGACY_OS_LOG_PATCH"
+fi
+grep -q 'PUREDARWIN_NO_OS_LOG' "$SYSLOG_SOURCE"

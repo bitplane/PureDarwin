@@ -1,0 +1,11 @@
+diff --git a/libsystem_asl.tproj/src/asl_util.c b/libsystem_asl.tproj/src/asl_util.c
+--- a/libsystem_asl.tproj/src/asl_util.c
++++ b/libsystem_asl.tproj/src/asl_util.c
+@@ -30,7 +30,9 @@
+ #include <stdlib.h>
+ #include <errno.h>
+ #include <unistd.h>
++#ifndef PUREDARWIN_NO_XPC
+ #include <Block.h>
++#endif
+ #include <dispatch/dispatch.h>

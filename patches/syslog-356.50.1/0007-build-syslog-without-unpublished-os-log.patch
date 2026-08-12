@@ -1,0 +1,41 @@
+diff --git a/libsystem_asl.tproj/src/syslog.c b/libsystem_asl.tproj/src/syslog.c
+--- a/libsystem_asl.tproj/src/syslog.c
++++ b/libsystem_asl.tproj/src/syslog.c
+@@ -66,6 +66,8 @@
+ #include <asl.h>
+ #include <asl_msg.h>
+ #include <asl_private.h>
++#ifndef PUREDARWIN_NO_OS_LOG
+ #include <os/log.h>
+ #include <os/log_private.h>
++#endif
+ 
+@@ -90,4 +92,5 @@ __private_extern__ int _sl_mask = 0;
+ 
+ #define EVAL_ASL (EVAL_SEND_ASL | EVAL_TEXT_FILE | EVAL_ASL_FILE)
+ 
++#ifndef PUREDARWIN_NO_OS_LOG
+ static const os_log_type_t shim_syslog_to_log_type[8] = {
+@@ -101,2 +104,3 @@ static const os_log_type_t shim_syslog_to_log_type[8] = {
+ 	OS_LOG_TYPE_DEBUG       // LOG_DEBUG
+ };
++#endif
+@@ -138,6 +142,11 @@ _vsyslog(int pri, const char *fmt, va_list ap, void *addr, bool mirror)
+ 	}
+ 
+ 	eval = _asl_evaluate_send(_sl_asl, msg, level);
++#ifdef PUREDARWIN_NO_OS_LOG
++	trace = false;
++#else
+ 	trace = (eval & EVAL_SEND_TRACE) && os_log_shim_enabled(addr);
++#endif
+ 
++#ifndef PUREDARWIN_NO_OS_LOG
+ 	if (trace)
+@@ -156,5 +164,6 @@ _vsyslog(int pri, const char *fmt, va_list ap, void *addr, bool mirror)
+ 			_asl_lib_vlog_text(_sl_asl, eval, msg, fmt, ap);
+ 		}
+ 	}
++#endif
+ 
+ 	if ((eval & EVAL_ASL) && (mirror || !trace))
