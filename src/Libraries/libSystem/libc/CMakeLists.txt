@@ -451,7 +451,8 @@ add_libc_pbx_group(libc_base_runtime Base)
 target_sources(libc_base_runtime PRIVATE
     compat/byteorder.c
     compat/flsl.c
-    ${CMAKE_SOURCE_DIR}/tools/cctools/libmacho/getsecbyname.c)
+    ${CMAKE_SOURCE_DIR}/tools/cctools/libmacho/getsecbyname.c
+    ${CMAKE_SOURCE_DIR}/tools/cctools/libmacho/swap.c)
 target_include_directories(libc_base_runtime PRIVATE
     ${CMAKE_SOURCE_DIR}/tools/cctools/include)
 set_source_files_properties(${libc_source_dir}/gen/backtrace.c PROPERTIES
