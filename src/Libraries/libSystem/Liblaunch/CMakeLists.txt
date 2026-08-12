@@ -55,8 +55,7 @@ target_include_directories(liblaunch_runtime PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR}/include
     ${liblaunch_source_dir}
     ${launchd_source_dir}/src
-    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch
-    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/EXTERNAL_HEADERS)
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch)
 target_link_libraries(liblaunch_runtime PRIVATE
     AvailabilityHeaders
     architecture_headers
