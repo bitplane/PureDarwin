@@ -15,6 +15,7 @@ add_subdirectory(libsystem_kernel)
 add_subdirectory(pthread)
 
 add_custom_target(base_system_runtime DEPENDS
+    System
     dispatch
     libdyld
     liblaunch
