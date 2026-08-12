@@ -30,6 +30,8 @@ SYSLOG_SOURCE=$SOURCE_ROOT/syslog/libsystem_asl.tproj/src/syslog.c
 SYSLOG_LEGACY_OS_LOG_PATCH=$SCRIPT_DIR/../patches/syslog-356.50.1/0007-build-syslog-without-unpublished-os-log.patch
 XNU_OSKEXT_SOURCE=$SOURCE_ROOT/xnu/libkern/c++/OSKext.cpp
 XNU_BOOT_KEXT_PATCH=$SCRIPT_DIR/../patches/xnu-4570.41.2/0001-allow-kernel-boot-to-link-external-extensions.patch
+XNU_COMMPAGE_SOURCE=$SOURCE_ROOT/xnu/osfmk/i386/commpage/commpage.c
+XNU_COMMPAGE_PATCH=$SCRIPT_DIR/../patches/xnu-4570.41.2/0002-keep-kernel-commpage-mapping-writable.patch
 
 if grep -q 'if (fd == -1) return;' "$ASL_SOURCE"; then
     patch -d "$SOURCE_ROOT/libplatform" -p1 < "$ASL_PATCH"
@@ -93,3 +95,9 @@ if ! grep -q 'all non-booter callers must be entitled' "$XNU_OSKEXT_SOURCE"; the
     patch -d "$SOURCE_ROOT/xnu" -p1 < "$XNU_BOOT_KEXT_PATCH"
 fi
 grep -q 'all non-booter callers must be entitled' "$XNU_OSKEXT_SOURCE"
+
+if grep -A4 'mach_make_memory_entry( kernel_map' "$XNU_COMMPAGE_SOURCE" | grep -q '^[[:space:]]*uperm,'; then
+    patch -d "$SOURCE_ROOT/xnu" -p1 < "$XNU_COMMPAGE_PATCH"
+fi
+grep -A4 'mach_make_memory_entry( kernel_map' "$XNU_COMMPAGE_SOURCE" \
+    | grep -q 'VM_PROT_READ | VM_PROT_WRITE'

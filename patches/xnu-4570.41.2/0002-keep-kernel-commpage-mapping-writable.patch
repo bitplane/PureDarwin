@@ -1,0 +1,12 @@
+diff --git a/osfmk/i386/commpage/commpage.c b/osfmk/i386/commpage/commpage.c
+--- a/osfmk/i386/commpage/commpage.c
++++ b/osfmk/i386/commpage/commpage.c
+@@ -168,7 +168,7 @@ commpage_allocate(
+ 	if ((kr = mach_make_memory_entry( kernel_map,		// target map
+ 				    &size,		// size 
+ 				    kernel_addr,	// offset (address in kernel map)
+-				    uperm,	// protections as specified
++				    VM_PROT_READ | VM_PROT_WRITE,
+ 				    &handle,		// this is the object handle we get
+ 				    NULL )))		// parent_entry (what is this?)
+ 		panic("cannot make entry for commpage %d", kr);
