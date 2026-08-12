@@ -202,7 +202,7 @@ void Apple8259PIC::initializePIC( UInt16 port,
 //---------------------------------------------------------------------------
 // Report whether the interrupt line is edge or level triggered.
 
-int Apple8259PIC::getVectorType(long vectorNumber,
+int Apple8259PIC::getVectorType(IOInterruptVectorNumber vectorNumber,
                                         IOInterruptVector * vector)
 {
     return getTriggerType(vectorNumber);
@@ -299,7 +299,7 @@ IOReturn Apple8259PIC::handleInterrupt(void *      savedState,
 //---------------------------------------------------------------------------
 //
 
-bool Apple8259PIC::vectorCanBeShared(long vectorNumber,
+bool Apple8259PIC::vectorCanBeShared(IOInterruptVectorNumber vectorNumber,
                                              IOInterruptVector * vector)
 {
     if ( getVectorType(vectorNumber, vector) == kIOInterruptTypeLevel )
@@ -311,7 +311,7 @@ bool Apple8259PIC::vectorCanBeShared(long vectorNumber,
 //---------------------------------------------------------------------------
 //
 
-void Apple8259PIC::initVector(long vectorNumber,
+void Apple8259PIC::initVector(IOInterruptVectorNumber vectorNumber,
                                       IOInterruptVector * vector)
 {
     super::initVector((IOInterruptVectorNumber)vectorNumber, vector);
@@ -320,7 +320,7 @@ void Apple8259PIC::initVector(long vectorNumber,
 //---------------------------------------------------------------------------
 //
 
-void Apple8259PIC::disableVectorHard(long vectorNumber,
+void Apple8259PIC::disableVectorHard(IOInterruptVectorNumber vectorNumber,
                                              IOInterruptVector * vector)
 {
     // Sorry, cacade/slave interrupt line cannot be disable.
@@ -333,7 +333,7 @@ void Apple8259PIC::disableVectorHard(long vectorNumber,
 //---------------------------------------------------------------------------
 //
 
-void Apple8259PIC::enableVector(long vectorNumber,
+void Apple8259PIC::enableVector(IOInterruptVectorNumber vectorNumber,
                                         IOInterruptVector * vector)
 {
     enableInterrupt(vectorNumber);

@@ -161,7 +161,7 @@ public:
 //                                       int   source,
 //                                       int * interruptType );
 
-    virtual int      getVectorType( long vectorNumber,
+    virtual int      getVectorType( IOInterruptVectorNumber vectorNumber,
                                     IOInterruptVector * vector);
 
     virtual IOInterruptAction getInterruptHandlerAddress( void );
@@ -170,16 +170,16 @@ public:
                                       IOService * nub,
                                       int source );
 
-    virtual bool     vectorCanBeShared( long vectorNumber,
+    virtual bool     vectorCanBeShared( IOInterruptVectorNumber vectorNumber,
                                         IOInterruptVector * vector );
 
-    virtual void     initVector( long vectorNumber,
+    virtual void     initVector( IOInterruptVectorNumber vectorNumber,
                                  IOInterruptVector * vector );
 
-    virtual void     disableVectorHard( long vectorNumber,
+    virtual void     disableVectorHard( IOInterruptVectorNumber vectorNumber,
                                         IOInterruptVector * vector );
 
-    virtual void     enableVector( long vectorNumber,
+    virtual void     enableVector( IOInterruptVectorNumber vectorNumber,
                                    IOInterruptVector * vector );
 
     virtual IOReturn callPlatformFunction( const OSSymbol * function,
