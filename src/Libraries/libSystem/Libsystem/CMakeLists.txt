@@ -61,6 +61,8 @@ target_link_libraries(System PRIVATE
     libsystem_platform
     libsystem_pthread)
 target_link_options(System PRIVATE
+    "LINKER:-compatibility_version,1.0.0"
+    "LINKER:-current_version,159.0.0"
     "LINKER:-reexport_library,$<TARGET_FILE:dispatch>"
     "LINKER:-reexport_library,$<TARGET_FILE:libdyld>"
     "LINKER:-reexport_library,$<TARGET_FILE:liblaunch>"
