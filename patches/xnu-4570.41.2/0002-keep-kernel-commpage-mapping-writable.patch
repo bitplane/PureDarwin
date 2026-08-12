@@ -1,31 +1,12 @@
 diff --git a/osfmk/i386/commpage/commpage.c b/osfmk/i386/commpage/commpage.c
 --- a/osfmk/i386/commpage/commpage.c
 +++ b/osfmk/i386/commpage/commpage.c
-@@ -163,6 +163,13 @@
- 		panic("cannot find commpage entry %d", kr);
- 	VME_OBJECT(entry)->copy_strategy = MEMORY_OBJECT_COPY_NONE;
- 
-+	/* Keep the kernel alias writable before exporting a read-only entry. */
-+	kr = vm_protect(kernel_map, kernel_addr, area_used, FALSE,
-+	    VM_PROT_READ | VM_PROT_WRITE);
-+	if (kr != KERN_SUCCESS) {
-+		panic("cannot make kernel commpage writable %d", kr);
-+	}
-+
+@@ -168,7 +168,7 @@ commpage_allocate(
  	if ((kr = mach_make_memory_entry( kernel_map,		// target map
  				    &size,		// size 
  				    kernel_addr,	// offset (address in kernel map)
-@@ -186,13 +193,6 @@
- 		panic("cannot map commpage %d", kr);
- 
- 	ipc_port_release(handle);
--	/* Make the kernel mapping non-executable. This cannot be done
--	 * at the time of map entry creation as mach_make_memory_entry
--	 * cannot handle disjoint permissions at this time.
--	 */
--	kr = vm_protect(kernel_map, kernel_addr, area_used, FALSE, VM_PROT_READ | VM_PROT_WRITE);
--	assert (kr == KERN_SUCCESS);
--
- 	return (void*)(intptr_t)kernel_addr;                     // return address in kernel map
- }
- 
+-				    uperm,	// protections as specified
++				    VM_PROT_ALL,	// preserve rights for both commpage variants
+ 				    &handle,		// this is the object handle we get
+ 				    NULL )))		// parent_entry (what is this?)
+ 		panic("cannot make entry for commpage %d", kr);
