@@ -47,6 +47,9 @@ target_compile_options(liblaunch_runtime PRIVATE
     -fblocks
     -fno-common
     "SHELL:-include os/base_private.h")
+target_compile_definitions(liblaunch_runtime PRIVATE
+    PRIVATE=1
+    USE_OBJC=0)
 target_include_directories(liblaunch_runtime PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}/include
