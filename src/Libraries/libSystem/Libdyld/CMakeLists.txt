@@ -52,6 +52,7 @@ mig(${dyld_source_dir}/dyld3/closured/closuredProtocol.defs
 target_sources(libdyld_runtime PRIVATE
     ${PUREDARWIN_SOURCE_DIR}/src/Libraries/dyld/common_digest.c
     ${PUREDARWIN_SOURCE_DIR}/src/Libraries/dyld/compat/libcxx_abort.cpp
+    ${PUREDARWIN_SOURCE_DIR}/src/Libraries/dyld/compat/vector_abort.cpp
     ${libdyld_sources}
     ${dyld_source_dir}/dyld3/libclosured-stub.cpp
     ${closured_protocol_header}
