@@ -36,6 +36,7 @@ target_compile_definitions(System PRIVATE
     CURRENT_VARIANT_normal=1)
 target_link_libraries(System PRIVATE
     AvailabilityHeaders
+    architecture_headers
     clang_bootstrap_headers
     dyld_headers
     libc_private_headers
