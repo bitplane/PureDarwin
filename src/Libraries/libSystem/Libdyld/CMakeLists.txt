@@ -74,6 +74,7 @@ target_include_directories(libdyld_runtime PRIVATE
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/Libm/Source/Intel
     ${PUREDARWIN_LIBCXX_SOURCE_DIR}/include)
 target_compile_definitions(libdyld_runtime PRIVATE
+    BUILDING_LIBDYLD=1
     DYLD_IN_PROCESS=1
     DYLD_VERSION=519.2.2
     _LIBCPP_NO_EXCEPTIONS=1)
