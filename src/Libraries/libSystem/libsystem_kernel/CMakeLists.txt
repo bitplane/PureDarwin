@@ -217,7 +217,7 @@ target_link_libraries(libsystem_kernel_static PUBLIC architecture_headers)
 
 target_include_directories(libsystem_kernel_static PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/public_include)
 target_include_directories(libsystem_kernel_static PRIVATE
-    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/osfmk
+    ${libsyscall_source_dir}/mach/mach
     ${libsyscall_source_dir}/mach
     ${libsyscall_source_dir}/mach/servers
     ${libsyscall_source_dir}/custom
@@ -242,24 +242,27 @@ target_link_libraries(libsystem_kernel_static PRIVATE xnu_private_headers libpla
 target_link_libraries(libsystem_kernel_static PUBLIC xnu_headers pthread_common_headers AvailabilityHeaders)
 
 # Public header generation (no source files here due to macro definition issues)
-mig(${libsyscall_source_dir}/mach/clock.defs INCLUDES_FROM_TARGET libsystem_kernel_static USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/clock.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/clock_priv.defs INCLUDES_FROM_TARGET libsystem_kernel_static USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/clock_priv.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/clock_reply.defs INCLUDES_FROM_TARGET libsystem_kernel_static USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/clock_reply.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/exc.defs INCLUDES_FROM_TARGET libsystem_kernel_static USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/exc.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/host_priv.defs INCLUDES_FROM_TARGET libsystem_kernel_static USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/host_priv.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/host_security.defs INCLUDES_FROM_TARGET libsystem_kernel_static USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/host_security.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/lock_set.defs INCLUDES_FROM_TARGET libsystem_kernel_static USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/lock_set.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/mach_host.defs INCLUDES_FROM_TARGET libsystem_kernel_static USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/mach_host.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/mach_port.defs INCLUDES_FROM_TARGET libsystem_kernel_static USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/mach_port.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/mach_voucher.defs INCLUDES_FROM_TARGET libsystem_kernel_static USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/mach_voucher.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/mach_vm.defs INCLUDES_FROM_TARGET libsystem_kernel_static USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/mach_vm.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/processor.defs INCLUDES_FROM_TARGET libsystem_kernel_static USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/processor.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/processor_set.defs INCLUDES_FROM_TARGET libsystem_kernel_static USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/processor_set.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/task.defs INCLUDES_FROM_TARGET libsystem_kernel_static USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/task.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/thread_act.defs INCLUDES_FROM_TARGET libsystem_kernel_static USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/thread_act.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/vm_map.defs INCLUDES_FROM_TARGET libsystem_kernel_static USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/vm_map.h NOVOUCHERS)
+set(mach_mig_options
+    INCLUDE_DIRECTORY ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/osfmk
+    INCLUDES_FROM_TARGET libsystem_kernel_static)
+mig(${libsyscall_source_dir}/mach/clock.defs ${mach_mig_options} USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/clock.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/clock_priv.defs ${mach_mig_options} USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/clock_priv.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/clock_reply.defs ${mach_mig_options} USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/clock_reply.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/exc.defs ${mach_mig_options} USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/exc.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/host_priv.defs ${mach_mig_options} USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/host_priv.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/host_security.defs ${mach_mig_options} USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/host_security.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/lock_set.defs ${mach_mig_options} USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/lock_set.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/mach_host.defs ${mach_mig_options} USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/mach_host.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/mach_port.defs ${mach_mig_options} USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/mach_port.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/mach_voucher.defs ${mach_mig_options} USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/mach_voucher.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/mach_vm.defs ${mach_mig_options} USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/mach_vm.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/processor.defs ${mach_mig_options} USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/processor.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/processor_set.defs ${mach_mig_options} USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/processor_set.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/task.defs ${mach_mig_options} USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/task.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/thread_act.defs ${mach_mig_options} USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/thread_act.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/vm_map.defs ${mach_mig_options} USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/vm_map.h NOVOUCHERS)
 
-mig(${libsyscall_source_dir}/mach/servers/netname.defs INCLUDES_FROM_TARGET libsystem_kernel_static USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/servers/netname.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/servers/netname.defs ${mach_mig_options} USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/servers/netname.h NOVOUCHERS)
 
 add_custom_target(libsystem_kernel_public_headers DEPENDS
     ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/clock.h
@@ -283,31 +286,31 @@ add_dependencies(libsystem_kernel_private_headers
     libsystem_kernel_public_headers)
 
 # Pass NODEFINES to build 'internal' copies of these MIG files. See scripts/mach_install_mig.sh for info.
-mig(${libsyscall_source_dir}/mach/clock.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/clock.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/clock.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/clock_priv.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/clock_priv.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/clock_priv.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/clock_reply.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/clock_reply.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/clock_reply.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/host_priv.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/host_priv.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/host_priv.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/host_security.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/host_security.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/phost_security.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/lock_set.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/lock_set.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/lock_set.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/mach_host.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/mach_host.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/mach_host.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/mach_voucher.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/mach_voucher.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/mach_voucher.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/mach_vm.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/mach_vm.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/mach_vm.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/notify.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/notify.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/notify.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/processor.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/processor.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/processor.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/processor_set.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/processor_set.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/processor_set.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/vm_map.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/vm_map.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/vm_map.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/clock.defs ${mach_mig_options} NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/clock.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/clock.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/clock_priv.defs ${mach_mig_options} NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/clock_priv.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/clock_priv.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/clock_reply.defs ${mach_mig_options} NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/clock_reply.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/clock_reply.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/host_priv.defs ${mach_mig_options} NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/host_priv.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/host_priv.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/host_security.defs ${mach_mig_options} NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/host_security.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/phost_security.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/lock_set.defs ${mach_mig_options} NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/lock_set.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/lock_set.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/mach_host.defs ${mach_mig_options} NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/mach_host.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/mach_host.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/mach_voucher.defs ${mach_mig_options} NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/mach_voucher.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/mach_voucher.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/mach_vm.defs ${mach_mig_options} NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/mach_vm.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/mach_vm.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/notify.defs ${mach_mig_options} NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/notify.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/notify.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/processor.defs ${mach_mig_options} NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/processor.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/processor.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/processor_set.defs ${mach_mig_options} NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/processor_set.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/processor_set.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/vm_map.defs ${mach_mig_options} NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/vm_map.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/vm_map.h NOVOUCHERS)
 
-mig(${libsyscall_source_dir}/mach/servers/netname.defs INCLUDES_FROM_TARGET libsystem_kernel_static USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/netname.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/netname.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/servers/netname.defs ${mach_mig_options} USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/netname.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/netname.h NOVOUCHERS)
 
 # This gets both a server and a client
-mig(${libsyscall_source_dir}/mach/exc.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE COMPILE_SERVER USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/exc_user.c SERVER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/exc_server.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/exc_user.h SERVER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/exc_server.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/exc.defs ${mach_mig_options} NODEFINES TRUE COMPILE_SERVER USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/exc_user.c SERVER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/exc_server.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/exc_user.h SERVER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/exc_server.h NOVOUCHERS)
 
 # These internal headers need to be installed privately for us to build off of.
-mig(${libsyscall_source_dir}/mach/mach_port.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/mach_port.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/mach_port_internal.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/mach_vm.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/mach_vm.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/mach_vm_internal.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/task.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/task.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/task_internal.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/thread_act.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/thread_act.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/thread_act_internal.h NOVOUCHERS)
-mig(${libsyscall_source_dir}/mach/vm_map.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/vm_map.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/vm_map_internal.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/mach_port.defs ${mach_mig_options} NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/mach_port.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/mach_port_internal.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/mach_vm.defs ${mach_mig_options} NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/mach_vm.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/mach_vm_internal.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/task.defs ${mach_mig_options} NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/task.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/task_internal.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/thread_act.defs ${mach_mig_options} NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/thread_act.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/thread_act_internal.h NOVOUCHERS)
+mig(${libsyscall_source_dir}/mach/vm_map.defs ${mach_mig_options} NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/vm_map.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/internal_include/mach/vm_map_internal.h NOVOUCHERS)
 
 # MIG output from above
 target_sources(libsystem_kernel_static PRIVATE
