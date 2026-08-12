@@ -34,6 +34,8 @@ target_sources(libsystem_asl_runtime PRIVATE
     ${asl_ipc_source})
 target_compile_definitions(libsystem_asl_runtime PRIVATE
     PRIVATE=1
+    PUREDARWIN_NO_OS_ACTIVITY=1
+    PUREDARWIN_NO_XPC=1
     USE_OBJC=0
     __DARWIN_NON_CANCELABLE=1)
 target_compile_options(libsystem_asl_runtime PRIVATE
@@ -79,4 +81,3 @@ add_darwin_circular_library(libsystem_asl
     STRONG_DEPENDENCIES libsystem_kernel
     LINK_OPTIONS "LINKER:-umbrella,System")
 install(TARGETS libsystem_asl DESTINATION usr/lib/system COMPONENT BaseSystem)
-

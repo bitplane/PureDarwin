@@ -1,0 +1,101 @@
+diff --git a/libsystem_asl.tproj/include/asl_msg.h b/libsystem_asl.tproj/include/asl_msg.h
+--- a/libsystem_asl.tproj/include/asl_msg.h
++++ b/libsystem_asl.tproj/include/asl_msg.h
+@@ -25,7 +25,9 @@
+ #define __ASL_MSG_H__
+ 
+ #include <stdint.h>
++#ifndef PUREDARWIN_NO_XPC
+ #include <xpc/xpc.h>
++#endif
+ #include <asl.h>
+ #include <asl_string.h>
+ #include <asl_core.h>
+@@ -138,6 +140,8 @@ asl_string_t * asl_string_append_asl_msg(asl_string_t *str, asl_msg_t *msg) __API
+ 
+ int asl_msg_cmp(asl_msg_t *a, asl_msg_t *b) __API_DEPRECATED("os_log(3) has replaced asl(3)", macosx(10.10,10.12), ios(7.0,10.0), watchos(2.0,3.0), tvos(9.0,10.0));
+ 
++#ifndef PUREDARWIN_NO_XPC
+ void _asl_log_args_to_xpc(asl_object_t client, asl_object_t msg, xpc_object_t dict); //TODO: ADD AVAILABLITY INFO
++#endif
+ 
+ __END_DECLS
+diff --git a/libsystem_asl.tproj/src/asl.c b/libsystem_asl.tproj/src/asl.c
+--- a/libsystem_asl.tproj/src/asl.c
++++ b/libsystem_asl.tproj/src/asl.c
+@@ -51,4 +51,6 @@
+ #include <dispatch/dispatch.h>
+ #include <libkern/OSAtomic.h>
++#ifndef PUREDARWIN_NO_OS_ACTIVITY
+ #include <os/activity.h>
++#endif
+ #include <os/log.h>
+ #include <os/log_private.h>
+@@ -1028,4 +1030,6 @@ asl_base_msg(asl_client_t *asl, uint32_t level, const struct timeval *tv, const c
+ 	char aux_val[64];
+ 	asl_msg_t *aux;
+ 	int status;
++#ifndef PUREDARWIN_NO_OS_ACTIVITY
+ 	os_activity_id_t osaid;
++#endif
+@@ -1052,6 +1056,7 @@ asl_base_msg(asl_client_t *asl, uint32_t level, const struct timeval *tv, const c
+ 	snprintf(aux_val, sizeof(aux_val), "%u", getpid());
+ 	asl_msg_set_key_val(aux, ASL_KEY_PID, aux_val);
+ 
++#ifndef PUREDARWIN_NO_OS_ACTIVITY
+ 	/* OSActivityID */
+ 	osaid = os_activity_get_identifier(OS_ACTIVITY_CURRENT, NULL);
+ 	if (osaid)
+@@ -1060,6 +1065,7 @@ asl_base_msg(asl_client_t *asl, uint32_t level, const struct timeval *tv, const c
+ 		snprintf(aux_val, sizeof(aux_val), "0x%016llx", osaid);
+ 		asl_msg_set_key_val(aux, ASL_KEY_OS_ACTIVITY_ID, aux_val);
+ 	}
++#endif
+ 
+ 	/* Sender */
+diff --git a/libsystem_asl.tproj/src/asl_msg.c b/libsystem_asl.tproj/src/asl_msg.c
+--- a/libsystem_asl.tproj/src/asl_msg.c
++++ b/libsystem_asl.tproj/src/asl_msg.c
+@@ -3031,4 +3031,5 @@ asl_format_message(asl_msg_t *msg, const char *mfmt, const char *tfmt, uint32_t e
+ #pragma mark -
+ #pragma mark xpc conversion
+ 
++#ifndef PUREDARWIN_NO_XPC
+ static void
+ _asl_msg_to_xpc(asl_msg_t *msg, xpc_object_t dict)
+@@ -3138,4 +3139,5 @@ _asl_log_args_to_xpc(asl_object_t client, asl_object_t msg, xpc_object_t dict)
+ 	_asl_msg_to_xpc(asl_client_kvdict((asl_client_t *)client), dict);
+ 	_asl_msg_to_xpc((asl_msg_t *)msg, dict);
+ }
++#endif
+ 
+ #pragma mark -
+diff --git a/libsystem_asl.tproj/src/asl_util.c b/libsystem_asl.tproj/src/asl_util.c
+--- a/libsystem_asl.tproj/src/asl_util.c
++++ b/libsystem_asl.tproj/src/asl_util.c
+@@ -34,4 +34,6 @@
+ #include <dispatch/dispatch.h>
+ #include <os/assumes.h>
++#ifndef PUREDARWIN_NO_XPC
+ #include <xpc/xpc.h>
++#endif
+ #include <syslog.h>
+@@ -312,4 +314,5 @@ asl_syslog_faciliy_name_to_num(const char *s)
+ 	return -1;
+ }
+ 
++#ifndef PUREDARWIN_NO_XPC
+ static xpc_connection_t
+ _create_aslmanager_connection(void)
+@@ -340,3 +343,10 @@ asl_trigger_aslmanager(void)
+ 	xpc_release(connection);
+ 	return 0;
+ }
++#else
++int
++asl_trigger_aslmanager(void)
++{
++	errno = ENOTSUP;
++	return -1;
++}
++#endif

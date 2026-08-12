@@ -17,6 +17,8 @@ LIBDISPATCH_INTERNAL=$SOURCE_ROOT/libdispatch/src/internal.h
 LIBDISPATCH_ASSERT_PATCH=$SCRIPT_DIR/../patches/libdispatch-913.30.4/0001-avoid-typeof-on-bit-fields.patch
 LAUNCHD_VPROC_INTERNAL=$SOURCE_ROOT/launchd/liblaunch/vproc_internal.h
 LAUNCHD_CLIENT_PATCH=$SCRIPT_DIR/../patches/launchd-842.92.1/0001-keep-client-mig-headers-out-of-launchd-internals.patch
+SYSLOG_ASL_MSG_HEADER=$SOURCE_ROOT/syslog/libsystem_asl.tproj/include/asl_msg.h
+SYSLOG_OPTIONAL_SPI_PATCH=$SCRIPT_DIR/../patches/syslog-356.50.1/0001-build-asl-without-unpublished-spis.patch
 
 if grep -q 'if (fd == -1) return;' "$ASL_SOURCE"; then
     patch -d "$SOURCE_ROOT/libplatform" -p1 < "$ASL_PATCH"
@@ -40,3 +42,8 @@ if ! grep -q 'PUREDARWIN_LIBLAUNCH_CLIENT' "$LAUNCHD_VPROC_INTERNAL"; then
     patch -d "$SOURCE_ROOT/launchd" -p1 < "$LAUNCHD_CLIENT_PATCH"
 fi
 grep -q 'PUREDARWIN_LIBLAUNCH_CLIENT' "$LAUNCHD_VPROC_INTERNAL"
+
+if ! grep -q 'PUREDARWIN_NO_XPC' "$SYSLOG_ASL_MSG_HEADER"; then
+    patch -d "$SOURCE_ROOT/syslog" -p1 < "$SYSLOG_OPTIONAL_SPI_PATCH"
+fi
+grep -q 'PUREDARWIN_NO_XPC' "$SYSLOG_ASL_MSG_HEADER"
