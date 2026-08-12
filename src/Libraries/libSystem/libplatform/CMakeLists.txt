@@ -121,6 +121,7 @@ target_include_directories(libplatform_runtime PRIVATE
 target_compile_definitions(libplatform_runtime PRIVATE
     PRIVATE=1
     _FORTIFY_SOURCE=0
+    VARIANT_STATIC=1
     OSATOMIC_USE_INLINED=0
     OSATOMIC_DEPRECATED=0
     OSSPINLOCK_USE_INLINED=0

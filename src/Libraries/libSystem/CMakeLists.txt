@@ -1,5 +1,6 @@
 add_subdirectory(corecrypto)
 add_subdirectory(Libsystem)
+add_subdirectory(libblocks)
 add_subdirectory(libc)
 #add_subdirectory(libdispatch)
 add_subdirectory(libplatform)

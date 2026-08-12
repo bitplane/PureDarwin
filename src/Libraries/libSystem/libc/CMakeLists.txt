@@ -515,7 +515,11 @@ add_darwin_circular_library(libsystem_c
         libc_pre1050_runtime
         libc_inode32_runtime
     STRONG_SIBLINGS libsystem_platform
-    SIBLINGS libsystem_malloc libsystem_pthread libsystem_platform
+    SIBLINGS
+        libsystem_blocks
+        libsystem_malloc
+        libsystem_pthread
+        libsystem_platform
     STRONG_DEPENDENCIES CrashReporterClient libsystem_kernel
     LINK_OPTIONS "LINKER:-umbrella,System")
 target_link_options(libsystem_c PRIVATE
