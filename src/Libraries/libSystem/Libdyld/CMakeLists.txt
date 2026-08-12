@@ -33,6 +33,11 @@ foreach(libdyld_source_path IN LISTS libdyld_source_paths)
     endif()
 endforeach()
 
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/servers)
+configure_file(
+    ${PUREDARWIN_SOURCE_DIR}/tools/cctools/include/foreign/servers/bootstrap.h
+    ${CMAKE_CURRENT_BINARY_DIR}/servers/bootstrap.h COPYONLY)
+
 add_darwin_object_library(libdyld_runtime)
 set_property(TARGET libdyld_runtime PROPERTY POSITION_INDEPENDENT_CODE ON)
 
@@ -59,11 +64,11 @@ target_include_directories(libdyld_runtime PRIVATE
     ${dyld_source_dir}/dyld3/closured
     ${PUREDARWIN_SOURCE_DIR}/src/Libraries/dyld/compat
     ${PUREDARWIN_SOURCE_DIR}/tools/cctools/include
-    ${PUREDARWIN_SOURCE_DIR}/tools/cctools/include/foreign
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libdispatch/src/BlocksRuntime
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/launchd/liblaunch
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/libplatform/private
+    ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/osfmk
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/libsyscall/mach
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/xnu/libsyscall/wrappers/libproc
     ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/Libm/Source/Intel
@@ -85,16 +90,23 @@ target_link_libraries(libdyld_runtime PRIVATE
     CrashReporterClient_headers
     architecture_headers
     clang_bootstrap_headers
+    corecrypto_static
+    cxx_dyld
+    cxxabi_dyld
     dyld_headers
     host_commoncrypto_headers
     host_commoncrypto_private_headers
+    libc_dyld
     libc_public_headers
     libc_private_headers
     libplatform_headers
+    libplatform_dyld
     libsystem_kernel_private_headers
     libsystem_private_headers
     pthread_common_headers
     pthread_common_private_headers
+    pthread_dyld
+    unwind_dyld
     xnu_headers
     xnu_private_headers)
 
