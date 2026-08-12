@@ -1,4 +1,8 @@
 set(ioata_block_source_dir ${PUREDARWIN_EXTERNAL_SOURCE_ROOT}/IOATABlockStorage)
+set(ioata_block_include_dir ${CMAKE_CURRENT_BINARY_DIR}/external_include)
+file(MAKE_DIRECTORY ${ioata_block_include_dir}/IOKit/storage/ata)
+file(COPY ${ioata_block_source_dir}/IOATAStorageDefines.h
+    DESTINATION ${ioata_block_include_dir}/IOKit/storage/ata)
 
 add_kext_bundle(IOATABlockStorage KERNEL_PRIVATE INFO_PLIST Info.plist
     INSTALL_DESTINATION System/Library/Extensions/IOATAFamily.kext/Contents/PlugIns
@@ -13,6 +17,7 @@ target_sources(IOATABlockStorage PRIVATE
 target_include_directories(IOATABlockStorage PRIVATE
     ${ioata_block_source_dir}
     ${ioata_block_source_dir}/UserClientLib
+    ${ioata_block_include_dir}
 )
 target_link_libraries(IOATABlockStorage PRIVATE
     IOATAFamilyHeaders
