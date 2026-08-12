@@ -76,6 +76,7 @@ add_darwin_circular_library(libsystem_asl
         liblaunch
         libsystem_blocks
         libsystem_c
+        libsystem_info
         libsystem_malloc
         libsystem_notify
         libsystem_platform
