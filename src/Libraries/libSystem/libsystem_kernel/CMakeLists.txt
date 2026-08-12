@@ -261,6 +261,27 @@ mig(${libsyscall_source_dir}/mach/vm_map.defs INCLUDES_FROM_TARGET libsystem_ker
 
 mig(${libsyscall_source_dir}/mach/servers/netname.defs INCLUDES_FROM_TARGET libsystem_kernel_static USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/public_include/servers/netname.h NOVOUCHERS)
 
+add_custom_target(libsystem_kernel_public_headers DEPENDS
+    ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/clock.h
+    ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/clock_priv.h
+    ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/clock_reply.h
+    ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/exc.h
+    ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/host_priv.h
+    ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/host_security.h
+    ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/lock_set.h
+    ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/mach_host.h
+    ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/mach_port.h
+    ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/mach_voucher.h
+    ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/mach_vm.h
+    ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/processor.h
+    ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/processor_set.h
+    ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/task.h
+    ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/thread_act.h
+    ${CMAKE_CURRENT_BINARY_DIR}/public_include/mach/vm_map.h
+    ${CMAKE_CURRENT_BINARY_DIR}/public_include/servers/netname.h)
+add_dependencies(libsystem_kernel_private_headers
+    libsystem_kernel_public_headers)
+
 # Pass NODEFINES to build 'internal' copies of these MIG files. See scripts/mach_install_mig.sh for info.
 mig(${libsyscall_source_dir}/mach/clock.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/clock.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/clock.h NOVOUCHERS)
 mig(${libsyscall_source_dir}/mach/clock_priv.defs INCLUDES_FROM_TARGET libsystem_kernel_static NODEFINES TRUE USER_SOURCE ${CMAKE_CURRENT_BINARY_DIR}/clock_priv.c USER_HEADER ${CMAKE_CURRENT_BINARY_DIR}/clock_priv.h NOVOUCHERS)
