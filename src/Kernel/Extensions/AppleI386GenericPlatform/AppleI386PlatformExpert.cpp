@@ -101,7 +101,7 @@ bool AppleI386PlatformExpert::init(OSDictionary *properties) {
 
 	OSString *name = (OSString *)getProperty("InterruptControllerName");
 	_interruptControllerName = name ? OSSymbol::withString(name)
-	                                : gPlatformInterruptControllerName;
+	                                : OSSymbol::withCStringNoCopy("8259-pic");
 
 	return true;
 }
@@ -167,8 +167,6 @@ IOService *AppleI386PlatformExpert::createNub(OSDictionary *from) {
 			setupPCI(nub);
 		} else if (strcmp(name, "bios") == 0) {
 			setupBIOS(nub);
-		} else if (strcmp(name, "8259-pic") == 0) {
-			setupPIC(nub);
 		}
 	}
 
@@ -186,41 +184,6 @@ void AppleI386PlatformExpert::setupPCI(IOService *nub) {
 		nub->setProperty("pci-bus-info", data);
 		data->release();
 	}
-}
-
-void AppleI386PlatformExpert::setupPIC(IOService *nub) {
-	int i;
-	OSDictionary *propTable;
-	OSArray *controller;
-	OSArray *specifier;
-	OSData *tmpData;
-	long tmpLong;
-
-	propTable = nub->getPropertyTable();
-
-	// For the moment... assume a classic 8259 interrupt controller
-	// with 16 interrupts. Later, this will be changed to detect
-	// an APIC and/or MP-Table and then will set the nubs appropriately.
-
-	specifier = OSArray::withCapacity(kSystemIRQCount);
-	assert(specifier);
-
-	for (i = 0; i < kSystemIRQCount; i++) {
-		tmpLong = i;
-		tmpData = OSData::withBytes(&tmpLong, sizeof(tmpLong));
-		specifier->setObject(tmpData);
-	}
-
-	controller = OSArray::withCapacity(kSystemIRQCount);
-	assert(controller);
-
-	for (i = 0; i < kSystemIRQCount; i++) controller->setObject(_interruptControllerName);
-
-	propTable->setObject(gIOInterruptControllersKey, controller);
-	propTable->setObject(gIOInterruptSpecifiersKey, specifier);
-
-	specifier->release();
-	controller->release();
 }
 
 void AppleI386PlatformExpert::setupBIOS(IOService *nub) {

@@ -46,7 +46,7 @@
 			<key>IOProviderClass</key>
 			<string>IOPlatformExpertDevice</string>
 			<key>InterruptControllerName</key>
-			<string>AppleI386CPUInterruptController</string>
+			<string>8259-pic</string>
 			<key>top-level</key>
 			<array>
 				<dict>

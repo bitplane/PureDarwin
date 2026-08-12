@@ -34,7 +34,6 @@ private:
 	const OSSymbol *_interruptControllerName;
 	AppleI386CPU *bootCPU;
 
-	void setupPIC(IOService *nub);
 	void setupPCI(IOService *nub);
 	void setupBIOS(IOService *nub);
 
