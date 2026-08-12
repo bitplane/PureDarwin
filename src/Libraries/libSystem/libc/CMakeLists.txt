@@ -170,14 +170,6 @@ set(libc_dyld_freebsd_sources
     ${libc_source_dir}/string/FreeBSD/strstr.c)
 set_source_files_properties(${libc_dyld_freebsd_sources} PROPERTIES
     COMPILE_OPTIONS "-include;${libc_source_dir}/fbsdcompat/_fbsd_compat_.h")
-set_source_files_properties(
-    ${libc_source_dir}/gen/FreeBSD/closedir.c
-    ${libc_source_dir}/gen/FreeBSD/opendir.c
-    ${libc_source_dir}/gen/FreeBSD/readdir.c
-    ${libc_source_dir}/gen/FreeBSD/scandir.c
-    ${libc_source_dir}/gen/FreeBSD/telldir.c
-    PROPERTIES COMPILE_OPTIONS
-    "-include;${libc_source_dir}/fbsdcompat/_fbsd_compat_.h;-include;${libc_source_dir}/gen/__dirent.h")
 target_include_directories(libc_dyld PRIVATE
     ${libc_source_dir}/fbsdcompat
     ${libc_source_dir}/gen
@@ -471,14 +463,14 @@ target_include_directories(libc_freebsd_runtime PRIVATE
     ${libc_source_dir}/gdtoa/FreeBSD)
 target_compile_options(libc_freebsd_runtime PRIVATE
     "SHELL:-include ${libc_source_dir}/fbsdcompat/_fbsd_compat_.h")
-set_source_files_properties(
+set_property(SOURCE
     ${libc_source_dir}/gen/FreeBSD/closedir.c
     ${libc_source_dir}/gen/FreeBSD/opendir.c
     ${libc_source_dir}/gen/FreeBSD/readdir.c
     ${libc_source_dir}/gen/FreeBSD/rewinddir.c
     ${libc_source_dir}/gen/FreeBSD/seekdir.c
     ${libc_source_dir}/gen/FreeBSD/telldir.c
-    PROPERTIES COMPILE_OPTIONS
+    APPEND PROPERTY COMPILE_OPTIONS
     "-include;${libc_source_dir}/gen/__dirent.h")
 set_source_files_properties(${libc_source_dir}/stdio/FreeBSD/mktemp.c
     PROPERTIES COMPILE_DEFINITIONS "TRUE=1;FALSE=0")
