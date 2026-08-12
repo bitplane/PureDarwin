@@ -51,6 +51,14 @@
 			<array>
 				<dict>
 					<key>IOName</key>
+					<string>pci</string>
+				</dict>
+				<dict>
+					<key>IOName</key>
+					<string>8259-pic</string>
+				</dict>
+				<dict>
+					<key>IOName</key>
 					<string>bios</string>
 				</dict>
 			</array>

@@ -35,6 +35,7 @@ private:
 	AppleI386CPU *bootCPU;
 
 	void setupPIC(IOService *nub);
+	void setupPCI(IOService *nub);
 	void setupBIOS(IOService *nub);
 
 	static int handlePEHaltRestart(unsigned int type);

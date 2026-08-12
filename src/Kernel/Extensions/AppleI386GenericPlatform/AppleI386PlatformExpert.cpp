@@ -44,6 +44,23 @@ enum {
 	kSystemIRQCount = 16
 };
 
+struct PCIBusInfo {
+	union {
+		struct {
+			UInt8 configMethod1 : 1;
+			UInt8 configMethod2 : 1;
+			UInt8 reserved : 2;
+			UInt8 specialCycle1 : 1;
+			UInt8 specialCycle2 : 1;
+		} fields;
+		UInt8 value;
+	} bus;
+	UInt8 maxBusNumber;
+	UInt8 majorVersion;
+	UInt8 minorVersion;
+	UInt8 biosPresent;
+};
+
 static struct {
 	UInt16 consumers;
 	UInt16 status;
@@ -148,8 +165,7 @@ IOService *AppleI386PlatformExpert::createNub(OSDictionary *from) {
 		const char *name = nub->getName();
 
 		if (strcmp(name, "pci") == 0) {
-			// TODO: Get the PCI info from the boot args
-			// and set it as the `pci-bus-info` property in the `from` dict.
+			setupPCI(nub);
 		} else if (strcmp(name, "bios") == 0) {
 			setupBIOS(nub);
 		} else if (strcmp(name, "8259-pic") == 0) {
@@ -158,6 +174,19 @@ IOService *AppleI386PlatformExpert::createNub(OSDictionary *from) {
 	}
 
 	return nub;
+}
+
+void AppleI386PlatformExpert::setupPCI(IOService *nub) {
+	PCIBusInfo info = {};
+	info.bus.fields.configMethod1 = 1;
+	info.majorVersion = 2;
+	info.minorVersion = 1;
+
+	OSData *data = OSData::withBytes(&info, sizeof(info));
+	if (data != 0) {
+		nub->setProperty("pci-bus-info", data);
+		data->release();
+	}
 }
 
 void AppleI386PlatformExpert::setupPIC(IOService *nub) {
