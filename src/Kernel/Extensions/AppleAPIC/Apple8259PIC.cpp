@@ -126,16 +126,21 @@ bool Apple8259PIC::start(IOService * provider)
     _interruptTriggerTypes = inb( kPIC1TriggerTypePort ) | ( inb( kPIC2TriggerTypePort ) << 8 );
     
     // Primary interrupt controller
+    kprintf("setting CPU interrupt properties... ");
     getPlatform()->setCPUInterruptProperties(provider);
+    kprintf("done\nregistering platform interrupt... ");
     
     // Register the interrupt handler function so it can service interrupts.
     handler = getInterruptHandlerAddress();
     
     if ( provider->registerInterrupt(0, this, handler, 0) != kIOReturnSuccess )
         panic("Apple8259PIC: Failed to install platform interrupt handler");
+
+    kprintf("done\nenabling platform interrupt... ");
     
     provider->enableInterrupt(0);
     enableInterrupt(0);
+    kprintf("done\n");
     
     // Register this interrupt controller so clients can find it.
     getPlatform()->registerInterruptController(gIntelPICName, this);
