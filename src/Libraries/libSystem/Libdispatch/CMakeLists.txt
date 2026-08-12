@@ -102,7 +102,8 @@ target_link_libraries(libdispatch_runtime PRIVATE
     pthread_common_headers
     pthread_common_private_headers
     xnu_headers
-    xnu_private_headers)
+    xnu_private_headers
+    xnu_kernel_private_headers)
 
 add_darwin_circular_library(dispatch
     INSTALL_NAME /usr/lib/system/libdispatch.dylib
