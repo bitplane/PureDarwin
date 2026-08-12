@@ -41,9 +41,12 @@ bool AppleI386CPU::startCommon() {
 	if (cpuIC->initCPUInterruptController(1) != kIOReturnSuccess) return false;
 
 	cpuIC->attach(this);
+	kprintf("AppleI386CPU: registering platform interrupt controller\n");
 	getPlatform()->registerInterruptController(gPlatformInterruptControllerName,
 	                                           cpuIC);
+	kprintf("AppleI386CPU: publishing CPU interrupt controller\n");
 	cpuIC->registerCPUInterruptController();
+	kprintf("AppleI386CPU: interrupt controller ready\n");
 
 	setCPUState(kIOCPUStateUninitalized);
 	initCPU(true);
