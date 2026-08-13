@@ -69,6 +69,7 @@ function(mig filename)
     get_filename_component(filename_abs ${filename} ABSOLUTE)
     add_custom_command(OUTPUT ${MIG_DEPS}
         COMMAND ${CMAKE_COMMAND} -E env MIGCC=${CMAKE_C_COMPILER} MIGCOM=$<TARGET_FILE:migcom>
+            PUREDARWIN_TARGET_TRIPLE=${PUREDARWIN_TARGET_TRIPLE}
             ${PUREDARWIN_SOURCE_DIR}/tools/mig/mig.sh -arch ${MIG_ARCH}
             -user ${MIG_USER_SOURCE} -header ${MIG_USER_HEADER} -server ${MIG_SERVER_SOURCE}
             -sheader ${MIG_SERVER_HEADER} ${MIG_FLAGS} ${filename_abs}
