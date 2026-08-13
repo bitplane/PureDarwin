@@ -128,6 +128,10 @@ do
     esac
 done
 
+if [ ${#target[@]} -eq 0 ] && [ -n "${PUREDARWIN_TARGET_TRIPLE:-}" ]; then
+    target=( "-target" "${PUREDARWIN_TARGET_TRIPLE}" )
+fi
+
 # process the rest as files
 until [ $# -eq 0 ]
 do
@@ -215,4 +219,3 @@ done
 
 /bin/rmdir "${WORKTMP}"
 exit 0
-
