@@ -92,6 +92,12 @@ cppflags="-D__MACH30__"
 
 files=
 arch=`/usr/bin/arch`
+if [ -n "${PUREDARWIN_TARGET_TRIPLE:-}" ]; then
+    arch="${PUREDARWIN_TARGET_TRIPLE%%-*}"
+    if [ "${arch}" = "aarch64" ]; then
+        arch=arm64
+    fi
+fi
 
 WORKTMP=`/usr/bin/mktemp -d "${TMPDIR:-/tmp}/mig.XXXXXX"`
 if [ $? -ne 0 ]; then
