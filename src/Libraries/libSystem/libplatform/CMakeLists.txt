@@ -163,7 +163,10 @@ target_link_options(libsystem_platform_firstpass PRIVATE
 install(TARGETS libsystem_platform DESTINATION usr/lib/system COMPONENT BaseSystem)
 
 install(
-    FILES ${libplatform_source_dir}/include/setjmp.h ${libplatform_source_dir}/include/string_x86.h ${libplatform_source_dir}/include/ucontext.h
+    FILES
+        ${libplatform_source_dir}/include/setjmp.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/string_x86.h
+        ${libplatform_source_dir}/include/ucontext.h
     DESTINATION usr/include COMPONENT DeveloperTools
 )
 
