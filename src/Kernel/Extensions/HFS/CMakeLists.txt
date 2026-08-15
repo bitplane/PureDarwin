@@ -4,6 +4,7 @@ set(hfs_include_dir ${CMAKE_CURRENT_BINARY_DIR}/include)
 file(MAKE_DIRECTORY ${hfs_include_dir}/hfs)
 file(COPY
     ${hfs_core_dir}/hfs_format.h
+    ${hfs_core_dir}/hfs_mount.h
     ${hfs_core_dir}/hfs_unistr.h
     DESTINATION ${hfs_include_dir}/hfs)
 
@@ -68,6 +69,10 @@ target_compile_options(HFS PRIVATE
     -Wno-shorten-64-to-32
     -Wno-sign-conversion)
 set_property(TARGET HFS PROPERTY C_STANDARD 99)
+
+install(DIRECTORY ${hfs_include_dir}/hfs
+    DESTINATION usr/include
+    COMPONENT DeveloperTools)
 
 set(hfs_encodings_dir ${hfs_source_dir}/hfs_encodings)
 add_kext_bundle(HFSEncodings KERNEL_PRIVATE
