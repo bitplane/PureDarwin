@@ -161,3 +161,6 @@ install(TARGETS libsystem_pthread DESTINATION usr/lib/system COMPONENT BaseSyste
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
     DESTINATION usr/include
     COMPONENT DeveloperTools)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/pthread/pthread.h
+    DESTINATION usr/include
+    COMPONENT DeveloperTools)
