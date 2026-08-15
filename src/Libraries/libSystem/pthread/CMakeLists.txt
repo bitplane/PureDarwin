@@ -161,9 +161,13 @@ install(TARGETS libsystem_pthread DESTINATION usr/lib/system COMPONENT BaseSyste
 install(DIRECTORY ${pthread_source_dir}/pthread/
     DESTINATION usr/include/pthread
     COMPONENT DeveloperTools)
-install(DIRECTORY ${pthread_source_dir}/sys/_pthread/
-    DESTINATION usr/include/sys/_pthread
+install(DIRECTORY ${pthread_source_dir}/sys/
+    DESTINATION usr/include/sys
     COMPONENT DeveloperTools)
-install(FILES ${pthread_source_dir}/pthread/pthread.h
+install(FILES
+    ${pthread_source_dir}/pthread/pthread.h
+    ${pthread_source_dir}/pthread/pthread_impl.h
+    ${pthread_source_dir}/pthread/sched.h
+    ${pthread_source_dir}/pthread/spawn.h
     DESTINATION usr/include
     COMPONENT DeveloperTools)
