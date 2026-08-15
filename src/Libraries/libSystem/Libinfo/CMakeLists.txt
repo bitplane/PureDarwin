@@ -77,3 +77,10 @@ add_darwin_circular_library(libsystem_info
     STRONG_DEPENDENCIES libsystem_kernel
     LINK_OPTIONS "LINKER:-umbrella,System")
 install(TARGETS libsystem_info DESTINATION usr/lib/system COMPONENT BaseSystem)
+install(FILES
+    ${libinfo_source_dir}/gen.subproj/ifaddrs.h
+    ${libinfo_source_dir}/lookup.subproj/grp.h
+    ${libinfo_source_dir}/lookup.subproj/netdb.h
+    ${libinfo_source_dir}/lookup.subproj/pwd.h
+    DESTINATION usr/include
+    COMPONENT DeveloperTools)

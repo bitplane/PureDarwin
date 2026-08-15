@@ -158,3 +158,6 @@ target_link_options(libsystem_pthread PRIVATE
     "LINKER:-alias_list,${pthread_source_dir}/xcodescripts/pthread.aliases"
 )
 install(TARGETS libsystem_pthread DESTINATION usr/lib/system COMPONENT BaseSystem)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
+    DESTINATION usr/include
+    COMPONENT DeveloperTools)
